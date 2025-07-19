@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:oqs/liboqs.dart';
+import 'package:oqs/oqs.dart';
 import 'package:test/test.dart';
 
 void main() {

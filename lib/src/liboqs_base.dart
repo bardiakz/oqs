@@ -34,8 +34,12 @@ class LibOQSException implements Exception {
   const LibOQSException(this.message, [this.errorCode]);
 
   @override
-  String toString() =>
-      'LibOQSException: $message${errorCode != null ? ' (code: $errorCode)' : ''}';
+  String toString() {
+    if (errorCode != null) {
+      return 'LibOQSException($errorCode): $message';
+    }
+    return 'LibOQSException: $message';
+  }
 }
 
 /// Utility functions for working with C memory and Dart

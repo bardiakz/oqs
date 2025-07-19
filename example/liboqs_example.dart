@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'package:oqs/liboqs.dart';
+import 'package:oqs/oqs.dart';
 
 void main() {
   print('=== LibOQS Dart Example ===\n');
