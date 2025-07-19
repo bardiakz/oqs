@@ -2,7 +2,8 @@ name: oqs
 description: Dart bindings for liboqs - A post-quantum cryptography library
 version: 1.0.0
 license: MIT
-# repository: www.github.com/bardiakzm/oqs
+repository: https://github.com/bardiakzm/oqs
+homepage: https://github.com/bardiakzm/oqs
 
 environment:
   sdk: ^3.8.1
@@ -10,7 +11,6 @@ environment:
 dependencies:
 
   ffi: ^2.1.4
-  path: ^1.9.1
 
 dev_dependencies:
   lints: ^5.0.0
@@ -22,7 +22,6 @@ platforms:
   ios:
   linux:
   macos:
-  web:
   windows:
 
 topics:
@@ -31,21 +30,7 @@ topics:
   - kem
   - encryption
   - pqc
-
-flutter:
-  plugin:
-    platforms:
-      android:
-        ffiPlugin: true
-      ios:
-        ffiPlugin: true
-      linux:
-        ffiPlugin: true
-      macos:
-        ffiPlugin: true
-      windows:
-        ffiPlugin: true
-
+  - liboqs
 
 ffigen:
   name: LibOQSBindings
@@ -55,25 +40,21 @@ ffigen:
     entry-points:
       - 'headers/oqs/oqs.h'
     include-directives:
-      - '**/oqs/*.h'
+      - 'headers/oqs/*.h'
   compiler-opts:
     - '-Iheaders'
-  # Exclude functions that might cause issues
-  exclude-all-by-name:
-    - 'OQS_randombytes_.*'
-  # Include important functions
   functions:
     include:
       - 'OQS_KEM_.*'
       - 'OQS_SIG_.*'
       - 'OQS_init'
       - 'OQS_destroy'
-  # Configure struct handling
+      - 'OQS_.*_enabled'
+      - 'OQS_.*_supported'
   structs:
     include:
       - 'OQS_KEM'
       - 'OQS_SIG'
-  # Configure type mappings
   type-map:
     'size_t': 'IntPtr'
     'uint8_t*': 'Pointer<Uint8>'
