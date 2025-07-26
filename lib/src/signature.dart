@@ -1,5 +1,6 @@
 // lib/src/signature.dart
 import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'bindings/liboqs_bindings.dart';
@@ -11,6 +12,24 @@ class Signature {
   final String algorithmName;
 
   Signature._(this._sigPtr, this.algorithmName);
+
+  /// supported Signature algorithms by liboqs
+  static void printSupportedSignatureAlgorithms() {
+    print("\nSupported Signatures:");
+    final sigCount = LibOQSBase.bindings.OQS_SIG_alg_count();
+    for (int i = 0; i < sigCount; i++) {
+      final sigNamePtr = LibOQSBase.bindings.OQS_SIG_alg_identifier(i);
+      if (sigNamePtr != ffi.nullptr) {
+        final sigName = sigNamePtr.cast<Utf8>().toDartString();
+        final isEnabled = LibOQSBase.bindings.OQS_SIG_alg_is_enabled(
+          sigName.toNativeUtf8().cast<ffi.Char>(),
+        );
+        if (isEnabled == 1) {
+          print("- $sigName");
+        }
+      }
+    }
+  }
 
   /// Create a new Signature instance with the specified algorithm
   static Signature? create(String algorithmName) {
@@ -41,49 +60,75 @@ class Signature {
   static List<String> getSupportedAlgorithms() {
     final List<String> algorithms = [];
 
-    // Common liboqs signature algorithms
     final sigAlgorithms = [
       'Dilithium2',
       'Dilithium3',
       'Dilithium5',
+      'ML-DSA-44',
+      'ML-DSA-65',
+      'ML-DSA-87',
       'Falcon-512',
       'Falcon-1024',
-      'SPHINCS+-Haraka-128f-robust',
-      'SPHINCS+-Haraka-128f-simple',
-      'SPHINCS+-Haraka-128s-robust',
-      'SPHINCS+-Haraka-128s-simple',
-      'SPHINCS+-Haraka-192f-robust',
-      'SPHINCS+-Haraka-192f-simple',
-      'SPHINCS+-Haraka-192s-robust',
-      'SPHINCS+-Haraka-192s-simple',
-      'SPHINCS+-Haraka-256f-robust',
-      'SPHINCS+-Haraka-256f-simple',
-      'SPHINCS+-Haraka-256s-robust',
-      'SPHINCS+-Haraka-256s-simple',
-      'SPHINCS+-SHA256-128f-robust',
-      'SPHINCS+-SHA256-128f-simple',
-      'SPHINCS+-SHA256-128s-robust',
-      'SPHINCS+-SHA256-128s-simple',
-      'SPHINCS+-SHA256-192f-robust',
-      'SPHINCS+-SHA256-192f-simple',
-      'SPHINCS+-SHA256-192s-robust',
-      'SPHINCS+-SHA256-192s-simple',
-      'SPHINCS+-SHA256-256f-robust',
-      'SPHINCS+-SHA256-256f-simple',
-      'SPHINCS+-SHA256-256s-robust',
-      'SPHINCS+-SHA256-256s-simple',
-      'SPHINCS+-SHAKE256-128f-robust',
-      'SPHINCS+-SHAKE256-128f-simple',
-      'SPHINCS+-SHAKE256-128s-robust',
-      'SPHINCS+-SHAKE256-128s-simple',
-      'SPHINCS+-SHAKE256-192f-robust',
-      'SPHINCS+-SHAKE256-192f-simple',
-      'SPHINCS+-SHAKE256-192s-robust',
-      'SPHINCS+-SHAKE256-192s-simple',
-      'SPHINCS+-SHAKE256-256f-robust',
-      'SPHINCS+-SHAKE256-256f-simple',
-      'SPHINCS+-SHAKE256-256s-robust',
-      'SPHINCS+-SHAKE256-256s-simple',
+      'Falcon-padded-512',
+      'Falcon-padded-1024',
+      'SPHINCS+-SHA2-128f-simple',
+      'SPHINCS+-SHA2-128s-simple',
+      'SPHINCS+-SHA2-192f-simple',
+      'SPHINCS+-SHA2-192s-simple',
+      'SPHINCS+-SHA2-256f-simple',
+      'SPHINCS+-SHA2-256s-simple',
+      'SPHINCS+-SHAKE-128f-simple',
+      'SPHINCS+-SHAKE-128s-simple',
+      'SPHINCS+-SHAKE-192f-simple',
+      'SPHINCS+-SHAKE-192s-simple',
+      'SPHINCS+-SHAKE-256f-simple',
+      'SPHINCS+-SHAKE-256s-simple',
+      'MAYO-1',
+      'MAYO-2',
+      'MAYO-3',
+      'MAYO-5',
+      'cross-rsdp-128-balanced',
+      'cross-rsdp-128-fast',
+      'cross-rsdp-128-small',
+      'cross-rsdp-192-balanced',
+      'cross-rsdp-192-fast',
+      'cross-rsdp-192-small',
+      'cross-rsdp-256-balanced',
+      'cross-rsdp-256-fast',
+      'cross-rsdp-256-small',
+      'cross-rsdpg-128-balanced',
+      'cross-rsdpg-128-fast',
+      'cross-rsdpg-128-small',
+      'cross-rsdpg-192-balanced',
+      'cross-rsdpg-192-fast',
+      'cross-rsdpg-192-small',
+      'cross-rsdpg-256-balanced',
+      'cross-rsdpg-256-fast',
+      'cross-rsdpg-256-small',
+      'OV-Is',
+      'OV-Ip',
+      'OV-III',
+      'OV-V',
+      'OV-Is-pkc',
+      'OV-Ip-pkc',
+      'OV-III-pkc',
+      'OV-V-pkc',
+      'OV-Is-pkc-skc',
+      'OV-Ip-pkc-skc',
+      'OV-III-pkc-skc',
+      'OV-V-pkc-skc',
+      'SNOVA_24_5_4',
+      'SNOVA_24_5_4_SHAKE',
+      'SNOVA_24_5_4_esk',
+      'SNOVA_24_5_4_SHAKE_esk',
+      'SNOVA_37_17_2',
+      'SNOVA_25_8_3',
+      'SNOVA_56_25_2',
+      'SNOVA_49_11_3',
+      'SNOVA_37_8_4',
+      'SNOVA_24_5_5',
+      'SNOVA_60_10_4',
+      'SNOVA_29_6_5',
     ];
 
     for (final alg in sigAlgorithms) {

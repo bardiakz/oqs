@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:oqs/oqs.dart';
+import 'package:oqs/src/kem.dart';
 
 void main() {
   print('=== LibOQS Dart Example ===\n');
@@ -9,6 +10,10 @@ void main() {
   LibOQS.init();
 
   try {
+    // Print supported algorithms
+    print('Supported KEM algorithms:');
+    KEM.printSupportedKemAlgorithms();
+    Signature.printSupportedSignatureAlgorithms();
     // Print library information
     print('LibOQS Version: ${LibOQS.getVersion()}');
     print(
