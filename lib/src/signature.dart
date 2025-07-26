@@ -31,6 +31,27 @@ class Signature {
     }
   }
 
+  /// returns list of supported Signature algorithms from liboqs
+  static List<String> getSupportedSignatureAlgorithms() {
+    final sigCount = LibOQSBase.bindings.OQS_SIG_alg_count();
+    final List<String> supportedSigs = [];
+
+    for (int i = 0; i < sigCount; i++) {
+      final sigNamePtr = LibOQSBase.bindings.OQS_SIG_alg_identifier(i);
+      if (sigNamePtr != ffi.nullptr) {
+        final sigName = sigNamePtr.cast<Utf8>().toDartString();
+        final isEnabled = LibOQSBase.bindings.OQS_SIG_alg_is_enabled(
+          sigName.toNativeUtf8().cast<ffi.Char>(),
+        );
+        if (isEnabled == 1) {
+          supportedSigs.add(sigName);
+        }
+      }
+    }
+
+    return supportedSigs;
+  }
+
   /// Create a new Signature instance with the specified algorithm
   static Signature? create(String algorithmName) {
     final namePtr = algorithmName.toNativeUtf8();
@@ -56,8 +77,8 @@ class Signature {
     }
   }
 
-  /// Get list of supported signature algorithms
-  static List<String> getSupportedAlgorithms() {
+  /// Get hard coded list of supported signature algorithms
+  static List<String> getSupportedSignatureAlgorithmsHardCodedList() {
     final List<String> algorithms = [];
 
     final sigAlgorithms = [

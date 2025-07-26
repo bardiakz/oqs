@@ -33,12 +33,12 @@ class LibOQS {
 
   /// Get all supported KEM algorithms
   static List<String> getSupportedKEMAlgorithms() {
-    return KEM.getSupportedAlgorithms();
+    return KEM.getSupportedKemAlgorithmsHardCodedList();
   }
 
   /// Get all supported signature algorithms
   static List<String> getSupportedSignatureAlgorithms() {
-    return Signature.getSupportedAlgorithms();
+    return Signature.getSupportedSignatureAlgorithmsHardCodedList();
   }
 
   /// Check if a KEM algorithm is supported

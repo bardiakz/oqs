@@ -14,10 +14,14 @@ class LibOQSBase {
   static LibOQSBindings get bindings => _bindings;
 
   /// Initialize liboqs (call this before using any other functions)
-  static void init() {}
+  static void init() {
+    bindings.OQS_init();
+  }
 
   /// Clean up liboqs resources
-  static void cleanup() {}
+  static void cleanup() {
+    bindings.OQS_destroy();
+  }
 
   static String getVersion() {
     final versionPtr = bindings.OQS_version();

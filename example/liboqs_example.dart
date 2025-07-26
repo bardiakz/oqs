@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:oqs/oqs.dart';
-import 'package:oqs/src/kem.dart';
 
 void main() {
   print('=== LibOQS Dart Example ===\n');
@@ -42,7 +41,7 @@ void kemExample() {
 
   // Try different KEM algorithms
   // final kemAlgorithms = ['Kyber512', 'Kyber768', 'Kyber1024'];
-  final kemAlgorithms = KEM.getSupportedAlgorithms();
+  final kemAlgorithms = KEM.getSupportedKemAlgorithms();
   for (final algName in kemAlgorithms) {
     if (!LibOQS.isKEMSupported(algName)) {
       print('$algName is not supported, skipping...');
@@ -101,7 +100,7 @@ void signatureExample() {
 
   // Try different signature algorithms
   // final sigAlgorithms = ['Dilithium2', 'Dilithium3', 'Falcon-512'];
-  final sigAlgorithms = Signature.getSupportedAlgorithms();
+  final sigAlgorithms = Signature.getSupportedSignatureAlgorithms();
   for (final algName in sigAlgorithms) {
     if (!LibOQS.isSignatureSupported(algName)) {
       print('$algName is not supported, skipping...');

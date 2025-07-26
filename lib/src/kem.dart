@@ -31,6 +31,26 @@ class KEM {
     }
   }
 
+  /// returns list of supported kem algorithms from liboqs
+  static List<String> getSupportedKemAlgorithms() {
+    final kemCount = LibOQSBase.bindings.OQS_KEM_alg_count();
+    final List<String> supportedKems = [];
+
+    for (int i = 0; i < kemCount; i++) {
+      final kemNamePtr = LibOQSBase.bindings.OQS_KEM_alg_identifier(i);
+      if (kemNamePtr != ffi.nullptr) {
+        final kemName = kemNamePtr.cast<Utf8>().toDartString();
+        final isEnabled = LibOQSBase.bindings.OQS_KEM_alg_is_enabled(
+          kemName.toNativeUtf8().cast<ffi.Char>(),
+        );
+        if (isEnabled == 1) {
+          supportedKems.add(kemName);
+        }
+      }
+    }
+    return supportedKems;
+  }
+
   /// Create a new KEM instance with the specified algorithm
   static KEM? create(String algorithmName) {
     final namePtr = algorithmName.toNativeUtf8();
@@ -55,8 +75,8 @@ class KEM {
     }
   }
 
-  /// Get list of supported KEM algorithms
-  static List<String> getSupportedAlgorithms() {
+  /// Get hard coded list of supported KEM algorithms
+  static List<String> getSupportedKemAlgorithmsHardCodedList() {
     final List<String> algorithms = [];
 
     final kemAlgorithms = [
