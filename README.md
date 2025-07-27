@@ -40,7 +40,7 @@ Add this to your package's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  oqs: ^1.0.1
+  oqs: ^1.0.2
 ```
 
 Then run:
@@ -50,218 +50,6 @@ dart pub get
 ```
 
 ## Quick Start
-
-## Using Prebuilt Binaries
-
-For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
-
-### Quick Setup with Prebuilt Binaries
-
-
-**You can just place the bin directory in root of your project and you will be good to go:**
-   ```
-   your_project/
-   ├── lib/
-   ├── bin/          # Create this directory
-   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
-   └── pubspec.yaml
-   ```
-
-### Library Loading Configuration
-
-The package uses flexible library loading with automatic fallbacks:
-
-```dart
-// The package automatically tries multiple loading strategies:
-// 1. Environment variable (LIBOQS_PATH)
-// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
-// 3. Relative paths (./bin/, ../lib/, etc.)
-// 4. Platform-specific locations
-
-// Manual configuration (advanced users):
-import 'package:oqs/src/platform/library_loader.dart';
-
-final library = LibOQSLoader.loadLibrary(
-  explicitPath: '/custom/path/to/liboqs.so',
-  useCache: false,
-);
-```
-
-### Verifying Installation
-
-Test that the library loads correctly:
-
-```dart
-import 'package:oqs/oqs.dart';
-
-void main() {
-  try {
-    // Initialize the library
-    LibOQS.init();
-
-    // Check version
-    print('liboqs version: ${LibOQS.getVersion()}');
-
-    // List available algorithms
-    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
-    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
-
-    print('✅ liboqs loaded successfully!');
-  } catch (e) {
-    print('❌ Failed to load liboqs: $e');
-  }
-}
-```
-## Platform Setup
-
-### Option 1: Use Prebuilt Binaries (Recommended)
-
-The easiest way to get started is using the prebuilt binaries. See the [Using Prebuilt Binaries](#using-prebuilt-binaries) section above for detailed instructions.
-
-### Option 2: Install from Package Manager
-
-#### Ubuntu/Debian
-```bash
-sudo apt update
-sudo apt install liboqs-dev
-```
-
-#### macOS (Homebrew)
-```bash
-brew install liboqs
-```
-
-#### Windows (vcpkg)
-```bash
-vcpkg install liboqs
-```
-
-### Option 3: Build from Source
-
-```bash
-git clone https://github.com/open-quantum-safe/liboqs.git
-cd liboqs
-mkdir build && cd build
-cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
-ninja install
-```
-
-### Library Loading Order
-
-The package attempts to load the liboqs library in the following order:
-
-1. **Environment variable**: `LIBOQS_PATH` if set
-2. **Prebuilt binaries**: `./bin/` directory in your project
-3. **System locations**: `/usr/lib`, `/usr/local/lib`, etc.
-4. **Relative paths**: `../lib/`, `./lib/`, etc.
-5. **Platform-specific paths**: Windows DLL search paths, macOS framework paths
-
-This ensures maximum compatibility across different deployment scenarios.
-
-## Examples
-
-### list of all KEM algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
-```dart
-kemAlgorithms = [
-'Classic-McEliece-348864',
-'Classic-McEliece-348864f',
-'Classic-McEliece-460896',
-'Classic-McEliece-460896f',
-'Classic-McEliece-6688128',
-'Classic-McEliece-6688128f',
-'Classic-McEliece-6960119',
-'Classic-McEliece-6960119f',
-'Classic-McEliece-8192128',
-'Classic-McEliece-8192128f',
-'Kyber512',
-'Kyber768',
-'Kyber1024',
-'ML-KEM-512',
-'ML-KEM-768',
-'ML-KEM-1024',
-'sntrup761',
-'FrodoKEM-640-AES',
-'FrodoKEM-640-SHAKE',
-'FrodoKEM-976-AES',
-'FrodoKEM-976-SHAKE',
-'FrodoKEM-1344-AES',
-'FrodoKEM-1344-SHAKE',
-];
-```
-
-### list of all Signature algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
-```dart
-sigAlgorithms = [
-'Dilithium2',
-'Dilithium3',
-'Dilithium5',
-'ML-DSA-44',
-'ML-DSA-65',
-'ML-DSA-87',
-'Falcon-512',
-'Falcon-1024',
-'Falcon-padded-512',
-'Falcon-padded-1024',
-'SPHINCS+-SHA2-128f-simple',
-'SPHINCS+-SHA2-128s-simple',
-'SPHINCS+-SHA2-192f-simple',
-'SPHINCS+-SHA2-192s-simple',
-'SPHINCS+-SHA2-256f-simple',
-'SPHINCS+-SHA2-256s-simple',
-'SPHINCS+-SHAKE-128f-simple',
-'SPHINCS+-SHAKE-128s-simple',
-'SPHINCS+-SHAKE-192f-simple',
-'SPHINCS+-SHAKE-192s-simple',
-'SPHINCS+-SHAKE-256f-simple',
-'SPHINCS+-SHAKE-256s-simple',
-'MAYO-1',
-'MAYO-2',
-'MAYO-3',
-'MAYO-5',
-'cross-rsdp-128-balanced',
-'cross-rsdp-128-fast',
-'cross-rsdp-128-small',
-'cross-rsdp-192-balanced',
-'cross-rsdp-192-fast',
-'cross-rsdp-192-small',
-'cross-rsdp-256-balanced',
-'cross-rsdp-256-fast',
-'cross-rsdp-256-small',
-'cross-rsdpg-128-balanced',
-'cross-rsdpg-128-fast',
-'cross-rsdpg-128-small',
-'cross-rsdpg-192-balanced',
-'cross-rsdpg-192-fast',
-'cross-rsdpg-192-small',
-'cross-rsdpg-256-balanced',
-'cross-rsdpg-256-fast',
-'cross-rsdpg-256-small',
-'OV-Is',
-'OV-Ip',
-'OV-III',
-'OV-V',
-'OV-Is-pkc',
-'OV-Ip-pkc',
-'OV-III-pkc',
-'OV-V-pkc',
-'OV-Is-pkc-skc',
-'OV-Ip-pkc-skc',
-'OV-III-pkc-skc',
-'OV-V-pkc-skc',
-'SNOVA_24_5_4',
-'SNOVA_24_5_4_SHAKE',
-'SNOVA_24_5_4_esk',
-'SNOVA_24_5_4_SHAKE_esk',
-'SNOVA_37_17_2',
-'SNOVA_25_8_3',
-'SNOVA_56_25_2',
-'SNOVA_49_11_3',
-'SNOVA_37_8_4',
-'SNOVA_24_5_5',
-'SNOVA_60_10_4',
-'SNOVA_29_6_5',
-];
-```
 
 ### Key Encapsulation (KEM) Example
 
@@ -351,6 +139,76 @@ void main() {
 }
 ```
 
+## Using Prebuilt Binaries
+
+For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
+
+### Quick Setup with Prebuilt Binaries
+
+**For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
+   ```
+   your_project/
+   ├── lib/
+   ├── bin/          # Create this directory
+   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
+   └── pubspec.yaml
+   ```
+**For Android in Flutter, native libraries must be placed in the jniLibs folder to be automatically included in the APK
+```
+    android/app/src/main/jniLibs/
+    ├── arm64-v8a/
+    │   └── liboqs.so
+    ├── armeabi-v7a/
+    │   └── liboqs.so
+    └── x86_64/
+    └── liboqs.so
+```
+### Library Loading Configuration
+
+The package uses flexible library loading with automatic fallbacks:
+
+```dart
+// The package automatically tries multiple loading strategies:
+// 1. Environment variable (LIBOQS_PATH)
+// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
+// 3. Relative paths (./bin/, ../lib/, etc.)
+// 4. Platform-specific locations
+
+// Manual configuration (advanced users):
+import 'package:oqs/src/platform/library_loader.dart';
+
+final library = LibOQSLoader.loadLibrary(
+  explicitPath: '/custom/path/to/liboqs.so',
+  useCache: false,
+);
+```
+
+### Verifying Installation
+
+Test that the library loads correctly:
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void main() {
+  try {
+    // Initialize the library
+    LibOQS.init();
+
+    // Check version
+    print('liboqs version: ${LibOQS.getVersion()}');
+
+    // List available algorithms
+    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
+    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
+
+    print('✅ liboqs loaded successfully!');
+  } catch (e) {
+    print('❌ Failed to load liboqs: $e');
+  }
+}
+```
+
 ## Available Algorithms
 
 Get lists of supported algorithms at runtime:
@@ -375,6 +233,46 @@ void main() {
   KEM.printSupportedKemAlgorithms();
   Signature.printSupportedSignatureAlgorithms();
 }
+```
+
+### Complete Algorithm Lists
+
+#### KEM Algorithms (LibOQS Version: 0.14.1-dev)
+```dart
+kemAlgorithms = [
+  'Classic-McEliece-348864', 'Classic-McEliece-348864f',
+  'Classic-McEliece-460896', 'Classic-McEliece-460896f',
+  'Classic-McEliece-6688128', 'Classic-McEliece-6688128f',
+  'Classic-McEliece-6960119', 'Classic-McEliece-6960119f',
+  'Classic-McEliece-8192128', 'Classic-McEliece-8192128f',
+  'Kyber512', 'Kyber768', 'Kyber1024',
+  'ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024',
+  'sntrup761',
+  'FrodoKEM-640-AES', 'FrodoKEM-640-SHAKE',
+  'FrodoKEM-976-AES', 'FrodoKEM-976-SHAKE',
+  'FrodoKEM-1344-AES', 'FrodoKEM-1344-SHAKE',
+];
+```
+
+#### Signature Algorithms (LibOQS Version: 0.14.1-dev)
+```dart
+sigAlgorithms = [
+  'Dilithium2', 'Dilithium3', 'Dilithium5',
+  'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87',
+  'Falcon-512', 'Falcon-1024', 'Falcon-padded-512', 'Falcon-padded-1024',
+  'SPHINCS+-SHA2-128f-simple', 'SPHINCS+-SHA2-128s-simple',
+  'SPHINCS+-SHA2-192f-simple', 'SPHINCS+-SHA2-192s-simple',
+  'SPHINCS+-SHA2-256f-simple', 'SPHINCS+-SHA2-256s-simple',
+  'SPHINCS+-SHAKE-128f-simple', 'SPHINCS+-SHAKE-128s-simple',
+  'SPHINCS+-SHAKE-192f-simple', 'SPHINCS+-SHAKE-192s-simple',
+  'SPHINCS+-SHAKE-256f-simple', 'SPHINCS+-SHAKE-256s-simple',
+  'MAYO-1', 'MAYO-2', 'MAYO-3', 'MAYO-5',
+  // Cross-Tree variants
+  'cross-rsdp-128-balanced', 'cross-rsdp-128-fast', 'cross-rsdp-128-small',
+  'cross-rsdp-192-balanced', 'cross-rsdp-192-fast', 'cross-rsdp-192-small',
+  'cross-rsdp-256-balanced', 'cross-rsdp-256-fast', 'cross-rsdp-256-small',
+  // And many more SNOVA and OV variants...
+];
 ```
 
 ## Resource Management
@@ -424,6 +322,39 @@ LibOQS.cleanupAll(); // Calls cleanupThread() + cleanup()
 - `LibOQS.init()` is safe to call multiple times
 - Individual KEM/Signature instances should not be shared between threads
 
+## Platform Setup
+
+### Option 1: Use Prebuilt Binaries (Recommended)
+
+The easiest way to get started is using the prebuilt binaries. See the [Using Prebuilt Binaries](#using-prebuilt-binaries) section above for detailed instructions.
+
+### Option 2: Install from Package Manager
+
+#### Ubuntu/Debian
+```bash
+sudo apt update
+sudo apt install liboqs-dev
+```
+
+#### macOS (Homebrew)
+```bash
+brew install liboqs
+```
+
+#### Windows (vcpkg)
+```bash
+vcpkg install liboqs
+```
+
+### Option 3: Build from Source
+
+```bash
+git clone https://github.com/open-quantum-safe/liboqs.git
+cd liboqs
+mkdir build && cd build
+cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
+ninja install
+```
 
 ### Library Loading Order
 
@@ -512,6 +443,7 @@ ninja install
 
 3. The library will be installed to `/usr/local/lib` by default.
 
+## Development
 
 ### Contributing
 
