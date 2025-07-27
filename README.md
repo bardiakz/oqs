@@ -34,21 +34,6 @@ A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), pr
 - Cross-Tree signatures
 - And more...
 
-## Installation
-
-Add this to your package's `pubspec.yaml`:
-
-```yaml
-dependencies:
-  oqs: ^1.0.2
-```
-
-Then run:
-
-```bash
-dart pub get
-```
-
 ## Quick Start
 
 ### Key Encapsulation (KEM) Example
