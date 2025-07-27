@@ -27,11 +27,11 @@ class LibOQS {
   }
 
   /// Ensure initialization before first use
-  static void _ensureInitialized() {
-    if (!_initialized) {
-      init();
-    }
-  }
+  // static void _ensureInitialized() {
+  //   if (!_initialized) {
+  //     init();
+  //   }
+  // }
 
   /// Clean up liboqs resources
   /// Call this when you're done using the library

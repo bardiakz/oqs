@@ -8,32 +8,28 @@ import 'dart:ffi' as ffi;
 class LibOQSBindings {
   /// Holds the symbol lookup function.
   final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-      _lookup;
+  _lookup;
 
   /// The symbols are looked up in [dynamicLibrary].
   LibOQSBindings(ffi.DynamicLibrary dynamicLibrary)
-      : _lookup = dynamicLibrary.lookup;
+    : _lookup = dynamicLibrary.lookup;
 
   /// The symbols are looked up with [lookup].
   LibOQSBindings.fromLookup(
-      ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-          lookup)
-      : _lookup = lookup;
+    ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
+  ) : _lookup = lookup;
 
   /// Checks if the CPU supports a given extension
   ///
   /// \return 1 if the given CPU extension is available, 0 otherwise.
-  int OQS_CPU_has_extension(
-    OQS_CPU_EXT ext,
-  ) {
-    return _OQS_CPU_has_extension(
-      ext.value,
-    );
+  int OQS_CPU_has_extension(OQS_CPU_EXT ext) {
+    return _OQS_CPU_has_extension(ext.value);
   }
 
   late final _OQS_CPU_has_extensionPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.UnsignedInt)>>(
-          'OQS_CPU_has_extension');
+        'OQS_CPU_has_extension',
+      );
   late final _OQS_CPU_has_extension =
       _OQS_CPU_has_extensionPtr.asFunction<int Function(int)>();
 
@@ -43,8 +39,9 @@ class LibOQSBindings {
     return _OQS_init();
   }
 
-  late final _OQS_initPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('OQS_init');
+  late final _OQS_initPtr = _lookup<ffi.NativeFunction<ffi.Void Function()>>(
+    'OQS_init',
+  );
   late final _OQS_init = _OQS_initPtr.asFunction<void Function()>();
 
   /// This function stops OpenSSL threads, which allows resources
@@ -65,8 +62,9 @@ class LibOQSBindings {
     return _OQS_destroy();
   }
 
-  late final _OQS_destroyPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function()>>('OQS_destroy');
+  late final _OQS_destroyPtr = _lookup<ffi.NativeFunction<ffi.Void Function()>>(
+    'OQS_destroy',
+  );
   late final _OQS_destroy = _OQS_destroyPtr.asFunction<void Function()>();
 
   /// Return library version string.
@@ -76,24 +74,22 @@ class LibOQSBindings {
 
   late final _OQS_versionPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function()>>(
-          'OQS_version');
+        'OQS_version',
+      );
   late final _OQS_version =
       _OQS_versionPtr.asFunction<ffi.Pointer<ffi.Char> Function()>();
 
   /// Allocates memory of a given size.
   /// @param size The size of the memory to be allocated in bytes.
   /// @return A pointer to the allocated memory.
-  ffi.Pointer<ffi.Void> OQS_MEM_malloc(
-    int size,
-  ) {
-    return _OQS_MEM_malloc(
-      size,
-    );
+  ffi.Pointer<ffi.Void> OQS_MEM_malloc(int size) {
+    return _OQS_MEM_malloc(size);
   }
 
   late final _OQS_MEM_mallocPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size)>>(
-          'OQS_MEM_malloc');
+        'OQS_MEM_malloc',
+      );
   late final _OQS_MEM_malloc =
       _OQS_MEM_mallocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int)>();
 
@@ -101,40 +97,34 @@ class LibOQSBindings {
   /// @param num_elements The number of elements to allocate.
   /// @param element_size The size of each element in bytes.
   /// @return A pointer to the allocated memory.
-  ffi.Pointer<ffi.Void> OQS_MEM_calloc(
-    int num_elements,
-    int element_size,
-  ) {
-    return _OQS_MEM_calloc(
-      num_elements,
-      element_size,
-    );
+  ffi.Pointer<ffi.Void> OQS_MEM_calloc(int num_elements, int element_size) {
+    return _OQS_MEM_calloc(num_elements, element_size);
   }
 
-  late final _OQS_MEM_callocPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>>(
-      'OQS_MEM_calloc');
+  late final _OQS_MEM_callocPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>
+      >('OQS_MEM_calloc');
   late final _OQS_MEM_calloc =
       _OQS_MEM_callocPtr.asFunction<ffi.Pointer<ffi.Void> Function(int, int)>();
 
   /// Duplicates a string.
   /// @param str The string to be duplicated.
   /// @return A pointer to the newly allocated string.
-  ffi.Pointer<ffi.Char> OQS_MEM_strdup(
-    ffi.Pointer<ffi.Char> str,
-  ) {
-    return _OQS_MEM_strdup(
-      str,
-    );
+  ffi.Pointer<ffi.Char> OQS_MEM_strdup(ffi.Pointer<ffi.Char> str) {
+    return _OQS_MEM_strdup(str);
   }
 
-  late final _OQS_MEM_strdupPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Char> Function(
-              ffi.Pointer<ffi.Char>)>>('OQS_MEM_strdup');
-  late final _OQS_MEM_strdup = _OQS_MEM_strdupPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)>();
+  late final _OQS_MEM_strdupPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)
+        >
+      >('OQS_MEM_strdup');
+  late final _OQS_MEM_strdup =
+      _OQS_MEM_strdupPtr.asFunction<
+        ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Constant time comparison of byte sequences `a` and `b` of length `len`.
   /// Returns 0 if the byte sequences are equal or if `len`=0.
@@ -148,19 +138,23 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Void> b,
     int len,
   ) {
-    return _OQS_MEM_secure_bcmp(
-      a,
-      b,
-      len,
-    );
+    return _OQS_MEM_secure_bcmp(a, b, len);
   }
 
-  late final _OQS_MEM_secure_bcmpPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>,
-              ffi.Size)>>('OQS_MEM_secure_bcmp');
-  late final _OQS_MEM_secure_bcmp = _OQS_MEM_secure_bcmpPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)>();
+  late final _OQS_MEM_secure_bcmpPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Void>,
+            ffi.Pointer<ffi.Void>,
+            ffi.Size,
+          )
+        >
+      >('OQS_MEM_secure_bcmp');
+  late final _OQS_MEM_secure_bcmp =
+      _OQS_MEM_secure_bcmpPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Void>, int)
+      >();
 
   /// Zeros out `len` bytes of memory starting at `ptr`.
   ///
@@ -170,22 +164,18 @@ class LibOQSBindings {
   ///
   /// @param[in] ptr The start of the memory to zero out.
   /// @param[in] len The number of bytes to zero out.
-  void OQS_MEM_cleanse(
-    ffi.Pointer<ffi.Void> ptr,
-    int len,
-  ) {
-    return _OQS_MEM_cleanse(
-      ptr,
-      len,
-    );
+  void OQS_MEM_cleanse(ffi.Pointer<ffi.Void> ptr, int len) {
+    return _OQS_MEM_cleanse(ptr, len);
   }
 
-  late final _OQS_MEM_cleansePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>>(
-      'OQS_MEM_cleanse');
-  late final _OQS_MEM_cleanse = _OQS_MEM_cleansePtr.asFunction<
-      void Function(ffi.Pointer<ffi.Void>, int)>();
+  late final _OQS_MEM_cleansePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>
+      >('OQS_MEM_cleanse');
+  late final _OQS_MEM_cleanse =
+      _OQS_MEM_cleansePtr.asFunction<
+        void Function(ffi.Pointer<ffi.Void>, int)
+      >();
 
   /// Zeros out `len` bytes of memory starting at `ptr`, then frees `ptr`.
   ///
@@ -197,22 +187,18 @@ class LibOQSBindings {
   ///
   /// @param[in] ptr The start of the memory to zero out and free.
   /// @param[in] len The number of bytes to zero out.
-  void OQS_MEM_secure_free(
-    ffi.Pointer<ffi.Void> ptr,
-    int len,
-  ) {
-    return _OQS_MEM_secure_free(
-      ptr,
-      len,
-    );
+  void OQS_MEM_secure_free(ffi.Pointer<ffi.Void> ptr, int len) {
+    return _OQS_MEM_secure_free(ptr, len);
   }
 
-  late final _OQS_MEM_secure_freePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>>(
-      'OQS_MEM_secure_free');
-  late final _OQS_MEM_secure_free = _OQS_MEM_secure_freePtr.asFunction<
-      void Function(ffi.Pointer<ffi.Void>, int)>();
+  late final _OQS_MEM_secure_freePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>
+      >('OQS_MEM_secure_free');
+  late final _OQS_MEM_secure_free =
+      _OQS_MEM_secure_freePtr.asFunction<
+        void Function(ffi.Pointer<ffi.Void>, int)
+      >();
 
   /// Frees `ptr`.
   ///
@@ -221,19 +207,18 @@ class LibOQSBindings {
   /// Should only be used on non-secret data.
   ///
   /// @param[in] ptr The start of the memory to free.
-  void OQS_MEM_insecure_free(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _OQS_MEM_insecure_free(
-      ptr,
-    );
+  void OQS_MEM_insecure_free(ffi.Pointer<ffi.Void> ptr) {
+    return _OQS_MEM_insecure_free(ptr);
   }
 
   late final _OQS_MEM_insecure_freePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'OQS_MEM_insecure_free');
-  late final _OQS_MEM_insecure_free = _OQS_MEM_insecure_freePtr.asFunction<
-      void Function(ffi.Pointer<ffi.Void>)>();
+        'OQS_MEM_insecure_free',
+      );
+  late final _OQS_MEM_insecure_free =
+      _OQS_MEM_insecure_freePtr.asFunction<
+        void Function(ffi.Pointer<ffi.Void>)
+      >();
 
   /// Internal implementation of C11 aligned_alloc to work around compiler quirks.
   ///
@@ -242,55 +227,46 @@ class LibOQSBindings {
   /// of sizeof(void *). Size must be a multiple of alignment.
   /// @note The allocated memory should be freed with `OQS_MEM_aligned_free` when
   /// it is no longer needed.
-  ffi.Pointer<ffi.Void> OQS_MEM_aligned_alloc(
-    int alignment,
-    int size,
-  ) {
-    return _OQS_MEM_aligned_alloc(
-      alignment,
-      size,
-    );
+  ffi.Pointer<ffi.Void> OQS_MEM_aligned_alloc(int alignment, int size) {
+    return _OQS_MEM_aligned_alloc(alignment, size);
   }
 
-  late final _OQS_MEM_aligned_allocPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>>(
-      'OQS_MEM_aligned_alloc');
-  late final _OQS_MEM_aligned_alloc = _OQS_MEM_aligned_allocPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(int, int)>();
+  late final _OQS_MEM_aligned_allocPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<ffi.Void> Function(ffi.Size, ffi.Size)>
+      >('OQS_MEM_aligned_alloc');
+  late final _OQS_MEM_aligned_alloc =
+      _OQS_MEM_aligned_allocPtr.asFunction<
+        ffi.Pointer<ffi.Void> Function(int, int)
+      >();
 
   /// Free memory allocated with OQS_MEM_aligned_alloc.
-  void OQS_MEM_aligned_free(
-    ffi.Pointer<ffi.Void> ptr,
-  ) {
-    return _OQS_MEM_aligned_free(
-      ptr,
-    );
+  void OQS_MEM_aligned_free(ffi.Pointer<ffi.Void> ptr) {
+    return _OQS_MEM_aligned_free(ptr);
   }
 
   late final _OQS_MEM_aligned_freePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'OQS_MEM_aligned_free');
-  late final _OQS_MEM_aligned_free = _OQS_MEM_aligned_freePtr.asFunction<
-      void Function(ffi.Pointer<ffi.Void>)>();
+        'OQS_MEM_aligned_free',
+      );
+  late final _OQS_MEM_aligned_free =
+      _OQS_MEM_aligned_freePtr.asFunction<
+        void Function(ffi.Pointer<ffi.Void>)
+      >();
 
   /// Free and zeroize memory allocated with OQS_MEM_aligned_alloc.
-  void OQS_MEM_aligned_secure_free(
-    ffi.Pointer<ffi.Void> ptr,
-    int len,
-  ) {
-    return _OQS_MEM_aligned_secure_free(
-      ptr,
-      len,
-    );
+  void OQS_MEM_aligned_secure_free(ffi.Pointer<ffi.Void> ptr, int len) {
+    return _OQS_MEM_aligned_secure_free(ptr, len);
   }
 
-  late final _OQS_MEM_aligned_secure_freePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>>(
-      'OQS_MEM_aligned_secure_free');
-  late final _OQS_MEM_aligned_secure_free = _OQS_MEM_aligned_secure_freePtr
-      .asFunction<void Function(ffi.Pointer<ffi.Void>, int)>();
+  late final _OQS_MEM_aligned_secure_freePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>, ffi.Size)>
+      >('OQS_MEM_aligned_secure_free');
+  late final _OQS_MEM_aligned_secure_free =
+      _OQS_MEM_aligned_secure_freePtr.asFunction<
+        void Function(ffi.Pointer<ffi.Void>, int)
+      >();
 
   /// Switches OQS_randombytes to use the specified algorithm.
   ///
@@ -300,20 +276,18 @@ class LibOQSBindings {
   ///
   /// @param[in] algorithm The name of the algorithm to use.
   /// @return OQS_SUCCESS if `algorithm` is a supported algorithm name, OQS_ERROR otherwise.
-  OQS_STATUS OQS_randombytes_switch_algorithm(
-    ffi.Pointer<ffi.Char> algorithm,
-  ) {
-    return OQS_STATUS.fromValue(_OQS_randombytes_switch_algorithm(
-      algorithm,
-    ));
+  OQS_STATUS OQS_randombytes_switch_algorithm(ffi.Pointer<ffi.Char> algorithm) {
+    return OQS_STATUS.fromValue(_OQS_randombytes_switch_algorithm(algorithm));
   }
 
   late final _OQS_randombytes_switch_algorithmPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'OQS_randombytes_switch_algorithm');
+        'OQS_randombytes_switch_algorithm',
+      );
   late final _OQS_randombytes_switch_algorithm =
       _OQS_randombytes_switch_algorithmPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Char>)>();
+        int Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Switches OQS_randombytes to use the given function.
   ///
@@ -323,28 +297,35 @@ class LibOQSBindings {
   /// @param[in] algorithm_ptr Pointer to the RNG function to use.
   void OQS_randombytes_custom_algorithm(
     ffi.Pointer<
-            ffi.NativeFunction<
-                ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>>
-        algorithm_ptr,
+      ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>
+    >
+    algorithm_ptr,
   ) {
-    return _OQS_randombytes_custom_algorithm(
-      algorithm_ptr,
-    );
+    return _OQS_randombytes_custom_algorithm(algorithm_ptr);
   }
 
-  late final _OQS_randombytes_custom_algorithmPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_randombytes_custom_algorithmPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Void Function(
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Uint8>,
-                          ffi.Size)>>)>>('OQS_randombytes_custom_algorithm');
+            ffi.Pointer<
+              ffi.NativeFunction<
+                ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)
+              >
+            >,
+          )
+        >
+      >('OQS_randombytes_custom_algorithm');
   late final _OQS_randombytes_custom_algorithm =
       _OQS_randombytes_custom_algorithmPtr.asFunction<
-          void Function(
-              ffi.Pointer<
-                  ffi.NativeFunction<
-                      ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>>)>();
+        void Function(
+          ffi.Pointer<
+            ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)
+            >
+          >,
+        )
+      >();
 
   /// Fills the given memory with the requested number of (pseudo)random bytes.
   ///
@@ -356,22 +337,18 @@ class LibOQSBindings {
   ///
   /// @param[out] random_array Pointer to the memory to fill with (pseudo)random bytes
   /// @param[in] bytes_to_read The number of random bytes to read into memory
-  void OQS_randombytes(
-    ffi.Pointer<ffi.Uint8> random_array,
-    int bytes_to_read,
-  ) {
-    return _OQS_randombytes(
-      random_array,
-      bytes_to_read,
-    );
+  void OQS_randombytes(ffi.Pointer<ffi.Uint8> random_array, int bytes_to_read) {
+    return _OQS_randombytes(random_array, bytes_to_read);
   }
 
-  late final _OQS_randombytesPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>>(
-      'OQS_randombytes');
-  late final _OQS_randombytes = _OQS_randombytesPtr.asFunction<
-      void Function(ffi.Pointer<ffi.Uint8>, int)>();
+  late final _OQS_randombytesPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>
+      >('OQS_randombytes');
+  late final _OQS_randombytes =
+      _OQS_randombytesPtr.asFunction<
+        void Function(ffi.Pointer<ffi.Uint8>, int)
+      >();
 
   /// Returns identifiers for available key encapsulation mechanisms in liboqs.  Used with OQS_KEM_new.
   ///
@@ -380,19 +357,18 @@ class LibOQSBindings {
   ///
   /// @param[in] i Index of the algorithm identifier to return, 0 <= i < OQS_KEM_algs_length
   /// @return Algorithm identifier as a string, or NULL.
-  ffi.Pointer<ffi.Char> OQS_KEM_alg_identifier(
-    int i,
-  ) {
-    return _OQS_KEM_alg_identifier(
-      i,
-    );
+  ffi.Pointer<ffi.Char> OQS_KEM_alg_identifier(int i) {
+    return _OQS_KEM_alg_identifier(i);
   }
 
   late final _OQS_KEM_alg_identifierPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Size)>>(
-          'OQS_KEM_alg_identifier');
-  late final _OQS_KEM_alg_identifier = _OQS_KEM_alg_identifierPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(int)>();
+        'OQS_KEM_alg_identifier',
+      );
+  late final _OQS_KEM_alg_identifier =
+      _OQS_KEM_alg_identifierPtr.asFunction<
+        ffi.Pointer<ffi.Char> Function(int)
+      >();
 
   /// Returns the number of key encapsulation mechanisms in liboqs.  They can be enumerated with
   /// OQS_KEM_alg_identifier.
@@ -413,19 +389,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_KEM_algs`.
   /// @return 1 if enabled, 0 if disabled or not found
-  int OQS_KEM_alg_is_enabled(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_KEM_alg_is_enabled(
-      method_name,
-    );
+  int OQS_KEM_alg_is_enabled(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_KEM_alg_is_enabled(method_name);
   }
 
   late final _OQS_KEM_alg_is_enabledPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'OQS_KEM_alg_is_enabled');
-  late final _OQS_KEM_alg_is_enabled = _OQS_KEM_alg_is_enabledPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>)>();
+        'OQS_KEM_alg_is_enabled',
+      );
+  late final _OQS_KEM_alg_is_enabled =
+      _OQS_KEM_alg_is_enabledPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Constructs an OQS_KEM object for a particular algorithm.
   ///
@@ -434,19 +409,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_KEM_algs`.
   /// @return An OQS_KEM for the particular algorithm, or `NULL` if the algorithm has been disabled at compile-time.
-  ffi.Pointer<OQS_KEM> OQS_KEM_new(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_KEM_new(
-      method_name,
-    );
+  ffi.Pointer<OQS_KEM> OQS_KEM_new(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_KEM_new(method_name);
   }
 
-  late final _OQS_KEM_newPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<OQS_KEM> Function(ffi.Pointer<ffi.Char>)>>('OQS_KEM_new');
-  late final _OQS_KEM_new = _OQS_KEM_newPtr.asFunction<
-      ffi.Pointer<OQS_KEM> Function(ffi.Pointer<ffi.Char>)>();
+  late final _OQS_KEM_newPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function(ffi.Pointer<ffi.Char>)>
+      >('OQS_KEM_new');
+  late final _OQS_KEM_new =
+      _OQS_KEM_newPtr.asFunction<
+        ffi.Pointer<OQS_KEM> Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Derandomized keypair generation algorithm.
   ///
@@ -465,24 +439,31 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_keypair_derand(
-      kem,
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_keypair_derand(kem, public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_KEM_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_KEM>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_keypair_derand');
-  late final _OQS_KEM_keypair_derand = _OQS_KEM_keypair_derandPtr.asFunction<
-      int Function(ffi.Pointer<OQS_KEM>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<OQS_KEM>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_keypair_derand');
+  late final _OQS_KEM_keypair_derand =
+      _OQS_KEM_keypair_derandPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_KEM>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Keypair generation algorithm.
   ///
@@ -499,20 +480,27 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_keypair(
-      kem,
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(_OQS_KEM_keypair(kem, public_key, secret_key));
   }
 
-  late final _OQS_KEM_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<OQS_KEM>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_keypair');
-  late final _OQS_KEM_keypair = _OQS_KEM_keypairPtr.asFunction<
-      int Function(ffi.Pointer<OQS_KEM>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_KEM_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<OQS_KEM>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_keypair');
+  late final _OQS_KEM_keypair =
+      _OQS_KEM_keypairPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_KEM>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Encapsulation algorithm.
   ///
@@ -531,24 +519,31 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_encaps(
-      kem,
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_encaps(kem, ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_encapsPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_KEM_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_KEM>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_encaps');
-  late final _OQS_KEM_encaps = _OQS_KEM_encapsPtr.asFunction<
-      int Function(ffi.Pointer<OQS_KEM>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<OQS_KEM>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_encaps');
+  late final _OQS_KEM_encaps =
+      _OQS_KEM_encapsPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_KEM>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Decapsulation algorithm.
   ///
@@ -567,39 +562,43 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_decaps(
-      kem,
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_decaps(kem, shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_decapsPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_KEM_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_KEM>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_decaps');
-  late final _OQS_KEM_decaps = _OQS_KEM_decapsPtr.asFunction<
-      int Function(ffi.Pointer<OQS_KEM>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<OQS_KEM>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_decaps');
+  late final _OQS_KEM_decaps =
+      _OQS_KEM_decapsPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_KEM>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Frees an OQS_KEM object that was constructed by OQS_KEM_new.
   ///
   /// @param[in] kem The OQS_KEM object to free.
-  void OQS_KEM_free(
-    ffi.Pointer<OQS_KEM> kem,
-  ) {
-    return _OQS_KEM_free(
-      kem,
-    );
+  void OQS_KEM_free(ffi.Pointer<OQS_KEM> kem) {
+    return _OQS_KEM_free(kem);
   }
 
   late final _OQS_KEM_freePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_KEM>)>>(
-          'OQS_KEM_free');
+        'OQS_KEM_free',
+      );
   late final _OQS_KEM_free =
       _OQS_KEM_freePtr.asFunction<void Function(ffi.Pointer<OQS_KEM>)>();
 
@@ -609,95 +608,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_348864_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_348864_new');
+        'OQS_KEM_classic_mceliece_348864_new',
+      );
   late final _OQS_KEM_classic_mceliece_348864_new =
       _OQS_KEM_classic_mceliece_348864_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864_keypair');
+  late final _OQS_KEM_classic_mceliece_348864_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_348864_keypair');
   late final _OQS_KEM_classic_mceliece_348864_keypair =
       _OQS_KEM_classic_mceliece_348864_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_348864_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864_keypair_derand');
   late final _OQS_KEM_classic_mceliece_348864_keypair_derand =
       _OQS_KEM_classic_mceliece_348864_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864_encaps');
+  late final _OQS_KEM_classic_mceliece_348864_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864_encaps');
   late final _OQS_KEM_classic_mceliece_348864_encaps =
       _OQS_KEM_classic_mceliece_348864_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864_decaps');
+  late final _OQS_KEM_classic_mceliece_348864_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864_decaps');
   late final _OQS_KEM_classic_mceliece_348864_decaps =
       _OQS_KEM_classic_mceliece_348864_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_348864f_new() {
     return _OQS_KEM_classic_mceliece_348864f_new();
@@ -705,96 +740,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_348864f_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_348864f_new');
+        'OQS_KEM_classic_mceliece_348864f_new',
+      );
   late final _OQS_KEM_classic_mceliece_348864f_new =
       _OQS_KEM_classic_mceliece_348864f_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864f_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864f_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864f_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864f_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864f_keypair');
+  late final _OQS_KEM_classic_mceliece_348864f_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_348864f_keypair');
   late final _OQS_KEM_classic_mceliece_348864f_keypair =
       _OQS_KEM_classic_mceliece_348864f_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864f_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_348864f_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864f_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864f_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864f_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_348864f_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864f_keypair_derand');
   late final _OQS_KEM_classic_mceliece_348864f_keypair_derand =
       _OQS_KEM_classic_mceliece_348864f_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864f_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864f_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864f_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864f_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864f_encaps');
+  late final _OQS_KEM_classic_mceliece_348864f_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864f_encaps');
   late final _OQS_KEM_classic_mceliece_348864f_encaps =
       _OQS_KEM_classic_mceliece_348864f_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_348864f_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_348864f_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_348864f_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_348864f_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_348864f_decaps');
+  late final _OQS_KEM_classic_mceliece_348864f_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_348864f_decaps');
   late final _OQS_KEM_classic_mceliece_348864f_decaps =
       _OQS_KEM_classic_mceliece_348864f_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_460896_new() {
     return _OQS_KEM_classic_mceliece_460896_new();
@@ -802,95 +872,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_460896_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_460896_new');
+        'OQS_KEM_classic_mceliece_460896_new',
+      );
   late final _OQS_KEM_classic_mceliece_460896_new =
       _OQS_KEM_classic_mceliece_460896_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896_keypair');
+  late final _OQS_KEM_classic_mceliece_460896_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_460896_keypair');
   late final _OQS_KEM_classic_mceliece_460896_keypair =
       _OQS_KEM_classic_mceliece_460896_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_460896_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896_keypair_derand');
   late final _OQS_KEM_classic_mceliece_460896_keypair_derand =
       _OQS_KEM_classic_mceliece_460896_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896_encaps');
+  late final _OQS_KEM_classic_mceliece_460896_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896_encaps');
   late final _OQS_KEM_classic_mceliece_460896_encaps =
       _OQS_KEM_classic_mceliece_460896_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896_decaps');
+  late final _OQS_KEM_classic_mceliece_460896_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896_decaps');
   late final _OQS_KEM_classic_mceliece_460896_decaps =
       _OQS_KEM_classic_mceliece_460896_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_460896f_new() {
     return _OQS_KEM_classic_mceliece_460896f_new();
@@ -898,96 +1004,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_460896f_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_460896f_new');
+        'OQS_KEM_classic_mceliece_460896f_new',
+      );
   late final _OQS_KEM_classic_mceliece_460896f_new =
       _OQS_KEM_classic_mceliece_460896f_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896f_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896f_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896f_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896f_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896f_keypair');
+  late final _OQS_KEM_classic_mceliece_460896f_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_460896f_keypair');
   late final _OQS_KEM_classic_mceliece_460896f_keypair =
       _OQS_KEM_classic_mceliece_460896f_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896f_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_460896f_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896f_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896f_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896f_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_460896f_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896f_keypair_derand');
   late final _OQS_KEM_classic_mceliece_460896f_keypair_derand =
       _OQS_KEM_classic_mceliece_460896f_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896f_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896f_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896f_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896f_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896f_encaps');
+  late final _OQS_KEM_classic_mceliece_460896f_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896f_encaps');
   late final _OQS_KEM_classic_mceliece_460896f_encaps =
       _OQS_KEM_classic_mceliece_460896f_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_460896f_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_460896f_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_460896f_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_460896f_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_460896f_decaps');
+  late final _OQS_KEM_classic_mceliece_460896f_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_460896f_decaps');
   late final _OQS_KEM_classic_mceliece_460896f_decaps =
       _OQS_KEM_classic_mceliece_460896f_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_6688128_new() {
     return _OQS_KEM_classic_mceliece_6688128_new();
@@ -995,96 +1136,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_6688128_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_6688128_new');
+        'OQS_KEM_classic_mceliece_6688128_new',
+      );
   late final _OQS_KEM_classic_mceliece_6688128_new =
       _OQS_KEM_classic_mceliece_6688128_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128_keypair');
+  late final _OQS_KEM_classic_mceliece_6688128_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_6688128_keypair');
   late final _OQS_KEM_classic_mceliece_6688128_keypair =
       _OQS_KEM_classic_mceliece_6688128_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_6688128_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_6688128_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128_keypair_derand');
   late final _OQS_KEM_classic_mceliece_6688128_keypair_derand =
       _OQS_KEM_classic_mceliece_6688128_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128_encaps');
+  late final _OQS_KEM_classic_mceliece_6688128_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128_encaps');
   late final _OQS_KEM_classic_mceliece_6688128_encaps =
       _OQS_KEM_classic_mceliece_6688128_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128_decaps');
+  late final _OQS_KEM_classic_mceliece_6688128_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128_decaps');
   late final _OQS_KEM_classic_mceliece_6688128_decaps =
       _OQS_KEM_classic_mceliece_6688128_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_6688128f_new() {
     return _OQS_KEM_classic_mceliece_6688128f_new();
@@ -1092,96 +1268,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_6688128f_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_6688128f_new');
+        'OQS_KEM_classic_mceliece_6688128f_new',
+      );
   late final _OQS_KEM_classic_mceliece_6688128f_new =
       _OQS_KEM_classic_mceliece_6688128f_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128f_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128f_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128f_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128f_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128f_keypair');
+  late final _OQS_KEM_classic_mceliece_6688128f_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_6688128f_keypair');
   late final _OQS_KEM_classic_mceliece_6688128f_keypair =
       _OQS_KEM_classic_mceliece_6688128f_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128f_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_6688128f_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128f_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128f_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128f_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_6688128f_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128f_keypair_derand');
   late final _OQS_KEM_classic_mceliece_6688128f_keypair_derand =
       _OQS_KEM_classic_mceliece_6688128f_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128f_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128f_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128f_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128f_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128f_encaps');
+  late final _OQS_KEM_classic_mceliece_6688128f_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128f_encaps');
   late final _OQS_KEM_classic_mceliece_6688128f_encaps =
       _OQS_KEM_classic_mceliece_6688128f_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6688128f_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6688128f_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6688128f_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6688128f_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6688128f_decaps');
+  late final _OQS_KEM_classic_mceliece_6688128f_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6688128f_decaps');
   late final _OQS_KEM_classic_mceliece_6688128f_decaps =
       _OQS_KEM_classic_mceliece_6688128f_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_6960119_new() {
     return _OQS_KEM_classic_mceliece_6960119_new();
@@ -1189,96 +1400,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_6960119_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_6960119_new');
+        'OQS_KEM_classic_mceliece_6960119_new',
+      );
   late final _OQS_KEM_classic_mceliece_6960119_new =
       _OQS_KEM_classic_mceliece_6960119_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119_keypair');
+  late final _OQS_KEM_classic_mceliece_6960119_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_6960119_keypair');
   late final _OQS_KEM_classic_mceliece_6960119_keypair =
       _OQS_KEM_classic_mceliece_6960119_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_6960119_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_6960119_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119_keypair_derand');
   late final _OQS_KEM_classic_mceliece_6960119_keypair_derand =
       _OQS_KEM_classic_mceliece_6960119_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119_encaps');
+  late final _OQS_KEM_classic_mceliece_6960119_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119_encaps');
   late final _OQS_KEM_classic_mceliece_6960119_encaps =
       _OQS_KEM_classic_mceliece_6960119_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119_decaps');
+  late final _OQS_KEM_classic_mceliece_6960119_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119_decaps');
   late final _OQS_KEM_classic_mceliece_6960119_decaps =
       _OQS_KEM_classic_mceliece_6960119_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_6960119f_new() {
     return _OQS_KEM_classic_mceliece_6960119f_new();
@@ -1286,96 +1532,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_6960119f_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_6960119f_new');
+        'OQS_KEM_classic_mceliece_6960119f_new',
+      );
   late final _OQS_KEM_classic_mceliece_6960119f_new =
       _OQS_KEM_classic_mceliece_6960119f_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119f_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119f_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119f_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119f_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119f_keypair');
+  late final _OQS_KEM_classic_mceliece_6960119f_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_6960119f_keypair');
   late final _OQS_KEM_classic_mceliece_6960119f_keypair =
       _OQS_KEM_classic_mceliece_6960119f_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119f_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_6960119f_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119f_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119f_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119f_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_6960119f_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119f_keypair_derand');
   late final _OQS_KEM_classic_mceliece_6960119f_keypair_derand =
       _OQS_KEM_classic_mceliece_6960119f_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119f_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119f_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119f_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119f_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119f_encaps');
+  late final _OQS_KEM_classic_mceliece_6960119f_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119f_encaps');
   late final _OQS_KEM_classic_mceliece_6960119f_encaps =
       _OQS_KEM_classic_mceliece_6960119f_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_6960119f_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_6960119f_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_6960119f_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_6960119f_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_6960119f_decaps');
+  late final _OQS_KEM_classic_mceliece_6960119f_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_6960119f_decaps');
   late final _OQS_KEM_classic_mceliece_6960119f_decaps =
       _OQS_KEM_classic_mceliece_6960119f_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_8192128_new() {
     return _OQS_KEM_classic_mceliece_8192128_new();
@@ -1383,96 +1664,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_8192128_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_8192128_new');
+        'OQS_KEM_classic_mceliece_8192128_new',
+      );
   late final _OQS_KEM_classic_mceliece_8192128_new =
       _OQS_KEM_classic_mceliece_8192128_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128_keypair');
+  late final _OQS_KEM_classic_mceliece_8192128_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_8192128_keypair');
   late final _OQS_KEM_classic_mceliece_8192128_keypair =
       _OQS_KEM_classic_mceliece_8192128_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_8192128_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_8192128_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128_keypair_derand');
   late final _OQS_KEM_classic_mceliece_8192128_keypair_derand =
       _OQS_KEM_classic_mceliece_8192128_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128_encaps');
+  late final _OQS_KEM_classic_mceliece_8192128_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128_encaps');
   late final _OQS_KEM_classic_mceliece_8192128_encaps =
       _OQS_KEM_classic_mceliece_8192128_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128_decaps');
+  late final _OQS_KEM_classic_mceliece_8192128_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128_decaps');
   late final _OQS_KEM_classic_mceliece_8192128_decaps =
       _OQS_KEM_classic_mceliece_8192128_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_classic_mceliece_8192128f_new() {
     return _OQS_KEM_classic_mceliece_8192128f_new();
@@ -1480,96 +1796,131 @@ class LibOQSBindings {
 
   late final _OQS_KEM_classic_mceliece_8192128f_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_classic_mceliece_8192128f_new');
+        'OQS_KEM_classic_mceliece_8192128f_new',
+      );
   late final _OQS_KEM_classic_mceliece_8192128f_new =
       _OQS_KEM_classic_mceliece_8192128f_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128f_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128f_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128f_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128f_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128f_keypair');
+  late final _OQS_KEM_classic_mceliece_8192128f_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_classic_mceliece_8192128f_keypair');
   late final _OQS_KEM_classic_mceliece_8192128f_keypair =
       _OQS_KEM_classic_mceliece_8192128f_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128f_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_KEM_classic_mceliece_8192128f_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128f_keypair_derand(
+        public_key,
+        secret_key,
+        seed,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128f_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128f_keypair_derand');
+  late final _OQS_KEM_classic_mceliece_8192128f_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128f_keypair_derand');
   late final _OQS_KEM_classic_mceliece_8192128f_keypair_derand =
       _OQS_KEM_classic_mceliece_8192128f_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128f_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128f_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128f_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128f_encapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128f_encaps');
+  late final _OQS_KEM_classic_mceliece_8192128f_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128f_encaps');
   late final _OQS_KEM_classic_mceliece_8192128f_encaps =
       _OQS_KEM_classic_mceliece_8192128f_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_classic_mceliece_8192128f_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_classic_mceliece_8192128f_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_classic_mceliece_8192128f_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_classic_mceliece_8192128f_decapsPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_classic_mceliece_8192128f_decaps');
+  late final _OQS_KEM_classic_mceliece_8192128f_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_classic_mceliece_8192128f_decaps');
   late final _OQS_KEM_classic_mceliece_8192128f_decaps =
       _OQS_KEM_classic_mceliece_8192128f_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_kyber_512_new() {
     return _OQS_KEM_kyber_512_new();
@@ -1577,7 +1928,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_kyber_512_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_kyber_512_new');
+        'OQS_KEM_kyber_512_new',
+      );
   late final _OQS_KEM_kyber_512_new =
       _OQS_KEM_kyber_512_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -1585,82 +1937,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_512_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_512_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_512_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_512_keypair');
+  late final _OQS_KEM_kyber_512_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_kyber_512_keypair');
   late final _OQS_KEM_kyber_512_keypair =
       _OQS_KEM_kyber_512_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_kyber_512_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_512_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_512_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_kyber_512_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_512_keypair_derand');
+  late final _OQS_KEM_kyber_512_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_512_keypair_derand');
   late final _OQS_KEM_kyber_512_keypair_derand =
       _OQS_KEM_kyber_512_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_512_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_512_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_512_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_512_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_512_encaps');
+  late final _OQS_KEM_kyber_512_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_512_encaps');
   late final _OQS_KEM_kyber_512_encaps =
       _OQS_KEM_kyber_512_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_512_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_512_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_512_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_512_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_512_decaps');
+  late final _OQS_KEM_kyber_512_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_512_decaps');
   late final _OQS_KEM_kyber_512_decaps =
       _OQS_KEM_kyber_512_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_kyber_768_new() {
     return _OQS_KEM_kyber_768_new();
@@ -1668,7 +2046,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_kyber_768_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_kyber_768_new');
+        'OQS_KEM_kyber_768_new',
+      );
   late final _OQS_KEM_kyber_768_new =
       _OQS_KEM_kyber_768_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -1676,82 +2055,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_768_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_768_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_768_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_768_keypair');
+  late final _OQS_KEM_kyber_768_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_kyber_768_keypair');
   late final _OQS_KEM_kyber_768_keypair =
       _OQS_KEM_kyber_768_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_kyber_768_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_768_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_768_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_kyber_768_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_768_keypair_derand');
+  late final _OQS_KEM_kyber_768_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_768_keypair_derand');
   late final _OQS_KEM_kyber_768_keypair_derand =
       _OQS_KEM_kyber_768_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_768_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_768_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_768_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_768_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_768_encaps');
+  late final _OQS_KEM_kyber_768_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_768_encaps');
   late final _OQS_KEM_kyber_768_encaps =
       _OQS_KEM_kyber_768_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_768_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_768_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_768_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_768_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_768_decaps');
+  late final _OQS_KEM_kyber_768_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_768_decaps');
   late final _OQS_KEM_kyber_768_decaps =
       _OQS_KEM_kyber_768_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_kyber_1024_new() {
     return _OQS_KEM_kyber_1024_new();
@@ -1759,7 +2164,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_kyber_1024_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_kyber_1024_new');
+        'OQS_KEM_kyber_1024_new',
+      );
   late final _OQS_KEM_kyber_1024_new =
       _OQS_KEM_kyber_1024_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -1767,82 +2173,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_1024_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_1024_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_1024_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_1024_keypair');
+  late final _OQS_KEM_kyber_1024_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_kyber_1024_keypair');
   late final _OQS_KEM_kyber_1024_keypair =
       _OQS_KEM_kyber_1024_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_kyber_1024_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_1024_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_1024_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_kyber_1024_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_1024_keypair_derand');
+  late final _OQS_KEM_kyber_1024_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_1024_keypair_derand');
   late final _OQS_KEM_kyber_1024_keypair_derand =
       _OQS_KEM_kyber_1024_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_1024_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_1024_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_1024_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_1024_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_1024_encaps');
+  late final _OQS_KEM_kyber_1024_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_1024_encaps');
   late final _OQS_KEM_kyber_1024_encaps =
       _OQS_KEM_kyber_1024_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_kyber_1024_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_kyber_1024_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_kyber_1024_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_kyber_1024_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_kyber_1024_decaps');
+  late final _OQS_KEM_kyber_1024_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_kyber_1024_decaps');
   late final _OQS_KEM_kyber_1024_decaps =
       _OQS_KEM_kyber_1024_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_ml_kem_512_new() {
     return _OQS_KEM_ml_kem_512_new();
@@ -1850,7 +2282,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_ml_kem_512_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_ml_kem_512_new');
+        'OQS_KEM_ml_kem_512_new',
+      );
   late final _OQS_KEM_ml_kem_512_new =
       _OQS_KEM_ml_kem_512_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -1858,82 +2291,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_512_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_512_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_512_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_512_keypair');
+  late final _OQS_KEM_ml_kem_512_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_ml_kem_512_keypair');
   late final _OQS_KEM_ml_kem_512_keypair =
       _OQS_KEM_ml_kem_512_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_512_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_512_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_512_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_512_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_512_keypair_derand');
+  late final _OQS_KEM_ml_kem_512_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_512_keypair_derand');
   late final _OQS_KEM_ml_kem_512_keypair_derand =
       _OQS_KEM_ml_kem_512_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_512_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_512_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_512_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_512_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_512_encaps');
+  late final _OQS_KEM_ml_kem_512_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_512_encaps');
   late final _OQS_KEM_ml_kem_512_encaps =
       _OQS_KEM_ml_kem_512_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_512_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_512_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_512_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_512_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_512_decaps');
+  late final _OQS_KEM_ml_kem_512_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_512_decaps');
   late final _OQS_KEM_ml_kem_512_decaps =
       _OQS_KEM_ml_kem_512_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_ml_kem_768_new() {
     return _OQS_KEM_ml_kem_768_new();
@@ -1941,7 +2400,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_ml_kem_768_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_ml_kem_768_new');
+        'OQS_KEM_ml_kem_768_new',
+      );
   late final _OQS_KEM_ml_kem_768_new =
       _OQS_KEM_ml_kem_768_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -1949,82 +2409,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_768_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_768_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_768_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_768_keypair');
+  late final _OQS_KEM_ml_kem_768_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_ml_kem_768_keypair');
   late final _OQS_KEM_ml_kem_768_keypair =
       _OQS_KEM_ml_kem_768_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_768_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_768_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_768_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_768_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_768_keypair_derand');
+  late final _OQS_KEM_ml_kem_768_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_768_keypair_derand');
   late final _OQS_KEM_ml_kem_768_keypair_derand =
       _OQS_KEM_ml_kem_768_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_768_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_768_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_768_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_768_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_768_encaps');
+  late final _OQS_KEM_ml_kem_768_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_768_encaps');
   late final _OQS_KEM_ml_kem_768_encaps =
       _OQS_KEM_ml_kem_768_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_768_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_768_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_768_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_768_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_768_decaps');
+  late final _OQS_KEM_ml_kem_768_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_768_decaps');
   late final _OQS_KEM_ml_kem_768_decaps =
       _OQS_KEM_ml_kem_768_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_ml_kem_1024_new() {
     return _OQS_KEM_ml_kem_1024_new();
@@ -2032,7 +2518,8 @@ class LibOQSBindings {
 
   late final _OQS_KEM_ml_kem_1024_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_ml_kem_1024_new');
+        'OQS_KEM_ml_kem_1024_new',
+      );
   late final _OQS_KEM_ml_kem_1024_new =
       _OQS_KEM_ml_kem_1024_newPtr.asFunction<ffi.Pointer<OQS_KEM> Function()>();
 
@@ -2040,82 +2527,108 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_1024_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_1024_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_1024_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_1024_keypair');
+  late final _OQS_KEM_ml_kem_1024_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_ml_kem_1024_keypair');
   late final _OQS_KEM_ml_kem_1024_keypair =
       _OQS_KEM_ml_kem_1024_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_1024_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_1024_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_1024_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_1024_keypair_derandPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_1024_keypair_derand');
+  late final _OQS_KEM_ml_kem_1024_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_1024_keypair_derand');
   late final _OQS_KEM_ml_kem_1024_keypair_derand =
       _OQS_KEM_ml_kem_1024_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_1024_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_1024_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_1024_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_1024_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_1024_encaps');
+  late final _OQS_KEM_ml_kem_1024_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_1024_encaps');
   late final _OQS_KEM_ml_kem_1024_encaps =
       _OQS_KEM_ml_kem_1024_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ml_kem_1024_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ml_kem_1024_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ml_kem_1024_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ml_kem_1024_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ml_kem_1024_decaps');
+  late final _OQS_KEM_ml_kem_1024_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ml_kem_1024_decaps');
   late final _OQS_KEM_ml_kem_1024_decaps =
       _OQS_KEM_ml_kem_1024_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_ntruprime_sntrup761_new() {
     return _OQS_KEM_ntruprime_sntrup761_new();
@@ -2123,92 +2636,127 @@ class LibOQSBindings {
 
   late final _OQS_KEM_ntruprime_sntrup761_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_ntruprime_sntrup761_new');
+        'OQS_KEM_ntruprime_sntrup761_new',
+      );
   late final _OQS_KEM_ntruprime_sntrup761_new =
       _OQS_KEM_ntruprime_sntrup761_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_ntruprime_sntrup761_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ntruprime_sntrup761_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ntruprime_sntrup761_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_ntruprime_sntrup761_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ntruprime_sntrup761_keypair');
+  late final _OQS_KEM_ntruprime_sntrup761_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_ntruprime_sntrup761_keypair');
   late final _OQS_KEM_ntruprime_sntrup761_keypair =
       _OQS_KEM_ntruprime_sntrup761_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_ntruprime_sntrup761_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ntruprime_sntrup761_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ntruprime_sntrup761_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_ntruprime_sntrup761_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_ntruprime_sntrup761_keypair_derand');
+  late final _OQS_KEM_ntruprime_sntrup761_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ntruprime_sntrup761_keypair_derand');
   late final _OQS_KEM_ntruprime_sntrup761_keypair_derand =
       _OQS_KEM_ntruprime_sntrup761_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ntruprime_sntrup761_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ntruprime_sntrup761_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ntruprime_sntrup761_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_ntruprime_sntrup761_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ntruprime_sntrup761_encaps');
+  late final _OQS_KEM_ntruprime_sntrup761_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ntruprime_sntrup761_encaps');
   late final _OQS_KEM_ntruprime_sntrup761_encaps =
       _OQS_KEM_ntruprime_sntrup761_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_ntruprime_sntrup761_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_ntruprime_sntrup761_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_ntruprime_sntrup761_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_ntruprime_sntrup761_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_ntruprime_sntrup761_decaps');
+  late final _OQS_KEM_ntruprime_sntrup761_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_ntruprime_sntrup761_decaps');
   late final _OQS_KEM_ntruprime_sntrup761_decaps =
       _OQS_KEM_ntruprime_sntrup761_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_640_aes_new() {
     return _OQS_KEM_frodokem_640_aes_new();
@@ -2216,91 +2764,119 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_640_aes_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_640_aes_new');
-  late final _OQS_KEM_frodokem_640_aes_new = _OQS_KEM_frodokem_640_aes_newPtr
-      .asFunction<ffi.Pointer<OQS_KEM> Function()>();
+        'OQS_KEM_frodokem_640_aes_new',
+      );
+  late final _OQS_KEM_frodokem_640_aes_new =
+      _OQS_KEM_frodokem_640_aes_newPtr.asFunction<
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_aes_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_aes_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_aes_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_aes_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_aes_keypair');
+  late final _OQS_KEM_frodokem_640_aes_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_640_aes_keypair');
   late final _OQS_KEM_frodokem_640_aes_keypair =
       _OQS_KEM_frodokem_640_aes_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_aes_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_aes_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_aes_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_aes_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_640_aes_keypair_derand');
+  late final _OQS_KEM_frodokem_640_aes_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_aes_keypair_derand');
   late final _OQS_KEM_frodokem_640_aes_keypair_derand =
       _OQS_KEM_frodokem_640_aes_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_aes_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_aes_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_aes_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_aes_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_aes_encaps');
+  late final _OQS_KEM_frodokem_640_aes_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_aes_encaps');
   late final _OQS_KEM_frodokem_640_aes_encaps =
       _OQS_KEM_frodokem_640_aes_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_aes_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_aes_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_aes_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_aes_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_aes_decaps');
+  late final _OQS_KEM_frodokem_640_aes_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_aes_decaps');
   late final _OQS_KEM_frodokem_640_aes_decaps =
       _OQS_KEM_frodokem_640_aes_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_640_shake_new() {
     return _OQS_KEM_frodokem_640_shake_new();
@@ -2308,92 +2884,119 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_640_shake_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_640_shake_new');
+        'OQS_KEM_frodokem_640_shake_new',
+      );
   late final _OQS_KEM_frodokem_640_shake_new =
       _OQS_KEM_frodokem_640_shake_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_shake_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_shake_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_shake_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_shake_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_shake_keypair');
+  late final _OQS_KEM_frodokem_640_shake_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_640_shake_keypair');
   late final _OQS_KEM_frodokem_640_shake_keypair =
       _OQS_KEM_frodokem_640_shake_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_shake_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_shake_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_shake_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_shake_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_640_shake_keypair_derand');
+  late final _OQS_KEM_frodokem_640_shake_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_shake_keypair_derand');
   late final _OQS_KEM_frodokem_640_shake_keypair_derand =
       _OQS_KEM_frodokem_640_shake_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_shake_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_shake_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_shake_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_shake_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_shake_encaps');
+  late final _OQS_KEM_frodokem_640_shake_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_shake_encaps');
   late final _OQS_KEM_frodokem_640_shake_encaps =
       _OQS_KEM_frodokem_640_shake_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_640_shake_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_640_shake_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_640_shake_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_640_shake_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_640_shake_decaps');
+  late final _OQS_KEM_frodokem_640_shake_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_640_shake_decaps');
   late final _OQS_KEM_frodokem_640_shake_decaps =
       _OQS_KEM_frodokem_640_shake_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_976_aes_new() {
     return _OQS_KEM_frodokem_976_aes_new();
@@ -2401,91 +3004,119 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_976_aes_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_976_aes_new');
-  late final _OQS_KEM_frodokem_976_aes_new = _OQS_KEM_frodokem_976_aes_newPtr
-      .asFunction<ffi.Pointer<OQS_KEM> Function()>();
+        'OQS_KEM_frodokem_976_aes_new',
+      );
+  late final _OQS_KEM_frodokem_976_aes_new =
+      _OQS_KEM_frodokem_976_aes_newPtr.asFunction<
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_aes_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_aes_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_aes_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_aes_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_aes_keypair');
+  late final _OQS_KEM_frodokem_976_aes_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_976_aes_keypair');
   late final _OQS_KEM_frodokem_976_aes_keypair =
       _OQS_KEM_frodokem_976_aes_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_aes_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_aes_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_aes_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_aes_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_976_aes_keypair_derand');
+  late final _OQS_KEM_frodokem_976_aes_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_aes_keypair_derand');
   late final _OQS_KEM_frodokem_976_aes_keypair_derand =
       _OQS_KEM_frodokem_976_aes_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_aes_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_aes_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_aes_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_aes_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_aes_encaps');
+  late final _OQS_KEM_frodokem_976_aes_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_aes_encaps');
   late final _OQS_KEM_frodokem_976_aes_encaps =
       _OQS_KEM_frodokem_976_aes_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_aes_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_aes_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_aes_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_aes_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_aes_decaps');
+  late final _OQS_KEM_frodokem_976_aes_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_aes_decaps');
   late final _OQS_KEM_frodokem_976_aes_decaps =
       _OQS_KEM_frodokem_976_aes_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_976_shake_new() {
     return _OQS_KEM_frodokem_976_shake_new();
@@ -2493,92 +3124,119 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_976_shake_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_976_shake_new');
+        'OQS_KEM_frodokem_976_shake_new',
+      );
   late final _OQS_KEM_frodokem_976_shake_new =
       _OQS_KEM_frodokem_976_shake_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_shake_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_shake_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_shake_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_shake_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_shake_keypair');
+  late final _OQS_KEM_frodokem_976_shake_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_976_shake_keypair');
   late final _OQS_KEM_frodokem_976_shake_keypair =
       _OQS_KEM_frodokem_976_shake_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_shake_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_shake_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_shake_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_shake_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_976_shake_keypair_derand');
+  late final _OQS_KEM_frodokem_976_shake_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_shake_keypair_derand');
   late final _OQS_KEM_frodokem_976_shake_keypair_derand =
       _OQS_KEM_frodokem_976_shake_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_shake_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_shake_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_shake_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_shake_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_shake_encaps');
+  late final _OQS_KEM_frodokem_976_shake_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_shake_encaps');
   late final _OQS_KEM_frodokem_976_shake_encaps =
       _OQS_KEM_frodokem_976_shake_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_976_shake_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_976_shake_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_976_shake_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_976_shake_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_976_shake_decaps');
+  late final _OQS_KEM_frodokem_976_shake_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_976_shake_decaps');
   late final _OQS_KEM_frodokem_976_shake_decaps =
       _OQS_KEM_frodokem_976_shake_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_1344_aes_new() {
     return _OQS_KEM_frodokem_1344_aes_new();
@@ -2586,91 +3244,119 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_1344_aes_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_1344_aes_new');
-  late final _OQS_KEM_frodokem_1344_aes_new = _OQS_KEM_frodokem_1344_aes_newPtr
-      .asFunction<ffi.Pointer<OQS_KEM> Function()>();
+        'OQS_KEM_frodokem_1344_aes_new',
+      );
+  late final _OQS_KEM_frodokem_1344_aes_new =
+      _OQS_KEM_frodokem_1344_aes_newPtr.asFunction<
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_aes_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_aes_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_aes_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_aes_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_aes_keypair');
+  late final _OQS_KEM_frodokem_1344_aes_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_1344_aes_keypair');
   late final _OQS_KEM_frodokem_1344_aes_keypair =
       _OQS_KEM_frodokem_1344_aes_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_aes_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_aes_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_aes_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_aes_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_1344_aes_keypair_derand');
+  late final _OQS_KEM_frodokem_1344_aes_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_aes_keypair_derand');
   late final _OQS_KEM_frodokem_1344_aes_keypair_derand =
       _OQS_KEM_frodokem_1344_aes_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_aes_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_aes_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_aes_encaps(ciphertext, shared_secret, public_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_aes_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_aes_encaps');
+  late final _OQS_KEM_frodokem_1344_aes_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_aes_encaps');
   late final _OQS_KEM_frodokem_1344_aes_encaps =
       _OQS_KEM_frodokem_1344_aes_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_aes_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_aes_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_aes_decaps(shared_secret, ciphertext, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_aes_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_aes_decaps');
+  late final _OQS_KEM_frodokem_1344_aes_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_aes_decaps');
   late final _OQS_KEM_frodokem_1344_aes_decaps =
       _OQS_KEM_frodokem_1344_aes_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_KEM> OQS_KEM_frodokem_1344_shake_new() {
     return _OQS_KEM_frodokem_1344_shake_new();
@@ -2678,92 +3364,127 @@ class LibOQSBindings {
 
   late final _OQS_KEM_frodokem_1344_shake_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_KEM> Function()>>(
-          'OQS_KEM_frodokem_1344_shake_new');
+        'OQS_KEM_frodokem_1344_shake_new',
+      );
   late final _OQS_KEM_frodokem_1344_shake_new =
       _OQS_KEM_frodokem_1344_shake_newPtr.asFunction<
-          ffi.Pointer<OQS_KEM> Function()>();
+        ffi.Pointer<OQS_KEM> Function()
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_shake_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_shake_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_shake_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_shake_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_shake_keypair');
+  late final _OQS_KEM_frodokem_1344_shake_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_KEM_frodokem_1344_shake_keypair');
   late final _OQS_KEM_frodokem_1344_shake_keypair =
       _OQS_KEM_frodokem_1344_shake_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_shake_keypair_derand(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
     ffi.Pointer<ffi.Uint8> seed,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_shake_keypair_derand(
-      public_key,
-      secret_key,
-      seed,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_shake_keypair_derand(public_key, secret_key, seed),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_shake_keypair_derandPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_KEM_frodokem_1344_shake_keypair_derand');
+  late final _OQS_KEM_frodokem_1344_shake_keypair_derandPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_shake_keypair_derand');
   late final _OQS_KEM_frodokem_1344_shake_keypair_derand =
       _OQS_KEM_frodokem_1344_shake_keypair_derandPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_shake_encaps(
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_shake_encaps(
-      ciphertext,
-      shared_secret,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_shake_encaps(
+        ciphertext,
+        shared_secret,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_shake_encapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_shake_encaps');
+  late final _OQS_KEM_frodokem_1344_shake_encapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_shake_encaps');
   late final _OQS_KEM_frodokem_1344_shake_encaps =
       _OQS_KEM_frodokem_1344_shake_encapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_KEM_frodokem_1344_shake_decaps(
     ffi.Pointer<ffi.Uint8> shared_secret,
     ffi.Pointer<ffi.Uint8> ciphertext,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_KEM_frodokem_1344_shake_decaps(
-      shared_secret,
-      ciphertext,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_KEM_frodokem_1344_shake_decaps(
+        shared_secret,
+        ciphertext,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_KEM_frodokem_1344_shake_decapsPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_KEM_frodokem_1344_shake_decaps');
+  late final _OQS_KEM_frodokem_1344_shake_decapsPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_KEM_frodokem_1344_shake_decaps');
   late final _OQS_KEM_frodokem_1344_shake_decaps =
       _OQS_KEM_frodokem_1344_shake_decapsPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Returns identifiers for available signature schemes in liboqs.  Used with OQS_SIG_new.
   ///
@@ -2772,19 +3493,18 @@ class LibOQSBindings {
   ///
   /// @param[in] i Index of the algorithm identifier to return, 0 <= i < OQS_SIG_algs_length
   /// @return Algorithm identifier as a string, or NULL.
-  ffi.Pointer<ffi.Char> OQS_SIG_alg_identifier(
-    int i,
-  ) {
-    return _OQS_SIG_alg_identifier(
-      i,
-    );
+  ffi.Pointer<ffi.Char> OQS_SIG_alg_identifier(int i) {
+    return _OQS_SIG_alg_identifier(i);
   }
 
   late final _OQS_SIG_alg_identifierPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Size)>>(
-          'OQS_SIG_alg_identifier');
-  late final _OQS_SIG_alg_identifier = _OQS_SIG_alg_identifierPtr.asFunction<
-      ffi.Pointer<ffi.Char> Function(int)>();
+        'OQS_SIG_alg_identifier',
+      );
+  late final _OQS_SIG_alg_identifier =
+      _OQS_SIG_alg_identifierPtr.asFunction<
+        ffi.Pointer<ffi.Char> Function(int)
+      >();
 
   /// Returns the number of signature mechanisms in liboqs.  They can be enumerated with
   /// OQS_SIG_alg_identifier.
@@ -2805,19 +3525,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_SIG_algs`.
   /// @return 1 if enabled, 0 if disabled or not found
-  int OQS_SIG_alg_is_enabled(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_SIG_alg_is_enabled(
-      method_name,
-    );
+  int OQS_SIG_alg_is_enabled(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_SIG_alg_is_enabled(method_name);
   }
 
   late final _OQS_SIG_alg_is_enabledPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'OQS_SIG_alg_is_enabled');
-  late final _OQS_SIG_alg_is_enabled = _OQS_SIG_alg_is_enabledPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>)>();
+        'OQS_SIG_alg_is_enabled',
+      );
+  late final _OQS_SIG_alg_is_enabled =
+      _OQS_SIG_alg_is_enabledPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Constructs an OQS_SIG object for a particular algorithm.
   ///
@@ -2826,19 +3545,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_SIG_algs`.
   /// @return An OQS_SIG for the particular algorithm, or `NULL` if the algorithm has been disabled at compile-time.
-  ffi.Pointer<OQS_SIG> OQS_SIG_new(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_SIG_new(
-      method_name,
-    );
+  ffi.Pointer<OQS_SIG> OQS_SIG_new(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_SIG_new(method_name);
   }
 
-  late final _OQS_SIG_newPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)>>('OQS_SIG_new');
-  late final _OQS_SIG_new = _OQS_SIG_newPtr.asFunction<
-      ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)>();
+  late final _OQS_SIG_newPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)>
+      >('OQS_SIG_new');
+  late final _OQS_SIG_new =
+      _OQS_SIG_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Keypair generation algorithm.
   ///
@@ -2855,20 +3573,27 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_keypair(
-      sig,
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(_OQS_SIG_keypair(sig, public_key, secret_key));
   }
 
-  late final _OQS_SIG_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_keypair');
-  late final _OQS_SIG_keypair = _OQS_SIG_keypairPtr.asFunction<
-      int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_SIG_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_keypair');
+  late final _OQS_SIG_keypair =
+      _OQS_SIG_keypairPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Signature generation algorithm.
   ///
@@ -2891,33 +3616,42 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sign(
-      sig,
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sign(
+        sig,
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_sign');
-  late final _OQS_SIG_sign = _OQS_SIG_signPtr.asFunction<
-      int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sign');
+  late final _OQS_SIG_sign =
+      _OQS_SIG_signPtr.asFunction<
+        int Function(
           ffi.Pointer<OQS_SIG>,
           ffi.Pointer<ffi.Uint8>,
           ffi.Pointer<ffi.Size>,
           ffi.Pointer<ffi.Uint8>,
           int,
-          ffi.Pointer<ffi.Uint8>)>();
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Signature generation algorithm, with custom context string.
   ///
@@ -2944,40 +3678,48 @@ class LibOQSBindings {
     int ctx_str_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sign_with_ctx_str(
-      sig,
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx_str,
-      ctx_str_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sign_with_ctx_str(
+        sig,
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx_str,
+        ctx_str_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_sign_with_ctx_str');
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sign_with_ctx_str');
   late final _OQS_SIG_sign_with_ctx_str =
       _OQS_SIG_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Signature verification algorithm.
   ///
@@ -2996,28 +3738,42 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_verify(
-      sig,
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_verify(
+        sig,
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_verify');
-  late final _OQS_SIG_verify = _OQS_SIG_verifyPtr.asFunction<
-      int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_verify');
+  late final _OQS_SIG_verify =
+      _OQS_SIG_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Signature verification algorithm, with custom context string.
   ///
@@ -3040,55 +3796,60 @@ class LibOQSBindings {
     int ctx_str_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_verify_with_ctx_str(
-      sig,
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx_str,
-      ctx_str_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_verify_with_ctx_str(
+        sig,
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx_str,
+        ctx_str_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_verify_with_ctx_str');
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_verify_with_ctx_str');
   late final _OQS_SIG_verify_with_ctx_str =
       _OQS_SIG_verify_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Frees an OQS_SIG object that was constructed by OQS_SIG_new.
   ///
   /// @param[in] sig The OQS_SIG object to free.
-  void OQS_SIG_free(
-    ffi.Pointer<OQS_SIG> sig,
-  ) {
-    return _OQS_SIG_free(
-      sig,
-    );
+  void OQS_SIG_free(ffi.Pointer<OQS_SIG> sig) {
+    return _OQS_SIG_free(sig);
   }
 
   late final _OQS_SIG_freePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SIG>)>>(
-          'OQS_SIG_free');
+        'OQS_SIG_free',
+      );
   late final _OQS_SIG_free =
       _OQS_SIG_freePtr.asFunction<void Function(ffi.Pointer<OQS_SIG>)>();
 
@@ -3096,19 +3857,18 @@ class LibOQSBindings {
   ///
   /// @param[in] alg_name Name of the desired algorithm; one of the names in `OQS_SIG_algs`.
   /// @return true if the algorithm supports context string signing, false otherwise.
-  bool OQS_SIG_supports_ctx_str(
-    ffi.Pointer<ffi.Char> alg_name,
-  ) {
-    return _OQS_SIG_supports_ctx_str(
-      alg_name,
-    );
+  bool OQS_SIG_supports_ctx_str(ffi.Pointer<ffi.Char> alg_name) {
+    return _OQS_SIG_supports_ctx_str(alg_name);
   }
 
   late final _OQS_SIG_supports_ctx_strPtr =
       _lookup<ffi.NativeFunction<ffi.Bool Function(ffi.Pointer<ffi.Char>)>>(
-          'OQS_SIG_supports_ctx_str');
-  late final _OQS_SIG_supports_ctx_str = _OQS_SIG_supports_ctx_strPtr
-      .asFunction<bool Function(ffi.Pointer<ffi.Char>)>();
+        'OQS_SIG_supports_ctx_str',
+      );
+  late final _OQS_SIG_supports_ctx_str =
+      _OQS_SIG_supports_ctx_strPtr.asFunction<
+        bool Function(ffi.Pointer<ffi.Char>)
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_dilithium_2_new() {
     return _OQS_SIG_dilithium_2_new();
@@ -3116,7 +3876,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_dilithium_2_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_dilithium_2_new');
+        'OQS_SIG_dilithium_2_new',
+      );
   late final _OQS_SIG_dilithium_2_new =
       _OQS_SIG_dilithium_2_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3124,19 +3885,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_2_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_2_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_dilithium_2_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_2_keypair');
+  late final _OQS_SIG_dilithium_2_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_dilithium_2_keypair');
   late final _OQS_SIG_dilithium_2_keypair =
       _OQS_SIG_dilithium_2_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_2_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3145,27 +3908,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_2_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_2_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_2_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_2_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_2_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_2_sign');
   late final _OQS_SIG_dilithium_2_sign =
       _OQS_SIG_dilithium_2_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_2_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3174,27 +3949,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_2_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_2_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_2_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_2_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_2_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_2_verify');
   late final _OQS_SIG_dilithium_2_verify =
       _OQS_SIG_dilithium_2_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_2_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3205,38 +3992,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_2_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_2_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_2_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_2_sign_with_ctx_str');
+  late final _OQS_SIG_dilithium_2_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_2_sign_with_ctx_str');
   late final _OQS_SIG_dilithium_2_sign_with_ctx_str =
       _OQS_SIG_dilithium_2_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_2_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -3247,32 +4041,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_2_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_2_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_2_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_2_verify_with_ctx_str');
+  late final _OQS_SIG_dilithium_2_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_2_verify_with_ctx_str');
   late final _OQS_SIG_dilithium_2_verify_with_ctx_str =
       _OQS_SIG_dilithium_2_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_dilithium_3_new() {
     return _OQS_SIG_dilithium_3_new();
@@ -3280,7 +4087,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_dilithium_3_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_dilithium_3_new');
+        'OQS_SIG_dilithium_3_new',
+      );
   late final _OQS_SIG_dilithium_3_new =
       _OQS_SIG_dilithium_3_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3288,19 +4096,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_3_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_3_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_dilithium_3_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_3_keypair');
+  late final _OQS_SIG_dilithium_3_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_dilithium_3_keypair');
   late final _OQS_SIG_dilithium_3_keypair =
       _OQS_SIG_dilithium_3_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_3_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3309,27 +4119,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_3_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_3_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_3_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_3_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_3_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_3_sign');
   late final _OQS_SIG_dilithium_3_sign =
       _OQS_SIG_dilithium_3_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_3_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3338,27 +4160,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_3_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_3_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_3_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_3_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_3_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_3_verify');
   late final _OQS_SIG_dilithium_3_verify =
       _OQS_SIG_dilithium_3_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_3_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3369,38 +4203,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_3_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_3_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_3_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_3_sign_with_ctx_str');
+  late final _OQS_SIG_dilithium_3_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_3_sign_with_ctx_str');
   late final _OQS_SIG_dilithium_3_sign_with_ctx_str =
       _OQS_SIG_dilithium_3_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_3_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -3411,32 +4252,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_3_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_3_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_3_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_3_verify_with_ctx_str');
+  late final _OQS_SIG_dilithium_3_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_3_verify_with_ctx_str');
   late final _OQS_SIG_dilithium_3_verify_with_ctx_str =
       _OQS_SIG_dilithium_3_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_dilithium_5_new() {
     return _OQS_SIG_dilithium_5_new();
@@ -3444,7 +4298,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_dilithium_5_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_dilithium_5_new');
+        'OQS_SIG_dilithium_5_new',
+      );
   late final _OQS_SIG_dilithium_5_new =
       _OQS_SIG_dilithium_5_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3452,19 +4307,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_5_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_5_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_dilithium_5_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_5_keypair');
+  late final _OQS_SIG_dilithium_5_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_dilithium_5_keypair');
   late final _OQS_SIG_dilithium_5_keypair =
       _OQS_SIG_dilithium_5_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_5_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3473,27 +4330,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_5_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_5_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_5_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_5_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_5_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_5_sign');
   late final _OQS_SIG_dilithium_5_sign =
       _OQS_SIG_dilithium_5_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_5_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3502,27 +4371,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_5_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_5_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_5_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_dilithium_5_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_dilithium_5_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_5_verify');
   late final _OQS_SIG_dilithium_5_verify =
       _OQS_SIG_dilithium_5_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_5_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3533,38 +4414,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_5_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_5_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_5_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_5_sign_with_ctx_str');
+  late final _OQS_SIG_dilithium_5_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_5_sign_with_ctx_str');
   late final _OQS_SIG_dilithium_5_sign_with_ctx_str =
       _OQS_SIG_dilithium_5_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_dilithium_5_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -3575,32 +4463,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_dilithium_5_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_dilithium_5_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_dilithium_5_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_dilithium_5_verify_with_ctx_str');
+  late final _OQS_SIG_dilithium_5_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_dilithium_5_verify_with_ctx_str');
   late final _OQS_SIG_dilithium_5_verify_with_ctx_str =
       _OQS_SIG_dilithium_5_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_ml_dsa_44_new() {
     return _OQS_SIG_ml_dsa_44_new();
@@ -3608,7 +4509,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_ml_dsa_44_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_ml_dsa_44_new');
+        'OQS_SIG_ml_dsa_44_new',
+      );
   late final _OQS_SIG_ml_dsa_44_new =
       _OQS_SIG_ml_dsa_44_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3616,19 +4518,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_44_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_44_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_44_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_44_keypair');
+  late final _OQS_SIG_ml_dsa_44_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_ml_dsa_44_keypair');
   late final _OQS_SIG_ml_dsa_44_keypair =
       _OQS_SIG_ml_dsa_44_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_44_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3637,26 +4541,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_44_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_44_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_44_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_44_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_44_sign');
-  late final _OQS_SIG_ml_dsa_44_sign = _OQS_SIG_ml_dsa_44_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_44_sign');
+  late final _OQS_SIG_ml_dsa_44_sign =
+      _OQS_SIG_ml_dsa_44_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_44_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3665,27 +4582,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_44_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_44_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_44_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_44_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_44_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_44_verify');
   late final _OQS_SIG_ml_dsa_44_verify =
       _OQS_SIG_ml_dsa_44_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_44_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3696,37 +4625,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_44_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_44_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_44_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_44_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_44_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_44_sign_with_ctx_str');
   late final _OQS_SIG_ml_dsa_44_sign_with_ctx_str =
       _OQS_SIG_ml_dsa_44_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_44_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -3737,32 +4674,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_44_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_44_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_44_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_ml_dsa_44_verify_with_ctx_str');
+  late final _OQS_SIG_ml_dsa_44_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_44_verify_with_ctx_str');
   late final _OQS_SIG_ml_dsa_44_verify_with_ctx_str =
       _OQS_SIG_ml_dsa_44_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_ml_dsa_65_new() {
     return _OQS_SIG_ml_dsa_65_new();
@@ -3770,7 +4720,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_ml_dsa_65_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_ml_dsa_65_new');
+        'OQS_SIG_ml_dsa_65_new',
+      );
   late final _OQS_SIG_ml_dsa_65_new =
       _OQS_SIG_ml_dsa_65_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3778,19 +4729,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_65_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_65_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_65_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_65_keypair');
+  late final _OQS_SIG_ml_dsa_65_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_ml_dsa_65_keypair');
   late final _OQS_SIG_ml_dsa_65_keypair =
       _OQS_SIG_ml_dsa_65_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_65_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3799,26 +4752,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_65_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_65_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_65_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_65_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_65_sign');
-  late final _OQS_SIG_ml_dsa_65_sign = _OQS_SIG_ml_dsa_65_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_65_sign');
+  late final _OQS_SIG_ml_dsa_65_sign =
+      _OQS_SIG_ml_dsa_65_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_65_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3827,27 +4793,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_65_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_65_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_65_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_65_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_65_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_65_verify');
   late final _OQS_SIG_ml_dsa_65_verify =
       _OQS_SIG_ml_dsa_65_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_65_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3858,37 +4836,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_65_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_65_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_65_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_65_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_65_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_65_sign_with_ctx_str');
   late final _OQS_SIG_ml_dsa_65_sign_with_ctx_str =
       _OQS_SIG_ml_dsa_65_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_65_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -3899,32 +4885,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_65_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_65_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_65_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_ml_dsa_65_verify_with_ctx_str');
+  late final _OQS_SIG_ml_dsa_65_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_65_verify_with_ctx_str');
   late final _OQS_SIG_ml_dsa_65_verify_with_ctx_str =
       _OQS_SIG_ml_dsa_65_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_ml_dsa_87_new() {
     return _OQS_SIG_ml_dsa_87_new();
@@ -3932,7 +4931,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_ml_dsa_87_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_ml_dsa_87_new');
+        'OQS_SIG_ml_dsa_87_new',
+      );
   late final _OQS_SIG_ml_dsa_87_new =
       _OQS_SIG_ml_dsa_87_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -3940,19 +4940,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_87_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_87_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_87_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_87_keypair');
+  late final _OQS_SIG_ml_dsa_87_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_ml_dsa_87_keypair');
   late final _OQS_SIG_ml_dsa_87_keypair =
       _OQS_SIG_ml_dsa_87_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_87_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -3961,26 +4963,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_87_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_87_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_87_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_87_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_87_sign');
-  late final _OQS_SIG_ml_dsa_87_sign = _OQS_SIG_ml_dsa_87_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_87_sign');
+  late final _OQS_SIG_ml_dsa_87_sign =
+      _OQS_SIG_ml_dsa_87_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_87_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -3989,27 +5004,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_87_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_87_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_87_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_87_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_87_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_87_verify');
   late final _OQS_SIG_ml_dsa_87_verify =
       _OQS_SIG_ml_dsa_87_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_87_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4020,37 +5047,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_87_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_87_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_87_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_ml_dsa_87_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_ml_dsa_87_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_87_sign_with_ctx_str');
   late final _OQS_SIG_ml_dsa_87_sign_with_ctx_str =
       _OQS_SIG_ml_dsa_87_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_ml_dsa_87_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4061,32 +5096,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_ml_dsa_87_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_ml_dsa_87_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_ml_dsa_87_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_ml_dsa_87_verify_with_ctx_str');
+  late final _OQS_SIG_ml_dsa_87_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_ml_dsa_87_verify_with_ctx_str');
   late final _OQS_SIG_ml_dsa_87_verify_with_ctx_str =
       _OQS_SIG_ml_dsa_87_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_falcon_512_new() {
     return _OQS_SIG_falcon_512_new();
@@ -4094,7 +5142,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_falcon_512_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_falcon_512_new');
+        'OQS_SIG_falcon_512_new',
+      );
   late final _OQS_SIG_falcon_512_new =
       _OQS_SIG_falcon_512_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -4102,19 +5151,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_512_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_512_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_falcon_512_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_512_keypair');
+  late final _OQS_SIG_falcon_512_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_falcon_512_keypair');
   late final _OQS_SIG_falcon_512_keypair =
       _OQS_SIG_falcon_512_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_falcon_512_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4123,26 +5174,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_512_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_512_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_512_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_512_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_512_sign');
-  late final _OQS_SIG_falcon_512_sign = _OQS_SIG_falcon_512_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_512_sign');
+  late final _OQS_SIG_falcon_512_sign =
+      _OQS_SIG_falcon_512_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_512_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4151,27 +5215,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_512_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_512_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_512_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_512_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_512_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_512_verify');
   late final _OQS_SIG_falcon_512_verify =
       _OQS_SIG_falcon_512_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_512_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4182,37 +5258,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_512_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_512_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_512_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_512_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_512_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_512_sign_with_ctx_str');
   late final _OQS_SIG_falcon_512_sign_with_ctx_str =
       _OQS_SIG_falcon_512_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_512_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4223,32 +5307,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_512_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_512_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_512_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_512_verify_with_ctx_str');
+  late final _OQS_SIG_falcon_512_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_512_verify_with_ctx_str');
   late final _OQS_SIG_falcon_512_verify_with_ctx_str =
       _OQS_SIG_falcon_512_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_falcon_1024_new() {
     return _OQS_SIG_falcon_1024_new();
@@ -4256,7 +5353,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_falcon_1024_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_falcon_1024_new');
+        'OQS_SIG_falcon_1024_new',
+      );
   late final _OQS_SIG_falcon_1024_new =
       _OQS_SIG_falcon_1024_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -4264,19 +5362,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_1024_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_1024_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_falcon_1024_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_1024_keypair');
+  late final _OQS_SIG_falcon_1024_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_falcon_1024_keypair');
   late final _OQS_SIG_falcon_1024_keypair =
       _OQS_SIG_falcon_1024_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_falcon_1024_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4285,27 +5385,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_1024_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_1024_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_1024_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_1024_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_1024_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_1024_sign');
   late final _OQS_SIG_falcon_1024_sign =
       _OQS_SIG_falcon_1024_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_1024_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4314,27 +5426,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_1024_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_1024_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_1024_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_1024_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_1024_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_1024_verify');
   late final _OQS_SIG_falcon_1024_verify =
       _OQS_SIG_falcon_1024_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_1024_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4345,38 +5469,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_1024_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_1024_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_1024_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_1024_sign_with_ctx_str');
+  late final _OQS_SIG_falcon_1024_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_1024_sign_with_ctx_str');
   late final _OQS_SIG_falcon_1024_sign_with_ctx_str =
       _OQS_SIG_falcon_1024_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_1024_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4387,32 +5518,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_1024_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_1024_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_1024_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_1024_verify_with_ctx_str');
+  late final _OQS_SIG_falcon_1024_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_1024_verify_with_ctx_str');
   late final _OQS_SIG_falcon_1024_verify_with_ctx_str =
       _OQS_SIG_falcon_1024_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_falcon_padded_512_new() {
     return _OQS_SIG_falcon_padded_512_new();
@@ -4420,27 +5564,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_falcon_padded_512_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_falcon_padded_512_new');
-  late final _OQS_SIG_falcon_padded_512_new = _OQS_SIG_falcon_padded_512_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_falcon_padded_512_new',
+      );
+  late final _OQS_SIG_falcon_padded_512_new =
+      _OQS_SIG_falcon_padded_512_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_512_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_512_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_512_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_512_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_512_keypair');
+  late final _OQS_SIG_falcon_padded_512_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_falcon_padded_512_keypair');
   late final _OQS_SIG_falcon_padded_512_keypair =
       _OQS_SIG_falcon_padded_512_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_512_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4449,27 +5598,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_512_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_512_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_512_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_padded_512_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_512_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_512_sign');
   late final _OQS_SIG_falcon_padded_512_sign =
       _OQS_SIG_falcon_padded_512_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_512_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4478,27 +5639,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_512_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_512_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_512_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_padded_512_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_512_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_512_verify');
   late final _OQS_SIG_falcon_padded_512_verify =
       _OQS_SIG_falcon_padded_512_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_512_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4509,38 +5682,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_512_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_512_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_512_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_padded_512_sign_with_ctx_str');
+  late final _OQS_SIG_falcon_padded_512_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_512_sign_with_ctx_str');
   late final _OQS_SIG_falcon_padded_512_sign_with_ctx_str =
       _OQS_SIG_falcon_padded_512_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_512_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4551,32 +5731,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_512_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_512_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_512_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_padded_512_verify_with_ctx_str');
+  late final _OQS_SIG_falcon_padded_512_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_512_verify_with_ctx_str');
   late final _OQS_SIG_falcon_padded_512_verify_with_ctx_str =
       _OQS_SIG_falcon_padded_512_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_falcon_padded_1024_new() {
     return _OQS_SIG_falcon_padded_1024_new();
@@ -4584,28 +5777,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_falcon_padded_1024_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_falcon_padded_1024_new');
+        'OQS_SIG_falcon_padded_1024_new',
+      );
   late final _OQS_SIG_falcon_padded_1024_new =
       _OQS_SIG_falcon_padded_1024_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_1024_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_1024_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_1024_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_1024_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_1024_keypair');
+  late final _OQS_SIG_falcon_padded_1024_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_falcon_padded_1024_keypair');
   late final _OQS_SIG_falcon_padded_1024_keypair =
       _OQS_SIG_falcon_padded_1024_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_1024_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4614,27 +5811,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_1024_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_1024_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_1024_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_padded_1024_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_1024_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_1024_sign');
   late final _OQS_SIG_falcon_padded_1024_sign =
       _OQS_SIG_falcon_padded_1024_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_1024_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4643,27 +5852,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_1024_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_1024_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_1024_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_falcon_padded_1024_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_falcon_padded_1024_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_1024_verify');
   late final _OQS_SIG_falcon_padded_1024_verify =
       _OQS_SIG_falcon_padded_1024_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_1024_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4674,38 +5895,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_1024_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_1024_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_1024_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_padded_1024_sign_with_ctx_str');
+  late final _OQS_SIG_falcon_padded_1024_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_1024_sign_with_ctx_str');
   late final _OQS_SIG_falcon_padded_1024_sign_with_ctx_str =
       _OQS_SIG_falcon_padded_1024_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_falcon_padded_1024_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4716,32 +5944,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_falcon_padded_1024_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_falcon_padded_1024_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_falcon_padded_1024_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_falcon_padded_1024_verify_with_ctx_str');
+  late final _OQS_SIG_falcon_padded_1024_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_falcon_padded_1024_verify_with_ctx_str');
   late final _OQS_SIG_falcon_padded_1024_verify_with_ctx_str =
       _OQS_SIG_falcon_padded_1024_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_128f_simple_new() {
     return _OQS_SIG_sphincs_sha2_128f_simple_new();
@@ -4749,29 +5990,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_128f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_128f_simple_new');
+        'OQS_SIG_sphincs_sha2_128f_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_128f_simple_new =
       _OQS_SIG_sphincs_sha2_128f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128f_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_128f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_128f_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_128f_simple_keypair =
       _OQS_SIG_sphincs_sha2_128f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4780,24 +6024,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128f_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_128f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128f_simple_sign');
   late final _OQS_SIG_sphincs_sha2_128f_simple_sign =
       _OQS_SIG_sphincs_sha2_128f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4806,24 +6065,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128f_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_128f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128f_simple_verify');
   late final _OQS_SIG_sphincs_sha2_128f_simple_verify =
       _OQS_SIG_sphincs_sha2_128f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4834,39 +6108,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_128f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -4877,33 +6157,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_128f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_128s_simple_new() {
     return _OQS_SIG_sphincs_sha2_128s_simple_new();
@@ -4911,29 +6203,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_128s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_128s_simple_new');
+        'OQS_SIG_sphincs_sha2_128s_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_128s_simple_new =
       _OQS_SIG_sphincs_sha2_128s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128s_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_128s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_128s_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_128s_simple_keypair =
       _OQS_SIG_sphincs_sha2_128s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4942,24 +6237,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128s_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_128s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128s_simple_sign');
   late final _OQS_SIG_sphincs_sha2_128s_simple_sign =
       _OQS_SIG_sphincs_sha2_128s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -4968,24 +6278,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_128s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128s_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_128s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128s_simple_verify');
   late final _OQS_SIG_sphincs_sha2_128s_simple_verify =
       _OQS_SIG_sphincs_sha2_128s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -4996,39 +6321,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_128s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5039,33 +6370,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_128s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_192f_simple_new() {
     return _OQS_SIG_sphincs_sha2_192f_simple_new();
@@ -5073,29 +6416,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_192f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_192f_simple_new');
+        'OQS_SIG_sphincs_sha2_192f_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_192f_simple_new =
       _OQS_SIG_sphincs_sha2_192f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192f_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_192f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_192f_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_192f_simple_keypair =
       _OQS_SIG_sphincs_sha2_192f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5104,24 +6450,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192f_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_192f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192f_simple_sign');
   late final _OQS_SIG_sphincs_sha2_192f_simple_sign =
       _OQS_SIG_sphincs_sha2_192f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5130,24 +6491,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192f_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_192f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192f_simple_verify');
   late final _OQS_SIG_sphincs_sha2_192f_simple_verify =
       _OQS_SIG_sphincs_sha2_192f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5158,39 +6534,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_192f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5201,33 +6583,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_192f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_192s_simple_new() {
     return _OQS_SIG_sphincs_sha2_192s_simple_new();
@@ -5235,29 +6629,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_192s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_192s_simple_new');
+        'OQS_SIG_sphincs_sha2_192s_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_192s_simple_new =
       _OQS_SIG_sphincs_sha2_192s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192s_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_192s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_192s_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_192s_simple_keypair =
       _OQS_SIG_sphincs_sha2_192s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5266,24 +6663,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192s_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_192s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192s_simple_sign');
   late final _OQS_SIG_sphincs_sha2_192s_simple_sign =
       _OQS_SIG_sphincs_sha2_192s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5292,24 +6704,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_192s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192s_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_192s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192s_simple_verify');
   late final _OQS_SIG_sphincs_sha2_192s_simple_verify =
       _OQS_SIG_sphincs_sha2_192s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5320,39 +6747,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_192s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5363,33 +6796,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_192s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_256f_simple_new() {
     return _OQS_SIG_sphincs_sha2_256f_simple_new();
@@ -5397,29 +6842,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_256f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_256f_simple_new');
+        'OQS_SIG_sphincs_sha2_256f_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_256f_simple_new =
       _OQS_SIG_sphincs_sha2_256f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256f_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_256f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_256f_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_256f_simple_keypair =
       _OQS_SIG_sphincs_sha2_256f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5428,24 +6876,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256f_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_256f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256f_simple_sign');
   late final _OQS_SIG_sphincs_sha2_256f_simple_sign =
       _OQS_SIG_sphincs_sha2_256f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5454,24 +6917,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256f_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_256f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256f_simple_verify');
   late final _OQS_SIG_sphincs_sha2_256f_simple_verify =
       _OQS_SIG_sphincs_sha2_256f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5482,39 +6960,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_256f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5525,33 +7009,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_256f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_sha2_256s_simple_new() {
     return _OQS_SIG_sphincs_sha2_256s_simple_new();
@@ -5559,29 +7055,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_sha2_256s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_sha2_256s_simple_new');
+        'OQS_SIG_sphincs_sha2_256s_simple_new',
+      );
   late final _OQS_SIG_sphincs_sha2_256s_simple_new =
       _OQS_SIG_sphincs_sha2_256s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256s_simple_keypair');
+  late final _OQS_SIG_sphincs_sha2_256s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_sha2_256s_simple_keypair');
   late final _OQS_SIG_sphincs_sha2_256s_simple_keypair =
       _OQS_SIG_sphincs_sha2_256s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5590,24 +7089,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256s_simple_sign');
+  late final _OQS_SIG_sphincs_sha2_256s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256s_simple_sign');
   late final _OQS_SIG_sphincs_sha2_256s_simple_sign =
       _OQS_SIG_sphincs_sha2_256s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5616,24 +7130,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_sha2_256s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256s_simple_verify');
+  late final _OQS_SIG_sphincs_sha2_256s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256s_simple_verify');
   late final _OQS_SIG_sphincs_sha2_256s_simple_verify =
       _OQS_SIG_sphincs_sha2_256s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5644,39 +7173,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_sha2_256s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5687,33 +7222,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str');
+  late final _OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_sha2_256s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_128f_simple_new() {
     return _OQS_SIG_sphincs_shake_128f_simple_new();
@@ -5721,29 +7268,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_128f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_128f_simple_new');
+        'OQS_SIG_sphincs_shake_128f_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_128f_simple_new =
       _OQS_SIG_sphincs_shake_128f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128f_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_128f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_128f_simple_keypair');
   late final _OQS_SIG_sphincs_shake_128f_simple_keypair =
       _OQS_SIG_sphincs_shake_128f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5752,24 +7302,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128f_simple_sign');
+  late final _OQS_SIG_sphincs_shake_128f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128f_simple_sign');
   late final _OQS_SIG_sphincs_shake_128f_simple_sign =
       _OQS_SIG_sphincs_shake_128f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5778,24 +7343,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128f_simple_verify');
+  late final _OQS_SIG_sphincs_shake_128f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128f_simple_verify');
   late final _OQS_SIG_sphincs_shake_128f_simple_verify =
       _OQS_SIG_sphincs_shake_128f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5806,39 +7386,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_128f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -5849,34 +7435,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_128f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_128s_simple_new() {
     return _OQS_SIG_sphincs_shake_128s_simple_new();
@@ -5884,29 +7481,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_128s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_128s_simple_new');
+        'OQS_SIG_sphincs_shake_128s_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_128s_simple_new =
       _OQS_SIG_sphincs_shake_128s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128s_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_128s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_128s_simple_keypair');
   late final _OQS_SIG_sphincs_shake_128s_simple_keypair =
       _OQS_SIG_sphincs_shake_128s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5915,24 +7515,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128s_simple_sign');
+  late final _OQS_SIG_sphincs_shake_128s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128s_simple_sign');
   late final _OQS_SIG_sphincs_shake_128s_simple_sign =
       _OQS_SIG_sphincs_shake_128s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -5941,24 +7556,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_128s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128s_simple_verify');
+  late final _OQS_SIG_sphincs_shake_128s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128s_simple_verify');
   late final _OQS_SIG_sphincs_shake_128s_simple_verify =
       _OQS_SIG_sphincs_shake_128s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -5969,39 +7599,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_128s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6012,34 +7648,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_128s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_192f_simple_new() {
     return _OQS_SIG_sphincs_shake_192f_simple_new();
@@ -6047,29 +7694,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_192f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_192f_simple_new');
+        'OQS_SIG_sphincs_shake_192f_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_192f_simple_new =
       _OQS_SIG_sphincs_shake_192f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192f_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_192f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_192f_simple_keypair');
   late final _OQS_SIG_sphincs_shake_192f_simple_keypair =
       _OQS_SIG_sphincs_shake_192f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6078,24 +7728,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192f_simple_sign');
+  late final _OQS_SIG_sphincs_shake_192f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192f_simple_sign');
   late final _OQS_SIG_sphincs_shake_192f_simple_sign =
       _OQS_SIG_sphincs_shake_192f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6104,24 +7769,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192f_simple_verify');
+  late final _OQS_SIG_sphincs_shake_192f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192f_simple_verify');
   late final _OQS_SIG_sphincs_shake_192f_simple_verify =
       _OQS_SIG_sphincs_shake_192f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6132,39 +7812,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_192f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6175,34 +7861,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_192f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_192s_simple_new() {
     return _OQS_SIG_sphincs_shake_192s_simple_new();
@@ -6210,29 +7907,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_192s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_192s_simple_new');
+        'OQS_SIG_sphincs_shake_192s_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_192s_simple_new =
       _OQS_SIG_sphincs_shake_192s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192s_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_192s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_192s_simple_keypair');
   late final _OQS_SIG_sphincs_shake_192s_simple_keypair =
       _OQS_SIG_sphincs_shake_192s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6241,24 +7941,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192s_simple_sign');
+  late final _OQS_SIG_sphincs_shake_192s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192s_simple_sign');
   late final _OQS_SIG_sphincs_shake_192s_simple_sign =
       _OQS_SIG_sphincs_shake_192s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6267,24 +7982,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_192s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192s_simple_verify');
+  late final _OQS_SIG_sphincs_shake_192s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192s_simple_verify');
   late final _OQS_SIG_sphincs_shake_192s_simple_verify =
       _OQS_SIG_sphincs_shake_192s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6295,39 +8025,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_192s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6338,34 +8074,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_192s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_256f_simple_new() {
     return _OQS_SIG_sphincs_shake_256f_simple_new();
@@ -6373,29 +8120,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_256f_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_256f_simple_new');
+        'OQS_SIG_sphincs_shake_256f_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_256f_simple_new =
       _OQS_SIG_sphincs_shake_256f_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256f_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256f_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256f_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256f_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256f_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_256f_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_256f_simple_keypair');
   late final _OQS_SIG_sphincs_shake_256f_simple_keypair =
       _OQS_SIG_sphincs_shake_256f_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256f_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6404,24 +8154,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256f_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256f_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256f_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256f_simple_sign');
+  late final _OQS_SIG_sphincs_shake_256f_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256f_simple_sign');
   late final _OQS_SIG_sphincs_shake_256f_simple_sign =
       _OQS_SIG_sphincs_shake_256f_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256f_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6430,24 +8195,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256f_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256f_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256f_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256f_simple_verify');
+  late final _OQS_SIG_sphincs_shake_256f_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256f_simple_verify');
   late final _OQS_SIG_sphincs_shake_256f_simple_verify =
       _OQS_SIG_sphincs_shake_256f_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6458,39 +8238,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_256f_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6501,34 +8287,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_256f_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_sphincs_shake_256s_simple_new() {
     return _OQS_SIG_sphincs_shake_256s_simple_new();
@@ -6536,29 +8333,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_sphincs_shake_256s_simple_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_sphincs_shake_256s_simple_new');
+        'OQS_SIG_sphincs_shake_256s_simple_new',
+      );
   late final _OQS_SIG_sphincs_shake_256s_simple_new =
       _OQS_SIG_sphincs_shake_256s_simple_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256s_simple_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256s_simple_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256s_simple_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256s_simple_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256s_simple_keypair');
+  late final _OQS_SIG_sphincs_shake_256s_simple_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_sphincs_shake_256s_simple_keypair');
   late final _OQS_SIG_sphincs_shake_256s_simple_keypair =
       _OQS_SIG_sphincs_shake_256s_simple_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256s_simple_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6567,24 +8367,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256s_simple_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256s_simple_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256s_simple_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256s_simple_sign');
+  late final _OQS_SIG_sphincs_shake_256s_simple_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256s_simple_sign');
   late final _OQS_SIG_sphincs_shake_256s_simple_sign =
       _OQS_SIG_sphincs_shake_256s_simple_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256s_simple_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6593,24 +8408,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_sphincs_shake_256s_simple_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256s_simple_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256s_simple_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256s_simple_verify');
+  late final _OQS_SIG_sphincs_shake_256s_simple_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256s_simple_verify');
   late final _OQS_SIG_sphincs_shake_256s_simple_verify =
       _OQS_SIG_sphincs_shake_256s_simple_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6621,39 +8451,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str');
+  late final _OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_str =
       _OQS_SIG_sphincs_shake_256s_simple_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6664,34 +8500,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str');
   late final _OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_str =
       _OQS_SIG_sphincs_shake_256s_simple_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_mayo_1_new() {
     return _OQS_SIG_mayo_1_new();
@@ -6699,7 +8546,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_mayo_1_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_mayo_1_new');
+        'OQS_SIG_mayo_1_new',
+      );
   late final _OQS_SIG_mayo_1_new =
       _OQS_SIG_mayo_1_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -6707,18 +8555,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_1_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_1_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_mayo_1_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_1_keypair');
-  late final _OQS_SIG_mayo_1_keypair = _OQS_SIG_mayo_1_keypairPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_SIG_mayo_1_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_mayo_1_keypair');
+  late final _OQS_SIG_mayo_1_keypair =
+      _OQS_SIG_mayo_1_keypairPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_mayo_1_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6727,26 +8578,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_1_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_1_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_1_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_1_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_1_sign');
-  late final _OQS_SIG_mayo_1_sign = _OQS_SIG_mayo_1_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_1_sign');
+  late final _OQS_SIG_mayo_1_sign =
+      _OQS_SIG_mayo_1_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_1_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6755,26 +8619,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_1_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_1_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_1_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_1_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_1_verify');
-  late final _OQS_SIG_mayo_1_verify = _OQS_SIG_mayo_1_verifyPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_1_verify');
+  late final _OQS_SIG_mayo_1_verify =
+      _OQS_SIG_mayo_1_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_1_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6785,37 +8662,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_1_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_1_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_1_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_1_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_1_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_1_sign_with_ctx_str');
   late final _OQS_SIG_mayo_1_sign_with_ctx_str =
       _OQS_SIG_mayo_1_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_1_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6826,31 +8711,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_1_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_1_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_1_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_1_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_1_verify_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_1_verify_with_ctx_str');
   late final _OQS_SIG_mayo_1_verify_with_ctx_str =
       _OQS_SIG_mayo_1_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_mayo_2_new() {
     return _OQS_SIG_mayo_2_new();
@@ -6858,7 +8757,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_mayo_2_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_mayo_2_new');
+        'OQS_SIG_mayo_2_new',
+      );
   late final _OQS_SIG_mayo_2_new =
       _OQS_SIG_mayo_2_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -6866,18 +8766,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_2_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_2_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_mayo_2_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_2_keypair');
-  late final _OQS_SIG_mayo_2_keypair = _OQS_SIG_mayo_2_keypairPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_SIG_mayo_2_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_mayo_2_keypair');
+  late final _OQS_SIG_mayo_2_keypair =
+      _OQS_SIG_mayo_2_keypairPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_mayo_2_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6886,26 +8789,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_2_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_2_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_2_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_2_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_2_sign');
-  late final _OQS_SIG_mayo_2_sign = _OQS_SIG_mayo_2_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_2_sign');
+  late final _OQS_SIG_mayo_2_sign =
+      _OQS_SIG_mayo_2_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_2_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -6914,26 +8830,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_2_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_2_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_2_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_2_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_2_verify');
-  late final _OQS_SIG_mayo_2_verify = _OQS_SIG_mayo_2_verifyPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_2_verify');
+  late final _OQS_SIG_mayo_2_verify =
+      _OQS_SIG_mayo_2_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_2_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -6944,37 +8873,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_2_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_2_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_2_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_2_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_2_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_2_sign_with_ctx_str');
   late final _OQS_SIG_mayo_2_sign_with_ctx_str =
       _OQS_SIG_mayo_2_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_2_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -6985,31 +8922,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_2_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_2_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_2_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_2_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_2_verify_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_2_verify_with_ctx_str');
   late final _OQS_SIG_mayo_2_verify_with_ctx_str =
       _OQS_SIG_mayo_2_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_mayo_3_new() {
     return _OQS_SIG_mayo_3_new();
@@ -7017,7 +8968,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_mayo_3_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_mayo_3_new');
+        'OQS_SIG_mayo_3_new',
+      );
   late final _OQS_SIG_mayo_3_new =
       _OQS_SIG_mayo_3_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -7025,18 +8977,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_3_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_3_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_mayo_3_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_3_keypair');
-  late final _OQS_SIG_mayo_3_keypair = _OQS_SIG_mayo_3_keypairPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_SIG_mayo_3_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_mayo_3_keypair');
+  late final _OQS_SIG_mayo_3_keypair =
+      _OQS_SIG_mayo_3_keypairPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_mayo_3_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7045,26 +9000,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_3_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_3_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_3_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_3_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_3_sign');
-  late final _OQS_SIG_mayo_3_sign = _OQS_SIG_mayo_3_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_3_sign');
+  late final _OQS_SIG_mayo_3_sign =
+      _OQS_SIG_mayo_3_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_3_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7073,26 +9041,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_3_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_3_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_3_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_3_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_3_verify');
-  late final _OQS_SIG_mayo_3_verify = _OQS_SIG_mayo_3_verifyPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_3_verify');
+  late final _OQS_SIG_mayo_3_verify =
+      _OQS_SIG_mayo_3_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_3_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7103,37 +9084,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_3_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_3_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_3_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_3_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_3_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_3_sign_with_ctx_str');
   late final _OQS_SIG_mayo_3_sign_with_ctx_str =
       _OQS_SIG_mayo_3_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_3_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7144,31 +9133,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_3_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_3_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_3_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_3_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_3_verify_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_3_verify_with_ctx_str');
   late final _OQS_SIG_mayo_3_verify_with_ctx_str =
       _OQS_SIG_mayo_3_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_mayo_5_new() {
     return _OQS_SIG_mayo_5_new();
@@ -7176,7 +9179,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_mayo_5_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_mayo_5_new');
+        'OQS_SIG_mayo_5_new',
+      );
   late final _OQS_SIG_mayo_5_new =
       _OQS_SIG_mayo_5_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -7184,18 +9188,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_5_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_5_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_mayo_5_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_5_keypair');
-  late final _OQS_SIG_mayo_5_keypair = _OQS_SIG_mayo_5_keypairPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+  late final _OQS_SIG_mayo_5_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_mayo_5_keypair');
+  late final _OQS_SIG_mayo_5_keypair =
+      _OQS_SIG_mayo_5_keypairPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_mayo_5_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7204,26 +9211,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_5_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_5_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_5_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_5_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_5_sign');
-  late final _OQS_SIG_mayo_5_sign = _OQS_SIG_mayo_5_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_5_sign');
+  late final _OQS_SIG_mayo_5_sign =
+      _OQS_SIG_mayo_5_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_5_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7232,26 +9252,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_5_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_5_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_5_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_5_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_5_verify');
-  late final _OQS_SIG_mayo_5_verify = _OQS_SIG_mayo_5_verifyPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_5_verify');
+  late final _OQS_SIG_mayo_5_verify =
+      _OQS_SIG_mayo_5_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_5_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7262,37 +9295,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_5_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_5_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_5_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_5_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_5_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_5_sign_with_ctx_str');
   late final _OQS_SIG_mayo_5_sign_with_ctx_str =
       _OQS_SIG_mayo_5_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_mayo_5_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7303,31 +9344,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_mayo_5_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_mayo_5_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_mayo_5_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_mayo_5_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_mayo_5_verify_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_mayo_5_verify_with_ctx_str');
   late final _OQS_SIG_mayo_5_verify_with_ctx_str =
       _OQS_SIG_mayo_5_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_128_balanced_new() {
     return _OQS_SIG_cross_rsdp_128_balanced_new();
@@ -7335,29 +9390,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_128_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_128_balanced_new');
+        'OQS_SIG_cross_rsdp_128_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdp_128_balanced_new =
       _OQS_SIG_cross_rsdp_128_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_balanced_keypair');
+  late final _OQS_SIG_cross_rsdp_128_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_128_balanced_keypair');
   late final _OQS_SIG_cross_rsdp_128_balanced_keypair =
       _OQS_SIG_cross_rsdp_128_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7366,27 +9424,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_balanced_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_128_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_balanced_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_balanced_sign');
   late final _OQS_SIG_cross_rsdp_128_balanced_sign =
       _OQS_SIG_cross_rsdp_128_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7395,24 +9465,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_balanced_verify');
+  late final _OQS_SIG_cross_rsdp_128_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_balanced_verify');
   late final _OQS_SIG_cross_rsdp_128_balanced_verify =
       _OQS_SIG_cross_rsdp_128_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7423,39 +9508,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7466,33 +9557,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_128_fast_new() {
     return _OQS_SIG_cross_rsdp_128_fast_new();
@@ -7500,28 +9603,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_128_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_128_fast_new');
+        'OQS_SIG_cross_rsdp_128_fast_new',
+      );
   late final _OQS_SIG_cross_rsdp_128_fast_new =
       _OQS_SIG_cross_rsdp_128_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_fast_keypair');
+  late final _OQS_SIG_cross_rsdp_128_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_128_fast_keypair');
   late final _OQS_SIG_cross_rsdp_128_fast_keypair =
       _OQS_SIG_cross_rsdp_128_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7530,27 +9637,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_128_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_fast_sign');
   late final _OQS_SIG_cross_rsdp_128_fast_sign =
       _OQS_SIG_cross_rsdp_128_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7559,27 +9678,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_128_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_fast_verify');
   late final _OQS_SIG_cross_rsdp_128_fast_verify =
       _OQS_SIG_cross_rsdp_128_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7590,38 +9721,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7632,33 +9770,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_128_small_new() {
     return _OQS_SIG_cross_rsdp_128_small_new();
@@ -7666,28 +9816,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_128_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_128_small_new');
+        'OQS_SIG_cross_rsdp_128_small_new',
+      );
   late final _OQS_SIG_cross_rsdp_128_small_new =
       _OQS_SIG_cross_rsdp_128_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_small_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_small_keypair');
+  late final _OQS_SIG_cross_rsdp_128_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_128_small_keypair');
   late final _OQS_SIG_cross_rsdp_128_small_keypair =
       _OQS_SIG_cross_rsdp_128_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7696,27 +9850,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_128_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_small_sign');
   late final _OQS_SIG_cross_rsdp_128_small_sign =
       _OQS_SIG_cross_rsdp_128_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7725,27 +9891,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_128_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_128_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_small_verify');
   late final _OQS_SIG_cross_rsdp_128_small_verify =
       _OQS_SIG_cross_rsdp_128_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7756,38 +9934,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7798,33 +9983,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_128_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_128_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_128_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_128_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_192_balanced_new() {
     return _OQS_SIG_cross_rsdp_192_balanced_new();
@@ -7832,29 +10029,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_192_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_192_balanced_new');
+        'OQS_SIG_cross_rsdp_192_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdp_192_balanced_new =
       _OQS_SIG_cross_rsdp_192_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_balanced_keypair');
+  late final _OQS_SIG_cross_rsdp_192_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_192_balanced_keypair');
   late final _OQS_SIG_cross_rsdp_192_balanced_keypair =
       _OQS_SIG_cross_rsdp_192_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7863,27 +10063,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_balanced_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_192_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_balanced_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_balanced_sign');
   late final _OQS_SIG_cross_rsdp_192_balanced_sign =
       _OQS_SIG_cross_rsdp_192_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -7892,24 +10104,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_balanced_verify');
+  late final _OQS_SIG_cross_rsdp_192_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_balanced_verify');
   late final _OQS_SIG_cross_rsdp_192_balanced_verify =
       _OQS_SIG_cross_rsdp_192_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -7920,39 +10147,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -7963,33 +10196,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_192_fast_new() {
     return _OQS_SIG_cross_rsdp_192_fast_new();
@@ -7997,28 +10242,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_192_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_192_fast_new');
+        'OQS_SIG_cross_rsdp_192_fast_new',
+      );
   late final _OQS_SIG_cross_rsdp_192_fast_new =
       _OQS_SIG_cross_rsdp_192_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_fast_keypair');
+  late final _OQS_SIG_cross_rsdp_192_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_192_fast_keypair');
   late final _OQS_SIG_cross_rsdp_192_fast_keypair =
       _OQS_SIG_cross_rsdp_192_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8027,27 +10276,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_192_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_fast_sign');
   late final _OQS_SIG_cross_rsdp_192_fast_sign =
       _OQS_SIG_cross_rsdp_192_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8056,27 +10317,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_192_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_fast_verify');
   late final _OQS_SIG_cross_rsdp_192_fast_verify =
       _OQS_SIG_cross_rsdp_192_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8087,38 +10360,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8129,33 +10409,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_192_small_new() {
     return _OQS_SIG_cross_rsdp_192_small_new();
@@ -8163,28 +10455,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_192_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_192_small_new');
+        'OQS_SIG_cross_rsdp_192_small_new',
+      );
   late final _OQS_SIG_cross_rsdp_192_small_new =
       _OQS_SIG_cross_rsdp_192_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_small_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_small_keypair');
+  late final _OQS_SIG_cross_rsdp_192_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_192_small_keypair');
   late final _OQS_SIG_cross_rsdp_192_small_keypair =
       _OQS_SIG_cross_rsdp_192_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8193,27 +10489,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_192_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_small_sign');
   late final _OQS_SIG_cross_rsdp_192_small_sign =
       _OQS_SIG_cross_rsdp_192_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8222,27 +10530,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_192_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_192_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_small_verify');
   late final _OQS_SIG_cross_rsdp_192_small_verify =
       _OQS_SIG_cross_rsdp_192_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8253,38 +10573,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8295,33 +10622,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_192_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_192_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_192_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_192_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_256_balanced_new() {
     return _OQS_SIG_cross_rsdp_256_balanced_new();
@@ -8329,29 +10668,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_256_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_256_balanced_new');
+        'OQS_SIG_cross_rsdp_256_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdp_256_balanced_new =
       _OQS_SIG_cross_rsdp_256_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_balanced_keypair');
+  late final _OQS_SIG_cross_rsdp_256_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_256_balanced_keypair');
   late final _OQS_SIG_cross_rsdp_256_balanced_keypair =
       _OQS_SIG_cross_rsdp_256_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8360,27 +10702,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_balanced_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_256_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_balanced_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_balanced_sign');
   late final _OQS_SIG_cross_rsdp_256_balanced_sign =
       _OQS_SIG_cross_rsdp_256_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8389,24 +10743,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_balanced_verify');
+  late final _OQS_SIG_cross_rsdp_256_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_balanced_verify');
   late final _OQS_SIG_cross_rsdp_256_balanced_verify =
       _OQS_SIG_cross_rsdp_256_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8417,39 +10786,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8460,33 +10835,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_256_fast_new() {
     return _OQS_SIG_cross_rsdp_256_fast_new();
@@ -8494,28 +10881,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_256_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_256_fast_new');
+        'OQS_SIG_cross_rsdp_256_fast_new',
+      );
   late final _OQS_SIG_cross_rsdp_256_fast_new =
       _OQS_SIG_cross_rsdp_256_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_fast_keypair');
+  late final _OQS_SIG_cross_rsdp_256_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_256_fast_keypair');
   late final _OQS_SIG_cross_rsdp_256_fast_keypair =
       _OQS_SIG_cross_rsdp_256_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8524,27 +10915,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_256_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_fast_sign');
   late final _OQS_SIG_cross_rsdp_256_fast_sign =
       _OQS_SIG_cross_rsdp_256_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8553,27 +10956,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_256_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_fast_verify');
   late final _OQS_SIG_cross_rsdp_256_fast_verify =
       _OQS_SIG_cross_rsdp_256_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8584,38 +10999,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8626,33 +11048,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdp_256_small_new() {
     return _OQS_SIG_cross_rsdp_256_small_new();
@@ -8660,28 +11094,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdp_256_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdp_256_small_new');
+        'OQS_SIG_cross_rsdp_256_small_new',
+      );
   late final _OQS_SIG_cross_rsdp_256_small_new =
       _OQS_SIG_cross_rsdp_256_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_small_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_small_keypair');
+  late final _OQS_SIG_cross_rsdp_256_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdp_256_small_keypair');
   late final _OQS_SIG_cross_rsdp_256_small_keypair =
       _OQS_SIG_cross_rsdp_256_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8690,27 +11128,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_256_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_small_sign');
   late final _OQS_SIG_cross_rsdp_256_small_sign =
       _OQS_SIG_cross_rsdp_256_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8719,27 +11169,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdp_256_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdp_256_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_small_verify');
   late final _OQS_SIG_cross_rsdp_256_small_verify =
       _OQS_SIG_cross_rsdp_256_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8750,38 +11212,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8792,33 +11261,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdp_256_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdp_256_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdp_256_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdp_256_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_128_balanced_new() {
     return _OQS_SIG_cross_rsdpg_128_balanced_new();
@@ -8826,29 +11307,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_128_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_128_balanced_new');
+        'OQS_SIG_cross_rsdpg_128_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdpg_128_balanced_new =
       _OQS_SIG_cross_rsdpg_128_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_balanced_keypair');
+  late final _OQS_SIG_cross_rsdpg_128_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_128_balanced_keypair');
   late final _OQS_SIG_cross_rsdpg_128_balanced_keypair =
       _OQS_SIG_cross_rsdpg_128_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8857,24 +11341,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_balanced_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_balanced_sign');
+  late final _OQS_SIG_cross_rsdpg_128_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_balanced_sign');
   late final _OQS_SIG_cross_rsdpg_128_balanced_sign =
       _OQS_SIG_cross_rsdpg_128_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -8883,24 +11382,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_balanced_verify');
+  late final _OQS_SIG_cross_rsdpg_128_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_balanced_verify');
   late final _OQS_SIG_cross_rsdpg_128_balanced_verify =
       _OQS_SIG_cross_rsdpg_128_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -8911,39 +11425,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -8954,33 +11474,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_128_fast_new() {
     return _OQS_SIG_cross_rsdpg_128_fast_new();
@@ -8988,28 +11520,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_128_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_128_fast_new');
+        'OQS_SIG_cross_rsdpg_128_fast_new',
+      );
   late final _OQS_SIG_cross_rsdpg_128_fast_new =
       _OQS_SIG_cross_rsdpg_128_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_128_fast_keypair');
+  late final _OQS_SIG_cross_rsdpg_128_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_128_fast_keypair');
   late final _OQS_SIG_cross_rsdpg_128_fast_keypair =
       _OQS_SIG_cross_rsdpg_128_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9018,27 +11554,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_128_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_128_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_fast_sign');
   late final _OQS_SIG_cross_rsdpg_128_fast_sign =
       _OQS_SIG_cross_rsdpg_128_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9047,27 +11595,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_128_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_128_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_fast_verify');
   late final _OQS_SIG_cross_rsdpg_128_fast_verify =
       _OQS_SIG_cross_rsdpg_128_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9078,38 +11638,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9120,33 +11687,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_128_small_new() {
     return _OQS_SIG_cross_rsdpg_128_small_new();
@@ -9154,29 +11733,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_128_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_128_small_new');
+        'OQS_SIG_cross_rsdpg_128_small_new',
+      );
   late final _OQS_SIG_cross_rsdpg_128_small_new =
       _OQS_SIG_cross_rsdpg_128_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_small_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_small_keypair');
+  late final _OQS_SIG_cross_rsdpg_128_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_128_small_keypair');
   late final _OQS_SIG_cross_rsdpg_128_small_keypair =
       _OQS_SIG_cross_rsdpg_128_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9185,27 +11767,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_128_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_128_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_small_sign');
   late final _OQS_SIG_cross_rsdpg_128_small_sign =
       _OQS_SIG_cross_rsdpg_128_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9214,27 +11808,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_128_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_128_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_128_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_small_verify');
   late final _OQS_SIG_cross_rsdpg_128_small_verify =
       _OQS_SIG_cross_rsdpg_128_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9245,39 +11851,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9288,33 +11900,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_128_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_192_balanced_new() {
     return _OQS_SIG_cross_rsdpg_192_balanced_new();
@@ -9322,29 +11946,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_192_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_192_balanced_new');
+        'OQS_SIG_cross_rsdpg_192_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdpg_192_balanced_new =
       _OQS_SIG_cross_rsdpg_192_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_balanced_keypair');
+  late final _OQS_SIG_cross_rsdpg_192_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_192_balanced_keypair');
   late final _OQS_SIG_cross_rsdpg_192_balanced_keypair =
       _OQS_SIG_cross_rsdpg_192_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9353,24 +11980,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_balanced_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_balanced_sign');
+  late final _OQS_SIG_cross_rsdpg_192_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_balanced_sign');
   late final _OQS_SIG_cross_rsdpg_192_balanced_sign =
       _OQS_SIG_cross_rsdpg_192_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9379,24 +12021,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_balanced_verify');
+  late final _OQS_SIG_cross_rsdpg_192_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_balanced_verify');
   late final _OQS_SIG_cross_rsdpg_192_balanced_verify =
       _OQS_SIG_cross_rsdpg_192_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9407,39 +12064,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9450,33 +12113,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_192_fast_new() {
     return _OQS_SIG_cross_rsdpg_192_fast_new();
@@ -9484,28 +12159,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_192_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_192_fast_new');
+        'OQS_SIG_cross_rsdpg_192_fast_new',
+      );
   late final _OQS_SIG_cross_rsdpg_192_fast_new =
       _OQS_SIG_cross_rsdpg_192_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_192_fast_keypair');
+  late final _OQS_SIG_cross_rsdpg_192_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_192_fast_keypair');
   late final _OQS_SIG_cross_rsdpg_192_fast_keypair =
       _OQS_SIG_cross_rsdpg_192_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9514,27 +12193,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_192_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_192_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_fast_sign');
   late final _OQS_SIG_cross_rsdpg_192_fast_sign =
       _OQS_SIG_cross_rsdpg_192_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9543,27 +12234,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_192_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_192_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_fast_verify');
   late final _OQS_SIG_cross_rsdpg_192_fast_verify =
       _OQS_SIG_cross_rsdpg_192_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9574,38 +12277,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9616,33 +12326,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_192_small_new() {
     return _OQS_SIG_cross_rsdpg_192_small_new();
@@ -9650,29 +12372,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_192_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_192_small_new');
+        'OQS_SIG_cross_rsdpg_192_small_new',
+      );
   late final _OQS_SIG_cross_rsdpg_192_small_new =
       _OQS_SIG_cross_rsdpg_192_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_small_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_small_keypair');
+  late final _OQS_SIG_cross_rsdpg_192_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_192_small_keypair');
   late final _OQS_SIG_cross_rsdpg_192_small_keypair =
       _OQS_SIG_cross_rsdpg_192_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9681,27 +12406,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_192_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_192_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_small_sign');
   late final _OQS_SIG_cross_rsdpg_192_small_sign =
       _OQS_SIG_cross_rsdpg_192_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9710,27 +12447,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_192_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_192_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_192_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_small_verify');
   late final _OQS_SIG_cross_rsdpg_192_small_verify =
       _OQS_SIG_cross_rsdpg_192_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9741,39 +12490,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9784,33 +12539,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_192_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_256_balanced_new() {
     return _OQS_SIG_cross_rsdpg_256_balanced_new();
@@ -9818,29 +12585,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_256_balanced_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_256_balanced_new');
+        'OQS_SIG_cross_rsdpg_256_balanced_new',
+      );
   late final _OQS_SIG_cross_rsdpg_256_balanced_new =
       _OQS_SIG_cross_rsdpg_256_balanced_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_balanced_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_balanced_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_balanced_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_balanced_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_balanced_keypair');
+  late final _OQS_SIG_cross_rsdpg_256_balanced_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_256_balanced_keypair');
   late final _OQS_SIG_cross_rsdpg_256_balanced_keypair =
       _OQS_SIG_cross_rsdpg_256_balanced_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_balanced_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9849,24 +12619,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_balanced_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_balanced_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_balanced_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_balanced_sign');
+  late final _OQS_SIG_cross_rsdpg_256_balanced_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_balanced_sign');
   late final _OQS_SIG_cross_rsdpg_256_balanced_sign =
       _OQS_SIG_cross_rsdpg_256_balanced_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_balanced_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -9875,24 +12660,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_balanced_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_balanced_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_balanced_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_balanced_verify');
+  late final _OQS_SIG_cross_rsdpg_256_balanced_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_balanced_verify');
   late final _OQS_SIG_cross_rsdpg_256_balanced_verify =
       _OQS_SIG_cross_rsdpg_256_balanced_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -9903,39 +12703,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_balanced_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -9946,33 +12752,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_balanced_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_256_fast_new() {
     return _OQS_SIG_cross_rsdpg_256_fast_new();
@@ -9980,28 +12798,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_256_fast_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_256_fast_new');
+        'OQS_SIG_cross_rsdpg_256_fast_new',
+      );
   late final _OQS_SIG_cross_rsdpg_256_fast_new =
       _OQS_SIG_cross_rsdpg_256_fast_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_fast_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_fast_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_fast_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_fast_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_256_fast_keypair');
+  late final _OQS_SIG_cross_rsdpg_256_fast_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_256_fast_keypair');
   late final _OQS_SIG_cross_rsdpg_256_fast_keypair =
       _OQS_SIG_cross_rsdpg_256_fast_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_fast_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10010,27 +12832,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_fast_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_fast_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_fast_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_256_fast_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_256_fast_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_fast_sign');
   late final _OQS_SIG_cross_rsdpg_256_fast_sign =
       _OQS_SIG_cross_rsdpg_256_fast_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_fast_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10039,27 +12873,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_fast_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_fast_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_fast_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_256_fast_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_256_fast_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_fast_verify');
   late final _OQS_SIG_cross_rsdpg_256_fast_verify =
       _OQS_SIG_cross_rsdpg_256_fast_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10070,38 +12916,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_fast_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10112,33 +12965,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_fast_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_cross_rsdpg_256_small_new() {
     return _OQS_SIG_cross_rsdpg_256_small_new();
@@ -10146,29 +13011,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_cross_rsdpg_256_small_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_cross_rsdpg_256_small_new');
+        'OQS_SIG_cross_rsdpg_256_small_new',
+      );
   late final _OQS_SIG_cross_rsdpg_256_small_new =
       _OQS_SIG_cross_rsdpg_256_small_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_small_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_small_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_small_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_small_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_small_keypair');
+  late final _OQS_SIG_cross_rsdpg_256_small_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_cross_rsdpg_256_small_keypair');
   late final _OQS_SIG_cross_rsdpg_256_small_keypair =
       _OQS_SIG_cross_rsdpg_256_small_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_small_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10177,27 +13045,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_small_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_small_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_small_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_256_small_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_256_small_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_small_sign');
   late final _OQS_SIG_cross_rsdpg_256_small_sign =
       _OQS_SIG_cross_rsdpg_256_small_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_small_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10206,27 +13086,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_cross_rsdpg_256_small_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_small_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_small_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_cross_rsdpg_256_small_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_cross_rsdpg_256_small_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_small_verify');
   late final _OQS_SIG_cross_rsdpg_256_small_verify =
       _OQS_SIG_cross_rsdpg_256_small_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10237,39 +13129,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_small_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10280,33 +13178,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str');
+  late final _OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str');
   late final _OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_str =
       _OQS_SIG_cross_rsdpg_256_small_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Is_new() {
     return _OQS_SIG_uov_ov_Is_new();
@@ -10314,7 +13224,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Is_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Is_new');
+        'OQS_SIG_uov_ov_Is_new',
+      );
   late final _OQS_SIG_uov_ov_Is_new =
       _OQS_SIG_uov_ov_Is_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -10322,19 +13233,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_keypair');
+  late final _OQS_SIG_uov_ov_Is_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Is_keypair');
   late final _OQS_SIG_uov_ov_Is_keypair =
       _OQS_SIG_uov_ov_Is_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10343,26 +13256,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_sign');
-  late final _OQS_SIG_uov_ov_Is_sign = _OQS_SIG_uov_ov_Is_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_sign');
+  late final _OQS_SIG_uov_ov_Is_sign =
+      _OQS_SIG_uov_ov_Is_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10371,27 +13297,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_verify');
   late final _OQS_SIG_uov_ov_Is_verify =
       _OQS_SIG_uov_ov_Is_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10402,37 +13340,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Is_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10443,32 +13389,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Is_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Is_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Is_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Ip_new() {
     return _OQS_SIG_uov_ov_Ip_new();
@@ -10476,7 +13435,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Ip_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Ip_new');
+        'OQS_SIG_uov_ov_Ip_new',
+      );
   late final _OQS_SIG_uov_ov_Ip_new =
       _OQS_SIG_uov_ov_Ip_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -10484,19 +13444,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_keypair');
+  late final _OQS_SIG_uov_ov_Ip_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Ip_keypair');
   late final _OQS_SIG_uov_ov_Ip_keypair =
       _OQS_SIG_uov_ov_Ip_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10505,26 +13467,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_sign');
-  late final _OQS_SIG_uov_ov_Ip_sign = _OQS_SIG_uov_ov_Ip_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_sign');
+  late final _OQS_SIG_uov_ov_Ip_sign =
+      _OQS_SIG_uov_ov_Ip_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10533,27 +13508,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_verify');
   late final _OQS_SIG_uov_ov_Ip_verify =
       _OQS_SIG_uov_ov_Ip_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10564,37 +13551,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10605,32 +13600,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Ip_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Ip_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_III_new() {
     return _OQS_SIG_uov_ov_III_new();
@@ -10638,7 +13646,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_III_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_III_new');
+        'OQS_SIG_uov_ov_III_new',
+      );
   late final _OQS_SIG_uov_ov_III_new =
       _OQS_SIG_uov_ov_III_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -10646,19 +13655,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_keypair');
+  late final _OQS_SIG_uov_ov_III_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_III_keypair');
   late final _OQS_SIG_uov_ov_III_keypair =
       _OQS_SIG_uov_ov_III_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10667,26 +13678,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_sign');
-  late final _OQS_SIG_uov_ov_III_sign = _OQS_SIG_uov_ov_III_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_sign');
+  late final _OQS_SIG_uov_ov_III_sign =
+      _OQS_SIG_uov_ov_III_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10695,27 +13719,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_verify');
   late final _OQS_SIG_uov_ov_III_verify =
       _OQS_SIG_uov_ov_III_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10726,37 +13762,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_sign_with_ctx_str =
       _OQS_SIG_uov_ov_III_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10767,32 +13811,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_III_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_III_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_verify_with_ctx_str =
       _OQS_SIG_uov_ov_III_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_V_new() {
     return _OQS_SIG_uov_ov_V_new();
@@ -10800,7 +13857,8 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_V_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_V_new');
+        'OQS_SIG_uov_ov_V_new',
+      );
   late final _OQS_SIG_uov_ov_V_new =
       _OQS_SIG_uov_ov_V_newPtr.asFunction<ffi.Pointer<OQS_SIG> Function()>();
 
@@ -10808,19 +13866,21 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_keypair');
+  late final _OQS_SIG_uov_ov_V_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_V_keypair');
   late final _OQS_SIG_uov_ov_V_keypair =
       _OQS_SIG_uov_ov_V_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10829,26 +13889,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_sign');
-  late final _OQS_SIG_uov_ov_V_sign = _OQS_SIG_uov_ov_V_signPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_sign');
+  late final _OQS_SIG_uov_ov_V_sign =
+      _OQS_SIG_uov_ov_V_signPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -10857,26 +13930,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_verify');
-  late final _OQS_SIG_uov_ov_V_verify = _OQS_SIG_uov_ov_V_verifyPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_verify');
+  late final _OQS_SIG_uov_ov_V_verify =
+      _OQS_SIG_uov_ov_V_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10887,37 +13973,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_sign_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_sign_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_sign_with_ctx_str =
       _OQS_SIG_uov_ov_V_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -10928,31 +14022,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_verify_with_ctx_strPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_verify_with_ctx_str');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_verify_with_ctx_str =
       _OQS_SIG_uov_ov_V_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Is_pkc_new() {
     return _OQS_SIG_uov_ov_Is_pkc_new();
@@ -10960,27 +14068,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Is_pkc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Is_pkc_new');
-  late final _OQS_SIG_uov_ov_Is_pkc_new = _OQS_SIG_uov_ov_Is_pkc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_Is_pkc_new',
+      );
+  late final _OQS_SIG_uov_ov_Is_pkc_new =
+      _OQS_SIG_uov_ov_Is_pkc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_keypair');
+  late final _OQS_SIG_uov_ov_Is_pkc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_keypair');
   late final _OQS_SIG_uov_ov_Is_pkc_keypair =
       _OQS_SIG_uov_ov_Is_pkc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -10989,27 +14102,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_pkc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_sign');
   late final _OQS_SIG_uov_ov_Is_pkc_sign =
       _OQS_SIG_uov_ov_Is_pkc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11018,27 +14143,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_pkc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_verify');
   late final _OQS_SIG_uov_ov_Is_pkc_verify =
       _OQS_SIG_uov_ov_Is_pkc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11049,38 +14186,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Is_pkc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11091,32 +14235,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Is_pkc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Ip_pkc_new() {
     return _OQS_SIG_uov_ov_Ip_pkc_new();
@@ -11124,27 +14281,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Ip_pkc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Ip_pkc_new');
-  late final _OQS_SIG_uov_ov_Ip_pkc_new = _OQS_SIG_uov_ov_Ip_pkc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_Ip_pkc_new',
+      );
+  late final _OQS_SIG_uov_ov_Ip_pkc_new =
+      _OQS_SIG_uov_ov_Ip_pkc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_keypair');
+  late final _OQS_SIG_uov_ov_Ip_pkc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_keypair');
   late final _OQS_SIG_uov_ov_Ip_pkc_keypair =
       _OQS_SIG_uov_ov_Ip_pkc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11153,27 +14315,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_pkc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_sign');
   late final _OQS_SIG_uov_ov_Ip_pkc_sign =
       _OQS_SIG_uov_ov_Ip_pkc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11182,27 +14356,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_pkc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_verify');
   late final _OQS_SIG_uov_ov_Ip_pkc_verify =
       _OQS_SIG_uov_ov_Ip_pkc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11213,38 +14399,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_pkc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11255,32 +14448,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_pkc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_III_pkc_new() {
     return _OQS_SIG_uov_ov_III_pkc_new();
@@ -11288,27 +14494,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_III_pkc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_III_pkc_new');
-  late final _OQS_SIG_uov_ov_III_pkc_new = _OQS_SIG_uov_ov_III_pkc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_III_pkc_new',
+      );
+  late final _OQS_SIG_uov_ov_III_pkc_new =
+      _OQS_SIG_uov_ov_III_pkc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_keypair');
+  late final _OQS_SIG_uov_ov_III_pkc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_III_pkc_keypair');
   late final _OQS_SIG_uov_ov_III_pkc_keypair =
       _OQS_SIG_uov_ov_III_pkc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11317,27 +14528,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_pkc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_sign');
   late final _OQS_SIG_uov_ov_III_pkc_sign =
       _OQS_SIG_uov_ov_III_pkc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11346,27 +14569,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_pkc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_verify');
   late final _OQS_SIG_uov_ov_III_pkc_verify =
       _OQS_SIG_uov_ov_III_pkc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11377,38 +14612,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_III_pkc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_pkc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_III_pkc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11419,32 +14661,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_III_pkc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_pkc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_III_pkc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_V_pkc_new() {
     return _OQS_SIG_uov_ov_V_pkc_new();
@@ -11452,27 +14707,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_V_pkc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_V_pkc_new');
-  late final _OQS_SIG_uov_ov_V_pkc_new = _OQS_SIG_uov_ov_V_pkc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_V_pkc_new',
+      );
+  late final _OQS_SIG_uov_ov_V_pkc_new =
+      _OQS_SIG_uov_ov_V_pkc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_keypair');
+  late final _OQS_SIG_uov_ov_V_pkc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_V_pkc_keypair');
   late final _OQS_SIG_uov_ov_V_pkc_keypair =
       _OQS_SIG_uov_ov_V_pkc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11481,27 +14741,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_pkc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_sign');
   late final _OQS_SIG_uov_ov_V_pkc_sign =
       _OQS_SIG_uov_ov_V_pkc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11510,27 +14782,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_pkc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_verify');
   late final _OQS_SIG_uov_ov_V_pkc_verify =
       _OQS_SIG_uov_ov_V_pkc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11541,38 +14825,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_V_pkc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_pkc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_V_pkc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11583,32 +14874,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_V_pkc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_pkc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_V_pkc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Is_pkc_skc_new() {
     return _OQS_SIG_uov_ov_Is_pkc_skc_new();
@@ -11616,27 +14920,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Is_pkc_skc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Is_pkc_skc_new');
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_new = _OQS_SIG_uov_ov_Is_pkc_skc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_Is_pkc_skc_new',
+      );
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_new =
+      _OQS_SIG_uov_ov_Is_pkc_skc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_skc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_skc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_skc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_skc_keypair');
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_skc_keypair');
   late final _OQS_SIG_uov_ov_Is_pkc_skc_keypair =
       _OQS_SIG_uov_ov_Is_pkc_skc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_skc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11645,27 +14954,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_skc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_skc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_skc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_skc_sign');
   late final _OQS_SIG_uov_ov_Is_pkc_skc_sign =
       _OQS_SIG_uov_ov_Is_pkc_skc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_skc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11674,27 +14995,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_skc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_skc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Is_pkc_skc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_skc_verify');
   late final _OQS_SIG_uov_ov_Is_pkc_skc_verify =
       _OQS_SIG_uov_ov_Is_pkc_skc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11705,38 +15038,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Is_pkc_skc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11747,32 +15087,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Is_pkc_skc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_Ip_pkc_skc_new() {
     return _OQS_SIG_uov_ov_Ip_pkc_skc_new();
@@ -11780,27 +15133,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_Ip_pkc_skc_new');
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_new = _OQS_SIG_uov_ov_Ip_pkc_skc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_Ip_pkc_skc_new',
+      );
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_new =
+      _OQS_SIG_uov_ov_Ip_pkc_skc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_skc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_skc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_skc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_skc_keypair');
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_skc_keypair');
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_keypair =
       _OQS_SIG_uov_ov_Ip_pkc_skc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_skc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11809,27 +15167,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_skc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_skc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_skc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_skc_sign');
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_sign =
       _OQS_SIG_uov_ov_Ip_pkc_skc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_skc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -11838,27 +15208,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_skc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_skc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_Ip_pkc_skc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_skc_verify');
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_verify =
       _OQS_SIG_uov_ov_Ip_pkc_skc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11869,38 +15251,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_pkc_skc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -11911,32 +15300,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_Ip_pkc_skc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_III_pkc_skc_new() {
     return _OQS_SIG_uov_ov_III_pkc_skc_new();
@@ -11944,28 +15346,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_III_pkc_skc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_III_pkc_skc_new');
+        'OQS_SIG_uov_ov_III_pkc_skc_new',
+      );
   late final _OQS_SIG_uov_ov_III_pkc_skc_new =
       _OQS_SIG_uov_ov_III_pkc_skc_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_skc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_skc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_skc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_skc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_skc_keypair');
+  late final _OQS_SIG_uov_ov_III_pkc_skc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_III_pkc_skc_keypair');
   late final _OQS_SIG_uov_ov_III_pkc_skc_keypair =
       _OQS_SIG_uov_ov_III_pkc_skc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_skc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -11974,27 +15380,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_skc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_skc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_skc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_pkc_skc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_skc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_skc_sign');
   late final _OQS_SIG_uov_ov_III_pkc_skc_sign =
       _OQS_SIG_uov_ov_III_pkc_skc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_skc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12003,27 +15421,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_skc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_skc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_skc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_III_pkc_skc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_III_pkc_skc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_skc_verify');
   late final _OQS_SIG_uov_ov_III_pkc_skc_verify =
       _OQS_SIG_uov_ov_III_pkc_skc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12034,38 +15464,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_III_pkc_skc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12076,32 +15513,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_III_pkc_skc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_uov_ov_V_pkc_skc_new() {
     return _OQS_SIG_uov_ov_V_pkc_skc_new();
@@ -12109,27 +15559,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_uov_ov_V_pkc_skc_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_uov_ov_V_pkc_skc_new');
-  late final _OQS_SIG_uov_ov_V_pkc_skc_new = _OQS_SIG_uov_ov_V_pkc_skc_newPtr
-      .asFunction<ffi.Pointer<OQS_SIG> Function()>();
+        'OQS_SIG_uov_ov_V_pkc_skc_new',
+      );
+  late final _OQS_SIG_uov_ov_V_pkc_skc_new =
+      _OQS_SIG_uov_ov_V_pkc_skc_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_skc_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_skc_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_skc_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_skc_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_skc_keypair');
+  late final _OQS_SIG_uov_ov_V_pkc_skc_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_uov_ov_V_pkc_skc_keypair');
   late final _OQS_SIG_uov_ov_V_pkc_skc_keypair =
       _OQS_SIG_uov_ov_V_pkc_skc_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_skc_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12138,27 +15593,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_skc_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_skc_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_skc_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_pkc_skc_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_skc_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_skc_sign');
   late final _OQS_SIG_uov_ov_V_pkc_skc_sign =
       _OQS_SIG_uov_ov_V_pkc_skc_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_skc_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12167,27 +15634,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_skc_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_skc_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_skc_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_uov_ov_V_pkc_skc_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_uov_ov_V_pkc_skc_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_skc_verify');
   late final _OQS_SIG_uov_ov_V_pkc_skc_verify =
       _OQS_SIG_uov_ov_V_pkc_skc_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12198,38 +15677,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str');
+  late final _OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_str =
       _OQS_SIG_uov_ov_V_pkc_skc_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12240,32 +15726,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str');
+  late final _OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str');
   late final _OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_str =
       _OQS_SIG_uov_ov_V_pkc_skc_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_24_5_4_new() {
     return _OQS_SIG_snova_SNOVA_24_5_4_new();
@@ -12273,28 +15772,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_new');
+        'OQS_SIG_snova_SNOVA_24_5_4_new',
+      );
   late final _OQS_SIG_snova_SNOVA_24_5_4_new =
       _OQS_SIG_snova_SNOVA_24_5_4_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_4_keypair');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_keypair');
   late final _OQS_SIG_snova_SNOVA_24_5_4_keypair =
       _OQS_SIG_snova_SNOVA_24_5_4_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12303,27 +15806,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_24_5_4_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_4_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_sign');
   late final _OQS_SIG_snova_SNOVA_24_5_4_sign =
       _OQS_SIG_snova_SNOVA_24_5_4_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12332,27 +15847,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_24_5_4_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_4_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_verify');
   late final _OQS_SIG_snova_SNOVA_24_5_4_verify =
       _OQS_SIG_snova_SNOVA_24_5_4_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12363,38 +15890,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12405,32 +15939,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_24_5_4_SHAKE_new() {
     return _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_new();
@@ -12438,29 +15985,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_new');
+        'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_new',
+      );
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_new =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypair =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12469,24 +16019,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12495,24 +16060,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12523,39 +16103,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12566,33 +16152,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_24_5_4_esk_new() {
     return _OQS_SIG_snova_SNOVA_24_5_4_esk_new();
@@ -12600,29 +16198,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_esk_new');
+        'OQS_SIG_snova_SNOVA_24_5_4_esk_new',
+      );
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_new =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_esk_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_esk_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_esk_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_esk_keypair');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_esk_keypair');
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_keypair =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_esk_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12631,27 +16232,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_esk_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_esk_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_4_esk_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_esk_sign');
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_sign =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_esk_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12660,24 +16273,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_esk_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_esk_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_esk_verify');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_esk_verify');
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verify =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12688,39 +16316,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12731,33 +16365,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_esk_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_new() {
     return _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_new();
@@ -12765,29 +16411,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_new');
+        'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_new',
+      );
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_new =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypairPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypair =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12796,24 +16445,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_signPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_signPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12822,24 +16486,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verifyPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-                  ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify');
+  late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12850,40 +16529,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Pointer<ffi.Size>,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -12894,34 +16578,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_strPtr =
       _lookup<
-              ffi.NativeFunction<
-                  ffi.Int Function(
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>,
-                      ffi.Size,
-                      ffi.Pointer<ffi.Uint8>)>>(
-          'OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str');
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_4_SHAKE_esk_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_37_17_2_new() {
     return _OQS_SIG_snova_SNOVA_37_17_2_new();
@@ -12929,28 +16624,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_37_17_2_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_37_17_2_new');
+        'OQS_SIG_snova_SNOVA_37_17_2_new',
+      );
   late final _OQS_SIG_snova_SNOVA_37_17_2_new =
       _OQS_SIG_snova_SNOVA_37_17_2_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_17_2_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_17_2_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_17_2_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_17_2_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_17_2_keypair');
+  late final _OQS_SIG_snova_SNOVA_37_17_2_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_37_17_2_keypair');
   late final _OQS_SIG_snova_SNOVA_37_17_2_keypair =
       _OQS_SIG_snova_SNOVA_37_17_2_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_17_2_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -12959,27 +16658,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_17_2_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_17_2_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_17_2_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_37_17_2_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_17_2_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_17_2_sign');
   late final _OQS_SIG_snova_SNOVA_37_17_2_sign =
       _OQS_SIG_snova_SNOVA_37_17_2_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_17_2_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -12988,27 +16699,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_17_2_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_17_2_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_17_2_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_37_17_2_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_17_2_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_17_2_verify');
   late final _OQS_SIG_snova_SNOVA_37_17_2_verify =
       _OQS_SIG_snova_SNOVA_37_17_2_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13019,38 +16742,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_37_17_2_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13061,33 +16791,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_37_17_2_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_25_8_3_new() {
     return _OQS_SIG_snova_SNOVA_25_8_3_new();
@@ -13095,28 +16837,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_25_8_3_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_25_8_3_new');
+        'OQS_SIG_snova_SNOVA_25_8_3_new',
+      );
   late final _OQS_SIG_snova_SNOVA_25_8_3_new =
       _OQS_SIG_snova_SNOVA_25_8_3_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_25_8_3_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_25_8_3_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_25_8_3_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_25_8_3_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_25_8_3_keypair');
+  late final _OQS_SIG_snova_SNOVA_25_8_3_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_25_8_3_keypair');
   late final _OQS_SIG_snova_SNOVA_25_8_3_keypair =
       _OQS_SIG_snova_SNOVA_25_8_3_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_25_8_3_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13125,27 +16871,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_25_8_3_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_25_8_3_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_25_8_3_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_25_8_3_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_25_8_3_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_25_8_3_sign');
   late final _OQS_SIG_snova_SNOVA_25_8_3_sign =
       _OQS_SIG_snova_SNOVA_25_8_3_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_25_8_3_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13154,27 +16912,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_25_8_3_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_25_8_3_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_25_8_3_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_25_8_3_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_25_8_3_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_25_8_3_verify');
   late final _OQS_SIG_snova_SNOVA_25_8_3_verify =
       _OQS_SIG_snova_SNOVA_25_8_3_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13185,38 +16955,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_25_8_3_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13227,32 +17004,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_25_8_3_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_56_25_2_new() {
     return _OQS_SIG_snova_SNOVA_56_25_2_new();
@@ -13260,28 +17050,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_56_25_2_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_56_25_2_new');
+        'OQS_SIG_snova_SNOVA_56_25_2_new',
+      );
   late final _OQS_SIG_snova_SNOVA_56_25_2_new =
       _OQS_SIG_snova_SNOVA_56_25_2_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_56_25_2_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_56_25_2_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_56_25_2_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_56_25_2_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_56_25_2_keypair');
+  late final _OQS_SIG_snova_SNOVA_56_25_2_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_56_25_2_keypair');
   late final _OQS_SIG_snova_SNOVA_56_25_2_keypair =
       _OQS_SIG_snova_SNOVA_56_25_2_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_56_25_2_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13290,27 +17084,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_56_25_2_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_56_25_2_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_56_25_2_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_56_25_2_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_56_25_2_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_56_25_2_sign');
   late final _OQS_SIG_snova_SNOVA_56_25_2_sign =
       _OQS_SIG_snova_SNOVA_56_25_2_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_56_25_2_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13319,27 +17125,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_56_25_2_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_56_25_2_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_56_25_2_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_56_25_2_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_56_25_2_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_56_25_2_verify');
   late final _OQS_SIG_snova_SNOVA_56_25_2_verify =
       _OQS_SIG_snova_SNOVA_56_25_2_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13350,38 +17168,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_56_25_2_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13392,33 +17217,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_56_25_2_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_49_11_3_new() {
     return _OQS_SIG_snova_SNOVA_49_11_3_new();
@@ -13426,28 +17263,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_49_11_3_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_49_11_3_new');
+        'OQS_SIG_snova_SNOVA_49_11_3_new',
+      );
   late final _OQS_SIG_snova_SNOVA_49_11_3_new =
       _OQS_SIG_snova_SNOVA_49_11_3_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_49_11_3_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_49_11_3_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_49_11_3_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_49_11_3_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_49_11_3_keypair');
+  late final _OQS_SIG_snova_SNOVA_49_11_3_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_49_11_3_keypair');
   late final _OQS_SIG_snova_SNOVA_49_11_3_keypair =
       _OQS_SIG_snova_SNOVA_49_11_3_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_49_11_3_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13456,27 +17297,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_49_11_3_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_49_11_3_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_49_11_3_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_49_11_3_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_49_11_3_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_49_11_3_sign');
   late final _OQS_SIG_snova_SNOVA_49_11_3_sign =
       _OQS_SIG_snova_SNOVA_49_11_3_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_49_11_3_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13485,27 +17338,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_49_11_3_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_49_11_3_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_49_11_3_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_49_11_3_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_49_11_3_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_49_11_3_verify');
   late final _OQS_SIG_snova_SNOVA_49_11_3_verify =
       _OQS_SIG_snova_SNOVA_49_11_3_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13516,38 +17381,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_49_11_3_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13558,33 +17430,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_49_11_3_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_37_8_4_new() {
     return _OQS_SIG_snova_SNOVA_37_8_4_new();
@@ -13592,28 +17476,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_37_8_4_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_37_8_4_new');
+        'OQS_SIG_snova_SNOVA_37_8_4_new',
+      );
   late final _OQS_SIG_snova_SNOVA_37_8_4_new =
       _OQS_SIG_snova_SNOVA_37_8_4_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_8_4_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_8_4_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_8_4_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_8_4_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_8_4_keypair');
+  late final _OQS_SIG_snova_SNOVA_37_8_4_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_37_8_4_keypair');
   late final _OQS_SIG_snova_SNOVA_37_8_4_keypair =
       _OQS_SIG_snova_SNOVA_37_8_4_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_8_4_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13622,27 +17510,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_8_4_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_8_4_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_8_4_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_37_8_4_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_8_4_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_8_4_sign');
   late final _OQS_SIG_snova_SNOVA_37_8_4_sign =
       _OQS_SIG_snova_SNOVA_37_8_4_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_8_4_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13651,27 +17551,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_8_4_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_8_4_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_8_4_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_37_8_4_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_37_8_4_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_8_4_verify');
   late final _OQS_SIG_snova_SNOVA_37_8_4_verify =
       _OQS_SIG_snova_SNOVA_37_8_4_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13682,38 +17594,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_37_8_4_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13724,32 +17643,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_37_8_4_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_24_5_5_new() {
     return _OQS_SIG_snova_SNOVA_24_5_5_new();
@@ -13757,28 +17689,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_24_5_5_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_24_5_5_new');
+        'OQS_SIG_snova_SNOVA_24_5_5_new',
+      );
   late final _OQS_SIG_snova_SNOVA_24_5_5_new =
       _OQS_SIG_snova_SNOVA_24_5_5_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_5_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_5_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_5_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_5_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_5_keypair');
+  late final _OQS_SIG_snova_SNOVA_24_5_5_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_5_keypair');
   late final _OQS_SIG_snova_SNOVA_24_5_5_keypair =
       _OQS_SIG_snova_SNOVA_24_5_5_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_5_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13787,27 +17723,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_5_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_5_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_5_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_24_5_5_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_5_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_5_sign');
   late final _OQS_SIG_snova_SNOVA_24_5_5_sign =
       _OQS_SIG_snova_SNOVA_24_5_5_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_5_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13816,27 +17764,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_5_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_5_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_5_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_24_5_5_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_24_5_5_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_5_verify');
   late final _OQS_SIG_snova_SNOVA_24_5_5_verify =
       _OQS_SIG_snova_SNOVA_24_5_5_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13847,38 +17807,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_5_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -13889,32 +17856,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_24_5_5_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_60_10_4_new() {
     return _OQS_SIG_snova_SNOVA_60_10_4_new();
@@ -13922,28 +17902,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_60_10_4_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_60_10_4_new');
+        'OQS_SIG_snova_SNOVA_60_10_4_new',
+      );
   late final _OQS_SIG_snova_SNOVA_60_10_4_new =
       _OQS_SIG_snova_SNOVA_60_10_4_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_60_10_4_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_60_10_4_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_60_10_4_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_60_10_4_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_60_10_4_keypair');
+  late final _OQS_SIG_snova_SNOVA_60_10_4_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_60_10_4_keypair');
   late final _OQS_SIG_snova_SNOVA_60_10_4_keypair =
       _OQS_SIG_snova_SNOVA_60_10_4_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_60_10_4_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -13952,27 +17936,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_60_10_4_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_60_10_4_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_60_10_4_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_60_10_4_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_60_10_4_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_60_10_4_sign');
   late final _OQS_SIG_snova_SNOVA_60_10_4_sign =
       _OQS_SIG_snova_SNOVA_60_10_4_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_60_10_4_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -13981,27 +17977,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_60_10_4_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_60_10_4_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_60_10_4_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_60_10_4_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_60_10_4_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_60_10_4_verify');
   late final _OQS_SIG_snova_SNOVA_60_10_4_verify =
       _OQS_SIG_snova_SNOVA_60_10_4_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -14012,38 +18020,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_60_10_4_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -14054,33 +18069,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS
-        .fromValue(_OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_60_10_4_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   ffi.Pointer<OQS_SIG> OQS_SIG_snova_SNOVA_29_6_5_new() {
     return _OQS_SIG_snova_SNOVA_29_6_5_new();
@@ -14088,28 +18115,32 @@ class LibOQSBindings {
 
   late final _OQS_SIG_snova_SNOVA_29_6_5_newPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function()>>(
-          'OQS_SIG_snova_SNOVA_29_6_5_new');
+        'OQS_SIG_snova_SNOVA_29_6_5_new',
+      );
   late final _OQS_SIG_snova_SNOVA_29_6_5_new =
       _OQS_SIG_snova_SNOVA_29_6_5_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG> Function()>();
+        ffi.Pointer<OQS_SIG> Function()
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_29_6_5_keypair(
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_29_6_5_keypair(
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_29_6_5_keypair(public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_29_6_5_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_29_6_5_keypair');
+  late final _OQS_SIG_snova_SNOVA_29_6_5_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+        >
+      >('OQS_SIG_snova_SNOVA_29_6_5_keypair');
   late final _OQS_SIG_snova_SNOVA_29_6_5_keypair =
       _OQS_SIG_snova_SNOVA_29_6_5_keypairPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)>();
+        int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Uint8>)
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_29_6_5_sign(
     ffi.Pointer<ffi.Uint8> signature,
@@ -14118,27 +18149,39 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_29_6_5_sign(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_29_6_5_sign(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_29_6_5_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_29_6_5_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_29_6_5_sign');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_29_6_5_sign');
   late final _OQS_SIG_snova_SNOVA_29_6_5_sign =
       _OQS_SIG_snova_SNOVA_29_6_5_signPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_29_6_5_verify(
     ffi.Pointer<ffi.Uint8> message,
@@ -14147,27 +18190,39 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_29_6_5_verify(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_29_6_5_verify(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_29_6_5_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_snova_SNOVA_29_6_5_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_snova_SNOVA_29_6_5_verify');
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_29_6_5_verify');
   late final _OQS_SIG_snova_SNOVA_29_6_5_verify =
       _OQS_SIG_snova_SNOVA_29_6_5_verifyPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str(
     ffi.Pointer<ffi.Uint8> signature,
@@ -14178,38 +18233,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str(
-      signature,
-      signature_len,
-      message,
-      message_len,
-      ctx,
-      ctxlen,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str(
+        signature,
+        signature_len,
+        message,
+        message_len,
+        ctx,
+        ctxlen,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_str =
       _OQS_SIG_snova_SNOVA_29_6_5_sign_with_ctx_strPtr.asFunction<
-          int Function(
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   OQS_STATUS OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str(
     ffi.Pointer<ffi.Uint8> message,
@@ -14220,32 +18282,45 @@ class LibOQSBindings {
     int ctxlen,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str(
-      message,
-      message_len,
-      signature,
-      signature_len,
-      ctx,
-      ctxlen,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str(
+        message,
+        message_len,
+        signature,
+        signature_len,
+        ctx,
+        ctxlen,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_strPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>,
-                  ffi.Size,
-                  ffi.Pointer<ffi.Uint8>)>>(
-      'OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str');
+  late final _OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_strPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str');
   late final _OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_str =
       _OQS_SIG_snova_SNOVA_29_6_5_verify_with_ctx_strPtr.asFunction<
-          int Function(ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>, int,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+        int Function(
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Returns identifiers for available signature schemes in liboqs.  Used with `OQS_SIG_STFL_new`.
   ///
@@ -14254,19 +18329,18 @@ class LibOQSBindings {
   ///
   /// @param[in] i Index of the algorithm identifier to return, 0 <= i < OQS_SIG_algs_length
   /// @return Algorithm identifier as a string, or NULL.
-  ffi.Pointer<ffi.Char> OQS_SIG_STFL_alg_identifier(
-    int i,
-  ) {
-    return _OQS_SIG_STFL_alg_identifier(
-      i,
-    );
+  ffi.Pointer<ffi.Char> OQS_SIG_STFL_alg_identifier(int i) {
+    return _OQS_SIG_STFL_alg_identifier(i);
   }
 
   late final _OQS_SIG_STFL_alg_identifierPtr =
       _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Char> Function(ffi.Size)>>(
-          'OQS_SIG_STFL_alg_identifier');
-  late final _OQS_SIG_STFL_alg_identifier = _OQS_SIG_STFL_alg_identifierPtr
-      .asFunction<ffi.Pointer<ffi.Char> Function(int)>();
+        'OQS_SIG_STFL_alg_identifier',
+      );
+  late final _OQS_SIG_STFL_alg_identifier =
+      _OQS_SIG_STFL_alg_identifierPtr.asFunction<
+        ffi.Pointer<ffi.Char> Function(int)
+      >();
 
   /// Returns the number of stateful signature mechanisms in liboqs.  They can be enumerated with
   /// OQS_SIG_STFL_alg_identifier.
@@ -14287,19 +18361,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_SIG_STFL_algs`.
   /// @return 1 if enabled, 0 if disabled or not found
-  int OQS_SIG_STFL_alg_is_enabled(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_SIG_STFL_alg_is_enabled(
-      method_name,
-    );
+  int OQS_SIG_STFL_alg_is_enabled(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_SIG_STFL_alg_is_enabled(method_name);
   }
 
   late final _OQS_SIG_STFL_alg_is_enabledPtr =
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Char>)>>(
-          'OQS_SIG_STFL_alg_is_enabled');
-  late final _OQS_SIG_STFL_alg_is_enabled = _OQS_SIG_STFL_alg_is_enabledPtr
-      .asFunction<int Function(ffi.Pointer<ffi.Char>)>();
+        'OQS_SIG_STFL_alg_is_enabled',
+      );
+  late final _OQS_SIG_STFL_alg_is_enabled =
+      _OQS_SIG_STFL_alg_is_enabledPtr.asFunction<
+        int Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Constructs an OQS_SIG_STFL object for a particular algorithm.
   ///
@@ -14308,20 +18381,18 @@ class LibOQSBindings {
   ///
   /// @param[in] method_name Name of the desired algorithm; one of the names in `OQS_SIG_STFL_algs`.
   /// @return An OQS_SIG_STFL for the particular algorithm, or `NULL` if the algorithm has been disabled at compile-time.
-  ffi.Pointer<OQS_SIG> OQS_SIG_STFL_new(
-    ffi.Pointer<ffi.Char> method_name,
-  ) {
-    return _OQS_SIG_STFL_new(
-      method_name,
-    );
+  ffi.Pointer<OQS_SIG> OQS_SIG_STFL_new(ffi.Pointer<ffi.Char> method_name) {
+    return _OQS_SIG_STFL_new(method_name);
   }
 
-  late final _OQS_SIG_STFL_newPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<OQS_SIG> Function(
-              ffi.Pointer<ffi.Char>)>>('OQS_SIG_STFL_new');
-  late final _OQS_SIG_STFL_new = _OQS_SIG_STFL_newPtr.asFunction<
-      ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)>();
+  late final _OQS_SIG_STFL_newPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)>
+      >('OQS_SIG_STFL_new');
+  late final _OQS_SIG_STFL_new =
+      _OQS_SIG_STFL_newPtr.asFunction<
+        ffi.Pointer<OQS_SIG> Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Keypair generation algorithm.
   ///
@@ -14339,20 +18410,29 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Uint8> public_key,
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_keypair(
-      sig,
-      public_key,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_keypair(sig, public_key, secret_key),
+    );
   }
 
-  late final _OQS_SIG_STFL_keypairPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>('OQS_SIG_STFL_keypair');
-  late final _OQS_SIG_STFL_keypair = _OQS_SIG_STFL_keypairPtr.asFunction<
-      int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>,
-          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+  late final _OQS_SIG_STFL_keypairPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          )
+        >
+      >('OQS_SIG_STFL_keypair');
+  late final _OQS_SIG_STFL_keypair =
+      _OQS_SIG_STFL_keypairPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+        )
+      >();
 
   /// Signature generation algorithm.
   ///
@@ -14382,33 +18462,42 @@ class LibOQSBindings {
     int message_len,
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_sign(
-      sig,
-      signature,
-      signature_len,
-      message,
-      message_len,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_sign(
+        sig,
+        signature,
+        signature_len,
+        message,
+        message_len,
+        secret_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_STFL_signPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_STFL_signPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Pointer<ffi.Size>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>('OQS_SIG_STFL_sign');
-  late final _OQS_SIG_STFL_sign = _OQS_SIG_STFL_signPtr.asFunction<
-      int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          )
+        >
+      >('OQS_SIG_STFL_sign');
+  late final _OQS_SIG_STFL_sign =
+      _OQS_SIG_STFL_signPtr.asFunction<
+        int Function(
           ffi.Pointer<OQS_SIG>,
           ffi.Pointer<ffi.Uint8>,
           ffi.Pointer<ffi.Size>,
           ffi.Pointer<ffi.Uint8>,
           int,
-          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+        )
+      >();
 
   /// Signature verification algorithm.
   ///
@@ -14427,28 +18516,42 @@ class LibOQSBindings {
     int signature_len,
     ffi.Pointer<ffi.Uint8> public_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_verify(
-      sig,
-      message,
-      message_len,
-      signature,
-      signature_len,
-      public_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_verify(
+        sig,
+        message,
+        message_len,
+        signature,
+        signature_len,
+        public_key,
+      ),
+    );
   }
 
-  late final _OQS_SIG_STFL_verifyPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_STFL_verifyPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Uint8>)>>('OQS_SIG_STFL_verify');
-  late final _OQS_SIG_STFL_verify = _OQS_SIG_STFL_verifyPtr.asFunction<
-      int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.Uint8>, int,
-          ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Uint8>)>();
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Uint8>,
+          )
+        >
+      >('OQS_SIG_STFL_verify');
+  late final _OQS_SIG_STFL_verify =
+      _OQS_SIG_STFL_verifyPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Uint8>,
+        )
+      >();
 
   /// Query the number of remaining signatures.
   ///
@@ -14463,24 +18566,29 @@ class LibOQSBindings {
     ffi.Pointer<ffi.UnsignedLongLong> remain,
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_sigs_remaining(
-      sig,
-      remain,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_sigs_remaining(sig, remain, secret_key),
+    );
   }
 
-  late final _OQS_SIG_STFL_sigs_remainingPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<OQS_SIG>,
-                  ffi.Pointer<ffi.UnsignedLongLong>,
-                  ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_sigs_remaining');
+  late final _OQS_SIG_STFL_sigs_remainingPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.UnsignedLongLong>,
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          )
+        >
+      >('OQS_SIG_STFL_sigs_remaining');
   late final _OQS_SIG_STFL_sigs_remaining =
       _OQS_SIG_STFL_sigs_remainingPtr.asFunction<
-          int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.UnsignedLongLong>,
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.UnsignedLongLong>,
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+        )
+      >();
 
   /// Query the total number of signatures.
   ///
@@ -14495,36 +18603,37 @@ class LibOQSBindings {
     ffi.Pointer<ffi.UnsignedLongLong> max,
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> secret_key,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_sigs_total(
-      sig,
-      max,
-      secret_key,
-    ));
+    return OQS_STATUS.fromValue(_OQS_SIG_STFL_sigs_total(sig, max, secret_key));
   }
 
-  late final _OQS_SIG_STFL_sigs_totalPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<OQS_SIG>,
-                  ffi.Pointer<ffi.UnsignedLongLong>,
-                  ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_sigs_total');
-  late final _OQS_SIG_STFL_sigs_total = _OQS_SIG_STFL_sigs_totalPtr.asFunction<
-      int Function(ffi.Pointer<OQS_SIG>, ffi.Pointer<ffi.UnsignedLongLong>,
-          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+  late final _OQS_SIG_STFL_sigs_totalPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<OQS_SIG>,
+            ffi.Pointer<ffi.UnsignedLongLong>,
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          )
+        >
+      >('OQS_SIG_STFL_sigs_total');
+  late final _OQS_SIG_STFL_sigs_total =
+      _OQS_SIG_STFL_sigs_totalPtr.asFunction<
+        int Function(
+          ffi.Pointer<OQS_SIG>,
+          ffi.Pointer<ffi.UnsignedLongLong>,
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+        )
+      >();
 
   /// Free an OQS_SIG_STFL object that was constructed by OQS_SIG_STFL_new.
-  void OQS_SIG_STFL_free(
-    ffi.Pointer<OQS_SIG> sig,
-  ) {
-    return _OQS_SIG_STFL_free(
-      sig,
-    );
+  void OQS_SIG_STFL_free(ffi.Pointer<OQS_SIG> sig) {
+    return _OQS_SIG_STFL_free(sig);
   }
 
   late final _OQS_SIG_STFL_freePtr =
       _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SIG>)>>(
-          'OQS_SIG_STFL_free');
+        'OQS_SIG_STFL_free',
+      );
   late final _OQS_SIG_STFL_free =
       _OQS_SIG_STFL_freePtr.asFunction<void Function(ffi.Pointer<OQS_SIG>)>();
 
@@ -14538,37 +18647,37 @@ class LibOQSBindings {
   ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> OQS_SIG_STFL_SECRET_KEY_new(
     ffi.Pointer<ffi.Char> method_name,
   ) {
-    return _OQS_SIG_STFL_SECRET_KEY_new(
-      method_name,
-    );
+    return _OQS_SIG_STFL_SECRET_KEY_new(method_name);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_newPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> Function(
-              ffi.Pointer<ffi.Char>)>>('OQS_SIG_STFL_SECRET_KEY_new');
+  late final _OQS_SIG_STFL_SECRET_KEY_newPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> Function(ffi.Pointer<ffi.Char>)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_new');
   late final _OQS_SIG_STFL_SECRET_KEY_new =
       _OQS_SIG_STFL_SECRET_KEY_newPtr.asFunction<
-          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> Function(
-              ffi.Pointer<ffi.Char>)>();
+        ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> Function(ffi.Pointer<ffi.Char>)
+      >();
 
   /// Free an OQS_SIG_STFL_SECRET_KEY object that was constructed by OQS_SECRET_KEY_new.
   ///
   /// @param[in] sk The OQS_SIG_STFL_SECRET_KEY object to free.
-  void OQS_SIG_STFL_SECRET_KEY_free(
-    ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
-  ) {
-    return _OQS_SIG_STFL_SECRET_KEY_free(
-      sk,
-    );
+  void OQS_SIG_STFL_SECRET_KEY_free(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk) {
+    return _OQS_SIG_STFL_SECRET_KEY_free(sk);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_freePtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_SECRET_KEY_free');
-  late final _OQS_SIG_STFL_SECRET_KEY_free = _OQS_SIG_STFL_SECRET_KEY_freePtr
-      .asFunction<void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+  late final _OQS_SIG_STFL_SECRET_KEY_freePtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_free');
+  late final _OQS_SIG_STFL_SECRET_KEY_free =
+      _OQS_SIG_STFL_SECRET_KEY_freePtr.asFunction<
+        void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+      >();
 
   /// Attach a locking mechanism to a secret key object.
   ///
@@ -14587,19 +18696,19 @@ class LibOQSBindings {
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
     lock_key lock,
   ) {
-    return _OQS_SIG_STFL_SECRET_KEY_SET_lock(
-      sk,
-      lock,
-    );
+    return _OQS_SIG_STFL_SECRET_KEY_SET_lock(sk, lock);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_SET_lockPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              lock_key)>>('OQS_SIG_STFL_SECRET_KEY_SET_lock');
+  late final _OQS_SIG_STFL_SECRET_KEY_SET_lockPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, lock_key)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_SET_lock');
   late final _OQS_SIG_STFL_SECRET_KEY_SET_lock =
       _OQS_SIG_STFL_SECRET_KEY_SET_lockPtr.asFunction<
-          void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, lock_key)>();
+        void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, lock_key)
+      >();
 
   /// Attach an unlock mechanism to a secret key object.
   ///
@@ -14618,19 +18727,19 @@ class LibOQSBindings {
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
     unlock_key unlock,
   ) {
-    return _OQS_SIG_STFL_SECRET_KEY_SET_unlock(
-      sk,
-      unlock,
-    );
+    return _OQS_SIG_STFL_SECRET_KEY_SET_unlock(sk, unlock);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_SET_unlockPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              unlock_key)>>('OQS_SIG_STFL_SECRET_KEY_SET_unlock');
+  late final _OQS_SIG_STFL_SECRET_KEY_SET_unlockPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, unlock_key)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_SET_unlock');
   late final _OQS_SIG_STFL_SECRET_KEY_SET_unlock =
       _OQS_SIG_STFL_SECRET_KEY_SET_unlockPtr.asFunction<
-          void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, unlock_key)>();
+        void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, unlock_key)
+      >();
 
   /// Assign a mutex function to handle concurrency control over the secret key.
   ///
@@ -14646,20 +18755,25 @@ class LibOQSBindings {
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
     ffi.Pointer<ffi.Void> mutex,
   ) {
-    return _OQS_SIG_STFL_SECRET_KEY_SET_mutex(
-      sk,
-      mutex,
-    );
+    return _OQS_SIG_STFL_SECRET_KEY_SET_mutex(sk, mutex);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_SET_mutexPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              ffi.Pointer<ffi.Void>)>>('OQS_SIG_STFL_SECRET_KEY_SET_mutex');
+  late final _OQS_SIG_STFL_SECRET_KEY_SET_mutexPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+            ffi.Pointer<ffi.Void>,
+          )
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_SET_mutex');
   late final _OQS_SIG_STFL_SECRET_KEY_SET_mutex =
       _OQS_SIG_STFL_SECRET_KEY_SET_mutexPtr.asFunction<
-          void Function(
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, ffi.Pointer<ffi.Void>)>();
+        void Function(
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          ffi.Pointer<ffi.Void>,
+        )
+      >();
 
   /// Lock the secret key to ensure exclusive access in a concurrent environment.
   ///
@@ -14680,17 +18794,19 @@ class LibOQSBindings {
   OQS_STATUS OQS_SIG_STFL_SECRET_KEY_lock(
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_lock(
-      sk,
-    ));
+    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_lock(sk));
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_lockPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_SECRET_KEY_lock');
-  late final _OQS_SIG_STFL_SECRET_KEY_lock = _OQS_SIG_STFL_SECRET_KEY_lockPtr
-      .asFunction<int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+  late final _OQS_SIG_STFL_SECRET_KEY_lockPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_lock');
+  late final _OQS_SIG_STFL_SECRET_KEY_lock =
+      _OQS_SIG_STFL_SECRET_KEY_lockPtr.asFunction<
+        int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+      >();
 
   /// Unlock the secret key, making it accessible to other processes.
   ///
@@ -14711,18 +18827,19 @@ class LibOQSBindings {
   OQS_STATUS OQS_SIG_STFL_SECRET_KEY_unlock(
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_unlock(
-      sk,
-    ));
+    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_unlock(sk));
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_unlockPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_SECRET_KEY_unlock');
+  late final _OQS_SIG_STFL_SECRET_KEY_unlockPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_unlock');
   late final _OQS_SIG_STFL_SECRET_KEY_unlock =
       _OQS_SIG_STFL_SECRET_KEY_unlockPtr.asFunction<
-          int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+        int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)
+      >();
 
   /// Set the callback and context for securely storing a stateful secret key.
   ///
@@ -14742,23 +18859,27 @@ class LibOQSBindings {
     secure_store_sk store_cb,
     ffi.Pointer<ffi.Void> context,
   ) {
-    return _OQS_SIG_STFL_SECRET_KEY_SET_store_cb(
-      sk,
-      store_cb,
-      context,
-    );
+    return _OQS_SIG_STFL_SECRET_KEY_SET_store_cb(sk, store_cb, context);
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_SET_store_cbPtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_STFL_SECRET_KEY_SET_store_cbPtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Void Function(
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              secure_store_sk,
-              ffi.Pointer<ffi.Void>)>>('OQS_SIG_STFL_SECRET_KEY_SET_store_cb');
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+            secure_store_sk,
+            ffi.Pointer<ffi.Void>,
+          )
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_SET_store_cb');
   late final _OQS_SIG_STFL_SECRET_KEY_SET_store_cb =
       _OQS_SIG_STFL_SECRET_KEY_SET_store_cbPtr.asFunction<
-          void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>, secure_store_sk,
-              ffi.Pointer<ffi.Void>)>();
+        void Function(
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          secure_store_sk,
+          ffi.Pointer<ffi.Void>,
+        )
+      >();
 
   /// Serialize the stateful secret key data into a byte array.
   ///
@@ -14775,24 +18896,29 @@ class LibOQSBindings {
     ffi.Pointer<ffi.Size> sk_buf_len,
     ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_serialize(
-      sk_buf_ptr,
-      sk_buf_len,
-      sk,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_SECRET_KEY_serialize(sk_buf_ptr, sk_buf_len, sk),
+    );
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_serializePtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Int Function(
-                  ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
-                  ffi.Pointer<ffi.Size>,
-                  ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>>(
-      'OQS_SIG_STFL_SECRET_KEY_serialize');
+  late final _OQS_SIG_STFL_SECRET_KEY_serializePtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Int Function(
+            ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
+            ffi.Pointer<ffi.Size>,
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          )
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_serialize');
   late final _OQS_SIG_STFL_SECRET_KEY_serialize =
       _OQS_SIG_STFL_SECRET_KEY_serializePtr.asFunction<
-          int Function(ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
-              ffi.Pointer<ffi.Size>, ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>)>();
+        int Function(
+          ffi.Pointer<ffi.Pointer<ffi.Uint8>>,
+          ffi.Pointer<ffi.Size>,
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+        )
+      >();
 
   /// Deserialize a byte array into an OQS_SIG_STFL_SECRET_KEY object.
   ///
@@ -14812,25 +18938,31 @@ class LibOQSBindings {
     int sk_buf_len,
     ffi.Pointer<ffi.Void> context,
   ) {
-    return OQS_STATUS.fromValue(_OQS_SIG_STFL_SECRET_KEY_deserialize(
-      sk,
-      sk_buf,
-      sk_buf_len,
-      context,
-    ));
+    return OQS_STATUS.fromValue(
+      _OQS_SIG_STFL_SECRET_KEY_deserialize(sk, sk_buf, sk_buf_len, context),
+    );
   }
 
-  late final _OQS_SIG_STFL_SECRET_KEY_deserializePtr = _lookup<
-      ffi.NativeFunction<
+  late final _OQS_SIG_STFL_SECRET_KEY_deserializePtr =
+      _lookup<
+        ffi.NativeFunction<
           ffi.Int Function(
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Pointer<ffi.Void>)>>('OQS_SIG_STFL_SECRET_KEY_deserialize');
+            ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+            ffi.Pointer<ffi.Uint8>,
+            ffi.Size,
+            ffi.Pointer<ffi.Void>,
+          )
+        >
+      >('OQS_SIG_STFL_SECRET_KEY_deserialize');
   late final _OQS_SIG_STFL_SECRET_KEY_deserialize =
       _OQS_SIG_STFL_SECRET_KEY_deserializePtr.asFunction<
-          int Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Void>)>();
+        int Function(
+          ffi.Pointer<OQS_SIG_STFL_SECRET_KEY>,
+          ffi.Pointer<ffi.Uint8>,
+          int,
+          ffi.Pointer<ffi.Void>,
+        )
+      >();
 
   /// Set callback functions for AES operations.
   ///
@@ -14839,20 +18971,18 @@ class LibOQSBindings {
   /// default provider determined at build time will be used.
   ///
   /// @param[in] new_callbacks Callback functions defined in OQS_AES_callbacks
-  void OQS_AES_set_callbacks(
-    ffi.Pointer<OQS_AES_callbacks> new_callbacks,
-  ) {
-    return _OQS_AES_set_callbacks(
-      new_callbacks,
-    );
+  void OQS_AES_set_callbacks(ffi.Pointer<OQS_AES_callbacks> new_callbacks) {
+    return _OQS_AES_set_callbacks(new_callbacks);
   }
 
-  late final _OQS_AES_set_callbacksPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<OQS_AES_callbacks>)>>(
-      'OQS_AES_set_callbacks');
-  late final _OQS_AES_set_callbacks = _OQS_AES_set_callbacksPtr.asFunction<
-      void Function(ffi.Pointer<OQS_AES_callbacks>)>();
+  late final _OQS_AES_set_callbacksPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_AES_callbacks>)>
+      >('OQS_AES_set_callbacks');
+  late final _OQS_AES_set_callbacks =
+      _OQS_AES_set_callbacksPtr.asFunction<
+        void Function(ffi.Pointer<OQS_AES_callbacks>)
+      >();
 
   /// Set callback functions for SHA2 operations.
   ///
@@ -14861,20 +18991,18 @@ class LibOQSBindings {
   /// the default provider determined at build time will be used.
   ///
   /// @param[in] new_callbacks Callback functions defined in OQS_SHA2_callbacks
-  void OQS_SHA2_set_callbacks(
-    ffi.Pointer<OQS_SHA2_callbacks> new_callbacks,
-  ) {
-    return _OQS_SHA2_set_callbacks(
-      new_callbacks,
-    );
+  void OQS_SHA2_set_callbacks(ffi.Pointer<OQS_SHA2_callbacks> new_callbacks) {
+    return _OQS_SHA2_set_callbacks(new_callbacks);
   }
 
-  late final _OQS_SHA2_set_callbacksPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SHA2_callbacks>)>>(
-      'OQS_SHA2_set_callbacks');
-  late final _OQS_SHA2_set_callbacks = _OQS_SHA2_set_callbacksPtr.asFunction<
-      void Function(ffi.Pointer<OQS_SHA2_callbacks>)>();
+  late final _OQS_SHA2_set_callbacksPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SHA2_callbacks>)>
+      >('OQS_SHA2_set_callbacks');
+  late final _OQS_SHA2_set_callbacks =
+      _OQS_SHA2_set_callbacksPtr.asFunction<
+        void Function(ffi.Pointer<OQS_SHA2_callbacks>)
+      >();
 
   /// Set callback functions for SHA3 operations.
   ///
@@ -14883,20 +19011,18 @@ class LibOQSBindings {
   /// the default provider determined at build time will be used.
   ///
   /// @param new_callbacks Callback functions defined in OQS_SHA3_callbacks struct
-  void OQS_SHA3_set_callbacks(
-    ffi.Pointer<OQS_SHA3_callbacks> new_callbacks,
-  ) {
-    return _OQS_SHA3_set_callbacks(
-      new_callbacks,
-    );
+  void OQS_SHA3_set_callbacks(ffi.Pointer<OQS_SHA3_callbacks> new_callbacks) {
+    return _OQS_SHA3_set_callbacks(new_callbacks);
   }
 
-  late final _OQS_SHA3_set_callbacksPtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SHA3_callbacks>)>>(
-      'OQS_SHA3_set_callbacks');
-  late final _OQS_SHA3_set_callbacks = _OQS_SHA3_set_callbacksPtr.asFunction<
-      void Function(ffi.Pointer<OQS_SHA3_callbacks>)>();
+  late final _OQS_SHA3_set_callbacksPtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<OQS_SHA3_callbacks>)>
+      >('OQS_SHA3_set_callbacks');
+  late final _OQS_SHA3_set_callbacks =
+      _OQS_SHA3_set_callbacksPtr.asFunction<
+        void Function(ffi.Pointer<OQS_SHA3_callbacks>)
+      >();
 
   /// Set callback functions for 4-parallel SHA3 operations.
   ///
@@ -14908,17 +19034,19 @@ class LibOQSBindings {
   void OQS_SHA3_x4_set_callbacks(
     ffi.Pointer<OQS_SHA3_x4_callbacks> new_callbacks,
   ) {
-    return _OQS_SHA3_x4_set_callbacks(
-      new_callbacks,
-    );
+    return _OQS_SHA3_x4_set_callbacks(new_callbacks);
   }
 
-  late final _OQS_SHA3_x4_set_callbacksPtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_x4_callbacks>)>>(
-      'OQS_SHA3_x4_set_callbacks');
-  late final _OQS_SHA3_x4_set_callbacks = _OQS_SHA3_x4_set_callbacksPtr
-      .asFunction<void Function(ffi.Pointer<OQS_SHA3_x4_callbacks>)>();
+  late final _OQS_SHA3_x4_set_callbacksPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<OQS_SHA3_x4_callbacks>)
+        >
+      >('OQS_SHA3_x4_set_callbacks');
+  late final _OQS_SHA3_x4_set_callbacks =
+      _OQS_SHA3_x4_set_callbacksPtr.asFunction<
+        void Function(ffi.Pointer<OQS_SHA3_x4_callbacks>)
+      >();
 }
 
 /// Represents return values from functions.
@@ -14946,11 +19074,11 @@ enum OQS_STATUS {
   const OQS_STATUS(this.value);
 
   static OQS_STATUS fromValue(int value) => switch (value) {
-        -1 => OQS_ERROR,
-        0 => OQS_SUCCESS,
-        50 => OQS_EXTERNAL_LIB_ERROR_OPENSSL,
-        _ => throw ArgumentError('Unknown value for OQS_STATUS: $value'),
-      };
+    -1 => OQS_ERROR,
+    0 => OQS_SUCCESS,
+    50 => OQS_EXTERNAL_LIB_ERROR_OPENSSL,
+    _ => throw ArgumentError('Unknown value for OQS_STATUS: $value'),
+  };
 }
 
 /// CPU runtime detection flags
@@ -14979,27 +19107,27 @@ enum OQS_CPU_EXT {
   const OQS_CPU_EXT(this.value);
 
   static OQS_CPU_EXT fromValue(int value) => switch (value) {
-        0 => OQS_CPU_EXT_INIT,
-        1 => OQS_CPU_EXT_ADX,
-        2 => OQS_CPU_EXT_AES,
-        3 => OQS_CPU_EXT_AVX,
-        4 => OQS_CPU_EXT_AVX2,
-        5 => OQS_CPU_EXT_AVX512,
-        6 => OQS_CPU_EXT_BMI1,
-        7 => OQS_CPU_EXT_BMI2,
-        8 => OQS_CPU_EXT_PCLMULQDQ,
-        9 => OQS_CPU_EXT_VPCLMULQDQ,
-        10 => OQS_CPU_EXT_POPCNT,
-        11 => OQS_CPU_EXT_SSE,
-        12 => OQS_CPU_EXT_SSE2,
-        13 => OQS_CPU_EXT_SSE3,
-        14 => OQS_CPU_EXT_ARM_AES,
-        15 => OQS_CPU_EXT_ARM_SHA2,
-        16 => OQS_CPU_EXT_ARM_SHA3,
-        17 => OQS_CPU_EXT_ARM_NEON,
-        18 => OQS_CPU_EXT_COUNT,
-        _ => throw ArgumentError('Unknown value for OQS_CPU_EXT: $value'),
-      };
+    0 => OQS_CPU_EXT_INIT,
+    1 => OQS_CPU_EXT_ADX,
+    2 => OQS_CPU_EXT_AES,
+    3 => OQS_CPU_EXT_AVX,
+    4 => OQS_CPU_EXT_AVX2,
+    5 => OQS_CPU_EXT_AVX512,
+    6 => OQS_CPU_EXT_BMI1,
+    7 => OQS_CPU_EXT_BMI2,
+    8 => OQS_CPU_EXT_PCLMULQDQ,
+    9 => OQS_CPU_EXT_VPCLMULQDQ,
+    10 => OQS_CPU_EXT_POPCNT,
+    11 => OQS_CPU_EXT_SSE,
+    12 => OQS_CPU_EXT_SSE2,
+    13 => OQS_CPU_EXT_SSE3,
+    14 => OQS_CPU_EXT_ARM_AES,
+    15 => OQS_CPU_EXT_ARM_SHA2,
+    16 => OQS_CPU_EXT_ARM_SHA3,
+    17 => OQS_CPU_EXT_ARM_NEON,
+    18 => OQS_CPU_EXT_COUNT,
+    _ => throw ArgumentError('Unknown value for OQS_CPU_EXT: $value'),
+  };
 }
 
 /// Key encapsulation mechanism object
@@ -15052,11 +19180,15 @@ final class OQS_KEM extends ffi.Struct {
   /// @param[in] seed The input randomness represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> public_key,
-              ffi.Pointer<ffi.Uint8> secret_key,
-              ffi.Pointer<ffi.Uint8> seed)>> keypair_derand;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> public_key,
+        ffi.Pointer<ffi.Uint8> secret_key,
+        ffi.Pointer<ffi.Uint8> seed,
+      )
+    >
+  >
+  keypair_derand;
 
   /// Keypair generation algorithm.
   ///
@@ -15068,9 +19200,14 @@ final class OQS_KEM extends ffi.Struct {
   /// @param[out] secret_key The secret key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8> public_key,
-              ffi.Pointer<ffi.Uint8> secret_key)>> keypair;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> public_key,
+        ffi.Pointer<ffi.Uint8> secret_key,
+      )
+    >
+  >
+  keypair;
 
   /// Encapsulation algorithm.
   ///
@@ -15083,11 +19220,15 @@ final class OQS_KEM extends ffi.Struct {
   /// @param[in] public_key The public key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> ciphertext,
-              ffi.Pointer<ffi.Uint8> shared_secret,
-              ffi.Pointer<ffi.Uint8> public_key)>> encaps;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> ciphertext,
+        ffi.Pointer<ffi.Uint8> shared_secret,
+        ffi.Pointer<ffi.Uint8> public_key,
+      )
+    >
+  >
+  encaps;
 
   /// Decapsulation algorithm.
   ///
@@ -15100,11 +19241,15 @@ final class OQS_KEM extends ffi.Struct {
   /// @param[in] secret_key The secret key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> shared_secret,
-              ffi.Pointer<ffi.Uint8> ciphertext,
-              ffi.Pointer<ffi.Uint8> secret_key)>> decaps;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> shared_secret,
+        ffi.Pointer<ffi.Uint8> ciphertext,
+        ffi.Pointer<ffi.Uint8> secret_key,
+      )
+    >
+  >
+  decaps;
 }
 
 /// Signature schemes object
@@ -15156,9 +19301,14 @@ final class OQS_SIG extends ffi.Struct {
   /// @param[out] secret_key The secret key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8> public_key,
-              ffi.Pointer<ffi.Uint8> secret_key)>> keypair;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> public_key,
+        ffi.Pointer<ffi.Uint8> secret_key,
+      )
+    >
+  >
+  keypair;
 
   /// Signature generation algorithm.
   ///
@@ -15173,13 +19323,17 @@ final class OQS_SIG extends ffi.Struct {
   /// @param[in] secret_key The secret key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> signature,
-              ffi.Pointer<ffi.Size> signature_len,
-              ffi.Pointer<ffi.Uint8> message,
-              ffi.Size message_len,
-              ffi.Pointer<ffi.Uint8> secret_key)>> sign;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> signature,
+        ffi.Pointer<ffi.Size> signature_len,
+        ffi.Pointer<ffi.Uint8> message,
+        ffi.Size message_len,
+        ffi.Pointer<ffi.Uint8> secret_key,
+      )
+    >
+  >
+  sign;
 
   /// Signature generation algorithm, with custom context string.
   ///
@@ -15196,15 +19350,19 @@ final class OQS_SIG extends ffi.Struct {
   /// @param[in] secret_key The secret key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> signature,
-              ffi.Pointer<ffi.Size> signature_len,
-              ffi.Pointer<ffi.Uint8> message,
-              ffi.Size message_len,
-              ffi.Pointer<ffi.Uint8> ctx_str,
-              ffi.Size ctx_str_len,
-              ffi.Pointer<ffi.Uint8> secret_key)>> sign_with_ctx_str;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> signature,
+        ffi.Pointer<ffi.Size> signature_len,
+        ffi.Pointer<ffi.Uint8> message,
+        ffi.Size message_len,
+        ffi.Pointer<ffi.Uint8> ctx_str,
+        ffi.Size ctx_str_len,
+        ffi.Pointer<ffi.Uint8> secret_key,
+      )
+    >
+  >
+  sign_with_ctx_str;
 
   /// Signature verification algorithm.
   ///
@@ -15215,13 +19373,17 @@ final class OQS_SIG extends ffi.Struct {
   /// @param[in] public_key The public key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> message,
-              ffi.Size message_len,
-              ffi.Pointer<ffi.Uint8> signature,
-              ffi.Size signature_len,
-              ffi.Pointer<ffi.Uint8> public_key)>> verify;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> message,
+        ffi.Size message_len,
+        ffi.Pointer<ffi.Uint8> signature,
+        ffi.Size signature_len,
+        ffi.Pointer<ffi.Uint8> public_key,
+      )
+    >
+  >
+  verify;
 
   /// Signature verification algorithm, with custom context string.
   ///
@@ -15234,31 +19396,41 @@ final class OQS_SIG extends ffi.Struct {
   /// @param[in] public_key The public key represented as a byte string.
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Uint8> message,
-              ffi.Size message_len,
-              ffi.Pointer<ffi.Uint8> signature,
-              ffi.Size signature_len,
-              ffi.Pointer<ffi.Uint8> ctx_str,
-              ffi.Size ctx_str_len,
-              ffi.Pointer<ffi.Uint8> public_key)>> verify_with_ctx_str;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> message,
+        ffi.Size message_len,
+        ffi.Pointer<ffi.Uint8> signature,
+        ffi.Size signature_len,
+        ffi.Pointer<ffi.Uint8> ctx_str,
+        ffi.Size ctx_str_len,
+        ffi.Pointer<ffi.Uint8> public_key,
+      )
+    >
+  >
+  verify_with_ctx_str;
 }
 
-typedef secure_store_skFunction = ffi.Int Function(
-    ffi.Pointer<ffi.Uint8> sk_buf,
-    ffi.Size buf_len,
-    ffi.Pointer<ffi.Void> context);
-typedef Dartsecure_store_skFunction = OQS_STATUS Function(
-    ffi.Pointer<ffi.Uint8> sk_buf, int buf_len, ffi.Pointer<ffi.Void> context);
+typedef secure_store_skFunction =
+    ffi.Int Function(
+      ffi.Pointer<ffi.Uint8> sk_buf,
+      ffi.Size buf_len,
+      ffi.Pointer<ffi.Void> context,
+    );
+typedef Dartsecure_store_skFunction =
+    OQS_STATUS Function(
+      ffi.Pointer<ffi.Uint8> sk_buf,
+      int buf_len,
+      ffi.Pointer<ffi.Void> context,
+    );
 
 /// Application provided function to securely store data
 /// @param[in] sk_buf pointer to the data to be saved
 /// @param[in] buf_len length of the data to be stored
 /// @param[out] context pass back application data related to secret key data storage.
 /// return OQS_SUCCESS if successful, otherwise OQS_ERROR
-typedef secure_store_sk
-    = ffi.Pointer<ffi.NativeFunction<secure_store_skFunction>>;
+typedef secure_store_sk =
+    ffi.Pointer<ffi.NativeFunction<secure_store_skFunction>>;
 
 /// @brief OQS_SIG_STFL_SECRET_KEY object for stateful signature schemes
 final class OQS_SIG_STFL_SECRET_KEY extends ffi.Struct {
@@ -15289,11 +19461,15 @@ final class OQS_SIG_STFL_SECRET_KEY extends ffi.Struct {
   ///
   /// @attention The caller is responsible for ensuring that `sk` is a valid object before calling this function.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Pointer<ffi.Uint8>> sk_buf_ptr,
-              ffi.Pointer<ffi.Size> sk_buf_len,
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk)>> serialize_key;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Pointer<ffi.Uint8>> sk_buf_ptr,
+        ffi.Pointer<ffi.Size> sk_buf_len,
+        ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
+      )
+    >
+  >
+  serialize_key;
 
   /// Deserialize a byte stream into the internal representation of a stateful secret key.
   ///
@@ -15309,28 +19485,34 @@ final class OQS_SIG_STFL_SECRET_KEY extends ffi.Struct {
   ///
   /// @attention The caller is responsible for ensuring that `sk_buf` is securely deallocated when it's no longer needed.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
-              ffi.Pointer<ffi.Uint8> sk_buf,
-              ffi.Size sk_buf_len,
-              ffi.Pointer<ffi.Void> context)>> deserialize_key;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
+        ffi.Pointer<ffi.Uint8> sk_buf,
+        ffi.Size sk_buf_len,
+        ffi.Pointer<ffi.Void> context,
+      )
+    >
+  >
+  deserialize_key;
 
   /// Secret Key Locking Function
   ///
   /// @param[in] mutex application defined mutex
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> mutex)>>
-      lock_key;
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> mutex)>
+  >
+  lock_key;
 
   /// Secret Key Unlocking / Releasing Function
   ///
   /// @param[in]  mutex application defined mutex
   /// @return OQS_SUCCESS or OQS_ERROR
   external ffi.Pointer<
-          ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> mutex)>>
-      unlock_key;
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> mutex)>
+  >
+  unlock_key;
 
   /// Store Secret Key Function
   ///
@@ -15344,17 +19526,26 @@ final class OQS_SIG_STFL_SECRET_KEY extends ffi.Struct {
   /// @return OQS_SUCCESS or OQS_ERROR
   /// Ideally written to a secure device.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8> sk_buf, ffi.Size sk_buf_len,
-              ffi.Pointer<ffi.Void> context)>> secure_store_scrt_key;
+    ffi.NativeFunction<
+      ffi.Int Function(
+        ffi.Pointer<ffi.Uint8> sk_buf,
+        ffi.Size sk_buf_len,
+        ffi.Pointer<ffi.Void> context,
+      )
+    >
+  >
+  secure_store_scrt_key;
 
   /// Free internal variant-specific data
   ///
   /// @param[in] sk The secret key represented as OQS_SIG_STFL_SECRET_KEY object.
   /// @return None.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk)>> free_key;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk)
+    >
+  >
+  free_key;
 
   /// Set Secret Key Store Callback Function
   ///
@@ -15377,11 +19568,15 @@ final class OQS_SIG_STFL_SECRET_KEY extends ffi.Struct {
   /// OQS_SIG_STFL_SECRET_KEY_set_store_cb().
   /// @return None.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
-              secure_store_sk store_cb,
-              ffi.Pointer<ffi.Void> context)>> set_scrt_key_store_cb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SIG_STFL_SECRET_KEY> sk,
+        secure_store_sk store_cb,
+        ffi.Pointer<ffi.Void> context,
+      )
+    >
+  >
+  set_scrt_key_store_cb;
 }
 
 typedef lock_keyFunction = ffi.Int Function(ffi.Pointer<ffi.Void> mutex);
@@ -15392,8 +19587,8 @@ typedef Dartlock_keyFunction = OQS_STATUS Function(ffi.Pointer<ffi.Void> mutex);
 /// return OQS_SUCCESS if successful, otherwise OQS_ERROR
 typedef lock_key = ffi.Pointer<ffi.NativeFunction<lock_keyFunction>>;
 typedef unlock_keyFunction = ffi.Int Function(ffi.Pointer<ffi.Void> mutex);
-typedef Dartunlock_keyFunction = OQS_STATUS Function(
-    ffi.Pointer<ffi.Void> mutex);
+typedef Dartunlock_keyFunction =
+    OQS_STATUS Function(ffi.Pointer<ffi.Void> mutex);
 
 /// Application provided function to unlock secret key object
 /// @param[in] mutex pointer to mutex struct
@@ -15404,127 +19599,191 @@ typedef unlock_key = ffi.Pointer<ffi.NativeFunction<unlock_keyFunction>>;
 final class OQS_AES_callbacks extends ffi.Struct {
   /// Implementation of function OQS_AES128_ECB_load_schedule.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> key,
-                  ffi.Pointer<ffi.Pointer<ffi.Void>> ctx)>>
-      AES128_ECB_load_schedule;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Pointer<ffi.Void>> ctx,
+      )
+    >
+  >
+  AES128_ECB_load_schedule;
 
   /// Implementation of function OQS_AES256_CTR_inc_init.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> key,
-              ffi.Pointer<ffi.Pointer<ffi.Void>> ctx)>> AES128_CTR_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Pointer<ffi.Void>> ctx,
+      )
+    >
+  >
+  AES128_CTR_inc_init;
 
   /// Implementation of function OQS_AES256_CTR_inc_iv.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> iv, ffi.Size iv_len,
-              ffi.Pointer<ffi.Void> ctx)>> AES128_CTR_inc_iv;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> iv,
+        ffi.Size iv_len,
+        ffi.Pointer<ffi.Void> ctx,
+      )
+    >
+  >
+  AES128_CTR_inc_iv;
 
   /// Implementation of function OQS_AES256_CTR_inc_ivu64.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Uint64 iv, ffi.Pointer<ffi.Void> ctx)>>
-      AES128_CTR_inc_ivu64;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Uint64 iv, ffi.Pointer<ffi.Void> ctx)
+    >
+  >
+  AES128_CTR_inc_ivu64;
 
   /// Implementation of function OQS_AES128_free_schedule.
-  external ffi
-      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ctx)>>
-      AES128_free_schedule;
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ctx)>
+  >
+  AES128_free_schedule;
 
   /// Implementation of function OQS_AES128_ECB_enc.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> plaintext,
-              ffi.Size plaintext_len,
-              ffi.Pointer<ffi.Uint8> key,
-              ffi.Pointer<ffi.Uint8> ciphertext)>> AES128_ECB_enc;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> plaintext,
+        ffi.Size plaintext_len,
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Uint8> ciphertext,
+      )
+    >
+  >
+  AES128_ECB_enc;
 
   /// Implementation of function OQS_AES128_ECB_enc_sch.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> plaintext,
-              ffi.Size plaintext_len,
-              ffi.Pointer<ffi.Void> schedule,
-              ffi.Pointer<ffi.Uint8> ciphertext)>> AES128_ECB_enc_sch;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> plaintext,
+        ffi.Size plaintext_len,
+        ffi.Pointer<ffi.Void> schedule,
+        ffi.Pointer<ffi.Uint8> ciphertext,
+      )
+    >
+  >
+  AES128_ECB_enc_sch;
 
   /// Implementation of function OQS_AES128_CTR_inc_stream_iv.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> iv,
-              ffi.Size iv_len,
-              ffi.Pointer<ffi.Void> ctx,
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Size out_len)>> AES128_CTR_inc_stream_iv;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> iv,
+        ffi.Size iv_len,
+        ffi.Pointer<ffi.Void> ctx,
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Size out_len,
+      )
+    >
+  >
+  AES128_CTR_inc_stream_iv;
 
   /// Implementation of function OQS_AES256_ECB_load_schedule.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> key,
-                  ffi.Pointer<ffi.Pointer<ffi.Void>> ctx)>>
-      AES256_ECB_load_schedule;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Pointer<ffi.Void>> ctx,
+      )
+    >
+  >
+  AES256_ECB_load_schedule;
 
   /// Implementation of function OQS_AES256_CTR_inc_init.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> key,
-              ffi.Pointer<ffi.Pointer<ffi.Void>> ctx)>> AES256_CTR_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Pointer<ffi.Void>> ctx,
+      )
+    >
+  >
+  AES256_CTR_inc_init;
 
   /// Implementation of function OQS_AES256_CTR_inc_iv.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> iv, ffi.Size iv_len,
-              ffi.Pointer<ffi.Void> ctx)>> AES256_CTR_inc_iv;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> iv,
+        ffi.Size iv_len,
+        ffi.Pointer<ffi.Void> ctx,
+      )
+    >
+  >
+  AES256_CTR_inc_iv;
 
   /// Implementation of function OQS_AES256_CTR_inc_ivu64.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Uint64 iv, ffi.Pointer<ffi.Void> ctx)>>
-      AES256_CTR_inc_ivu64;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Uint64 iv, ffi.Pointer<ffi.Void> ctx)
+    >
+  >
+  AES256_CTR_inc_ivu64;
 
   /// Implementation of function OQS_AES256_free_schedule.
-  external ffi
-      .Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ctx)>>
-      AES256_free_schedule;
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void> ctx)>
+  >
+  AES256_free_schedule;
 
   /// Implementation of function OQS_AES256_ECB_enc.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> plaintext,
-              ffi.Size plaintext_len,
-              ffi.Pointer<ffi.Uint8> key,
-              ffi.Pointer<ffi.Uint8> ciphertext)>> AES256_ECB_enc;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> plaintext,
+        ffi.Size plaintext_len,
+        ffi.Pointer<ffi.Uint8> key,
+        ffi.Pointer<ffi.Uint8> ciphertext,
+      )
+    >
+  >
+  AES256_ECB_enc;
 
   /// Implementation of function OQS_AES256_ECB_enc_sch.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> plaintext,
-              ffi.Size plaintext_len,
-              ffi.Pointer<ffi.Void> schedule,
-              ffi.Pointer<ffi.Uint8> ciphertext)>> AES256_ECB_enc_sch;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> plaintext,
+        ffi.Size plaintext_len,
+        ffi.Pointer<ffi.Void> schedule,
+        ffi.Pointer<ffi.Uint8> ciphertext,
+      )
+    >
+  >
+  AES256_ECB_enc_sch;
 
   /// Implementation of function OQS_AES256_CTR_inc_stream_iv.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> iv,
-              ffi.Size iv_len,
-              ffi.Pointer<ffi.Void> ctx,
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Size out_len)>> AES256_CTR_inc_stream_iv;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> iv,
+        ffi.Size iv_len,
+        ffi.Pointer<ffi.Void> ctx,
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Size out_len,
+      )
+    >
+  >
+  AES256_CTR_inc_stream_iv;
 
   /// Implementation of function OQS_AES256_CTR_inc_stream_blks.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Void> ctx,
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Size out_blks)>> AES256_CTR_inc_stream_blks;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Void> ctx,
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Size out_blks,
+      )
+    >
+  >
+  AES256_CTR_inc_stream_blks;
 }
 
 /// Data structure for the state of the SHA-224 incremental hashing API.
@@ -15587,132 +19846,207 @@ final class OQS_SHA2_sha512_ctx extends ffi.Struct {
 final class OQS_SHA2_callbacks extends ffi.Struct {
   /// Implementation of function OQS_SHA2_sha256.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA2_sha256;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA2_sha256;
 
   /// Implementation of function OQS_SHA2_sha256_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> state)>>
-      SHA2_sha256_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> state)
+    >
+  >
+  SHA2_sha256_inc_init;
 
   /// Implementation of function OQS_SHA2_sha256_inc_ctx_clone.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> dest,
-              ffi.Pointer<OQS_SHA2_sha256_ctx> src)>> SHA2_sha256_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha256_ctx> dest,
+        ffi.Pointer<OQS_SHA2_sha256_ctx> src,
+      )
+    >
+  >
+  SHA2_sha256_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA2_sha256_inc.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$, ffi.Size len)>> SHA2_sha256_inc;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha256_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size len,
+      )
+    >
+  >
+  SHA2_sha256_inc;
 
   /// Implementation of function OQS_SHA2_sha256_inc_blocks.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA2_sha256_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inblocks)>> SHA2_sha256_inc_blocks;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha256_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inblocks,
+      )
+    >
+  >
+  SHA2_sha256_inc_blocks;
 
   /// Implementation of function OQS_SHA2_sha256_inc_finalize.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Pointer<OQS_SHA2_sha256_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inlen)>> SHA2_sha256_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Pointer<OQS_SHA2_sha256_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA2_sha256_inc_finalize;
 
   /// Implementation of function OQS_SHA2_sha256_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> state)>>
-      SHA2_sha256_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha256_ctx> state)
+    >
+  >
+  SHA2_sha256_inc_ctx_release;
 
   /// Implementation of function OQS_SHA2_sha384.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA2_sha384;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA2_sha384;
 
   /// Implementation of function OQS_SHA2_sha384_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha384_ctx> state)>>
-      SHA2_sha384_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha384_ctx> state)
+    >
+  >
+  SHA2_sha384_inc_init;
 
   /// Implementation of function OQS_SHA2_sha384_inc_ctx_clone.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SHA2_sha384_ctx> dest,
-              ffi.Pointer<OQS_SHA2_sha384_ctx> src)>> SHA2_sha384_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha384_ctx> dest,
+        ffi.Pointer<OQS_SHA2_sha384_ctx> src,
+      )
+    >
+  >
+  SHA2_sha384_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA2_sha384_inc_blocks.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA2_sha384_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inblocks)>> SHA2_sha384_inc_blocks;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha384_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inblocks,
+      )
+    >
+  >
+  SHA2_sha384_inc_blocks;
 
   /// Implementation of function OQS_SHA2_sha384_inc_finalize.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Pointer<OQS_SHA2_sha384_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inlen)>> SHA2_sha384_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Pointer<OQS_SHA2_sha384_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA2_sha384_inc_finalize;
 
   /// Implementation of function OQS_SHA2_sha384_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha384_ctx> state)>>
-      SHA2_sha384_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha384_ctx> state)
+    >
+  >
+  SHA2_sha384_inc_ctx_release;
 
   /// Implementation of function OQS_SHA2_sha512.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA2_sha512;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA2_sha512;
 
   /// Implementation of function OQS_SHA2_sha512_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha512_ctx> state)>>
-      SHA2_sha512_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha512_ctx> state)
+    >
+  >
+  SHA2_sha512_inc_init;
 
   /// Implementation of function OQS_SHA2_sha512_inc_ctx_clone.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<OQS_SHA2_sha512_ctx> dest,
-              ffi.Pointer<OQS_SHA2_sha512_ctx> src)>> SHA2_sha512_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha512_ctx> dest,
+        ffi.Pointer<OQS_SHA2_sha512_ctx> src,
+      )
+    >
+  >
+  SHA2_sha512_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA2_sha512_inc_blocks.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA2_sha512_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inblocks)>> SHA2_sha512_inc_blocks;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA2_sha512_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inblocks,
+      )
+    >
+  >
+  SHA2_sha512_inc_blocks;
 
   /// Implementation of function OQS_SHA2_sha512_inc_finalize.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> out,
-              ffi.Pointer<OQS_SHA2_sha512_ctx> state,
-              ffi.Pointer<ffi.Uint8> in$,
-              ffi.Size inlen)>> SHA2_sha512_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out,
+        ffi.Pointer<OQS_SHA2_sha512_ctx> state,
+        ffi.Pointer<ffi.Uint8> in$,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA2_sha512_inc_finalize;
 
   /// Implementation of function OQS_SHA2_sha512_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA2_sha512_ctx> state)>>
-      SHA2_sha512_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA2_sha512_ctx> state)
+    >
+  >
+  SHA2_sha512_inc_ctx_release;
 }
 
 /// Data structure for the state of the incremental SHA3-256 API.
@@ -15749,245 +20083,373 @@ final class OQS_SHA3_shake256_inc_ctx extends ffi.Struct {
 final class OQS_SHA3_callbacks extends ffi.Struct {
   /// Implementation of function OQS_SHA3_sha3_256.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA3_sha3_256;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA3_sha3_256;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)>>
-      SHA3_sha3_256_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_256_inc_init;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> input,
-              ffi.Size inlen)>> SHA3_sha3_256_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_sha3_256_inc_absorb;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-                  ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)>>
-      SHA3_sha3_256_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_sha3_256_inc_finalize;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)>>
-      SHA3_sha3_256_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_256_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)>>
-      SHA3_sha3_256_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_256_inc_ctx_reset;
 
   /// Implementation of function OQS_SHA3_sha3_256_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> src)>>
-      SHA3_sha3_256_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_sha3_256_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_sha3_256_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_sha3_384.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA3_sha3_384;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA3_sha3_384;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)>>
-      SHA3_sha3_384_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_384_inc_init;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> input,
-              ffi.Size inlen)>> SHA3_sha3_384_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_sha3_384_inc_absorb;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-                  ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)>>
-      SHA3_sha3_384_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_sha3_384_inc_finalize;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)>>
-      SHA3_sha3_384_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_384_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)>>
-      SHA3_sha3_384_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_384_inc_ctx_reset;
 
   /// Implementation of function OQS_SHA3_sha3_384_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> src)>>
-      SHA3_sha3_384_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_sha3_384_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_sha3_384_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_sha3_512.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA3_sha3_512;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA3_sha3_512;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)>>
-      SHA3_sha3_512_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_512_inc_init;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> input,
-              ffi.Size inlen)>> SHA3_sha3_512_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_sha3_512_inc_absorb;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> output,
-                  ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)>>
-      SHA3_sha3_512_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_sha3_512_inc_finalize;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)>>
-      SHA3_sha3_512_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_512_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)>>
-      SHA3_sha3_512_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> state)
+    >
+  >
+  SHA3_sha3_512_inc_ctx_reset;
 
   /// Implementation of function OQS_SHA3_sha3_512_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> src)>>
-      SHA3_sha3_512_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_sha3_512_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_sha3_512_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_shake128.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output, ffi.Size outlen,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA3_shake128;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Size outlen,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA3_shake128;
 
   /// Implementation of function OQS_SHA3_shake128_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)>>
-      SHA3_shake128_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_inc_init;
 
   /// Implementation of function OQS_SHA3_shake128_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> input,
-              ffi.Size inlen)>> SHA3_shake128_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake128_inc_absorb;
 
   /// Implementation of function OQS_SHA3_shake128_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)>>
-      SHA3_shake128_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_inc_finalize;
 
   /// Implementation of function OQS_SHA3_shake128_inc_squeeze.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> output, ffi.Size outlen,
-                  ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)>>
-      SHA3_shake128_inc_squeeze;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Size outlen,
+        ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_shake128_inc_squeeze;
 
   /// Implementation of function OQS_SHA3_shake128_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)>>
-      SHA3_shake128_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_shake128_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_shake128_inc_ctx> src)>>
-      SHA3_shake128_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake128_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_shake128_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_shake128_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_shake128_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)>>
-      SHA3_shake128_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_inc_ctx_reset;
 
   /// Implementation of function OQS_SHA3_shake256.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Uint8> output, ffi.Size outlen,
-              ffi.Pointer<ffi.Uint8> input, ffi.Size inplen)>> SHA3_shake256;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Size outlen,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inplen,
+      )
+    >
+  >
+  SHA3_shake256;
 
   /// Implementation of function OQS_SHA3_shake256_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)>>
-      SHA3_shake256_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_inc_init;
 
   /// Implementation of function OQS_SHA3_shake256_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> input,
-              ffi.Size inlen)>> SHA3_shake256_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> input,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake256_inc_absorb;
 
   /// Implementation of function OQS_SHA3_shake256_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)>>
-      SHA3_shake256_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_inc_finalize;
 
   /// Implementation of function OQS_SHA3_shake256_inc_squeeze.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<ffi.Uint8> output, ffi.Size outlen,
-                  ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)>>
-      SHA3_shake256_inc_squeeze;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> output,
+        ffi.Size outlen,
+        ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_shake256_inc_squeeze;
 
   /// Implementation of function OQS_SHA3_shake256_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)>>
-      SHA3_shake256_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_shake256_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_shake256_inc_ctx> src)>>
-      SHA3_shake256_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake256_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_shake256_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_shake256_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_shake256_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)>>
-      SHA3_shake256_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_inc_ctx_reset;
 }
 
 /// Data structure for the state of the four-way parallel incremental SHAKE-128 API.
@@ -16007,149 +20469,187 @@ final class OQS_SHA3_shake256_x4_inc_ctx extends ffi.Struct {
 final class OQS_SHA3_x4_callbacks extends ffi.Struct {
   /// Implementation of function OQS_SHA3_shake128_x4.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> out0,
-              ffi.Pointer<ffi.Uint8> out1,
-              ffi.Pointer<ffi.Uint8> out2,
-              ffi.Pointer<ffi.Uint8> out3,
-              ffi.Size outlen,
-              ffi.Pointer<ffi.Uint8> in0,
-              ffi.Pointer<ffi.Uint8> in1,
-              ffi.Pointer<ffi.Uint8> in2,
-              ffi.Pointer<ffi.Uint8> in3,
-              ffi.Size inlen)>> SHA3_shake128_x4;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out0,
+        ffi.Pointer<ffi.Uint8> out1,
+        ffi.Pointer<ffi.Uint8> out2,
+        ffi.Pointer<ffi.Uint8> out3,
+        ffi.Size outlen,
+        ffi.Pointer<ffi.Uint8> in0,
+        ffi.Pointer<ffi.Uint8> in1,
+        ffi.Pointer<ffi.Uint8> in2,
+        ffi.Pointer<ffi.Uint8> in3,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake128_x4;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)>>
-      SHA3_shake128_x4_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_x4_inc_init;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> in0,
-              ffi.Pointer<ffi.Uint8> in1,
-              ffi.Pointer<ffi.Uint8> in2,
-              ffi.Pointer<ffi.Uint8> in3,
-              ffi.Size inlen)>> SHA3_shake128_x4_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> in0,
+        ffi.Pointer<ffi.Uint8> in1,
+        ffi.Pointer<ffi.Uint8> in2,
+        ffi.Pointer<ffi.Uint8> in3,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake128_x4_inc_absorb;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)>>
-      SHA3_shake128_x4_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_x4_inc_finalize;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_squeeze.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<ffi.Uint8> out0,
-                  ffi.Pointer<ffi.Uint8> out1,
-                  ffi.Pointer<ffi.Uint8> out2,
-                  ffi.Pointer<ffi.Uint8> out3,
-                  ffi.Size outlen,
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)>>
-      SHA3_shake128_x4_inc_squeeze;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out0,
+        ffi.Pointer<ffi.Uint8> out1,
+        ffi.Pointer<ffi.Uint8> out2,
+        ffi.Pointer<ffi.Uint8> out3,
+        ffi.Size outlen,
+        ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_shake128_x4_inc_squeeze;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)>>
-      SHA3_shake128_x4_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_x4_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> src)>>
-      SHA3_shake128_x4_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_shake128_x4_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_shake128_x4_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)>>
-      SHA3_shake128_x4_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake128_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake128_x4_inc_ctx_reset;
 
   /// Implementation of function OQS_SHA3_shake256_x4.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<ffi.Uint8> out0,
-              ffi.Pointer<ffi.Uint8> out1,
-              ffi.Pointer<ffi.Uint8> out2,
-              ffi.Pointer<ffi.Uint8> out3,
-              ffi.Size outlen,
-              ffi.Pointer<ffi.Uint8> in0,
-              ffi.Pointer<ffi.Uint8> in1,
-              ffi.Pointer<ffi.Uint8> in2,
-              ffi.Pointer<ffi.Uint8> in3,
-              ffi.Size inlen)>> SHA3_shake256_x4;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out0,
+        ffi.Pointer<ffi.Uint8> out1,
+        ffi.Pointer<ffi.Uint8> out2,
+        ffi.Pointer<ffi.Uint8> out3,
+        ffi.Size outlen,
+        ffi.Pointer<ffi.Uint8> in0,
+        ffi.Pointer<ffi.Uint8> in1,
+        ffi.Pointer<ffi.Uint8> in2,
+        ffi.Pointer<ffi.Uint8> in3,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake256_x4;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_init.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)>>
-      SHA3_shake256_x4_inc_init;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_x4_inc_init;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_absorb.
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Void Function(
-              ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state,
-              ffi.Pointer<ffi.Uint8> in0,
-              ffi.Pointer<ffi.Uint8> in1,
-              ffi.Pointer<ffi.Uint8> in2,
-              ffi.Pointer<ffi.Uint8> in3,
-              ffi.Size inlen)>> SHA3_shake256_x4_inc_absorb;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state,
+        ffi.Pointer<ffi.Uint8> in0,
+        ffi.Pointer<ffi.Uint8> in1,
+        ffi.Pointer<ffi.Uint8> in2,
+        ffi.Pointer<ffi.Uint8> in3,
+        ffi.Size inlen,
+      )
+    >
+  >
+  SHA3_shake256_x4_inc_absorb;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_finalize.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)>>
-      SHA3_shake256_x4_inc_finalize;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_x4_inc_finalize;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_squeeze.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<ffi.Uint8> out0,
-                  ffi.Pointer<ffi.Uint8> out1,
-                  ffi.Pointer<ffi.Uint8> out2,
-                  ffi.Pointer<ffi.Uint8> out3,
-                  ffi.Size outlen,
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)>>
-      SHA3_shake256_x4_inc_squeeze;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<ffi.Uint8> out0,
+        ffi.Pointer<ffi.Uint8> out1,
+        ffi.Pointer<ffi.Uint8> out2,
+        ffi.Pointer<ffi.Uint8> out3,
+        ffi.Size outlen,
+        ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state,
+      )
+    >
+  >
+  SHA3_shake256_x4_inc_squeeze;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_ctx_release.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)>>
-      SHA3_shake256_x4_inc_ctx_release;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_x4_inc_ctx_release;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_ctx_clone.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> dest,
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> src)>>
-      SHA3_shake256_x4_inc_ctx_clone;
+    ffi.NativeFunction<
+      ffi.Void Function(
+        ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> dest,
+        ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> src,
+      )
+    >
+  >
+  SHA3_shake256_x4_inc_ctx_clone;
 
   /// Implementation of function OQS_SHA3_shake256_x4_inc_ctx_reset.
   external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Void Function(
-                  ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)>>
-      SHA3_shake256_x4_inc_ctx_reset;
+    ffi.NativeFunction<
+      ffi.Void Function(ffi.Pointer<OQS_SHA3_shake256_x4_inc_ctx> state)
+    >
+  >
+  SHA3_shake256_x4_inc_ctx_reset;
 }
 
 const String OQS_VERSION_TEXT = '0.14.1-dev';
