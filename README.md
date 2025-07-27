@@ -187,7 +187,7 @@ kemAlgorithms = [
 'FrodoKEM-1344-SHAKE',
 ];
 ```
-
+## Examples
 ### list of all Signature algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 sigAlgorithms = [
