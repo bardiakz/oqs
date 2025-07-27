@@ -51,7 +51,7 @@ dart pub get
 
 ## Quick Start
 
-### list of all KEM algorithms for creating the instance 
+### list of all KEM algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 kemAlgorithms = [
 'Classic-McEliece-348864',
@@ -80,7 +80,7 @@ kemAlgorithms = [
 ];
 ```
 
-### list of all Signature algorithms for creating the instance
+### list of all Signature algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 sigAlgorithms = [
 'Dilithium2',
