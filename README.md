@@ -159,7 +159,7 @@ cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ninja install
 ```
 
-##Examples
+## Examples
 
 ### list of all KEM algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart

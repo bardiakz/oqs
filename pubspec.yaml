@@ -1,6 +1,6 @@
 name: oqs
 description: Dart bindings for liboqs - A post-quantum cryptography library
-version: 1.0.0
+version: 1.0.1
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs
