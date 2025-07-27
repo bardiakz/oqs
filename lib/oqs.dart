@@ -14,16 +14,31 @@ export 'src/kem.dart' show KEMKeyPair, KEMEncapsulationResult;
 
 /// Main LibOQS class for initialization and global operations
 class LibOQS {
+  static bool _initialized = false;
+
   /// Initialize the liboqs library
   /// Call this before using any other functions
+  /// This is optional but recommended for better performance
   static void init() {
-    LibOQSBase.init();
+    if (!_initialized) {
+      LibOQSBase.init();
+      _initialized = true;
+    }
+  }
+
+  /// Ensure initialization before first use
+  static void _ensureInitialized() {
+    if (!_initialized) {
+      init();
+    }
   }
 
   /// Clean up liboqs resources
   /// Call this when you're done using the library
+  /// This function frees prefetched OpenSSL objects
   static void cleanup() {
-    LibOQSBase.cleanup();
+    LibOQSBase.cleanupAll();
+    _initialized = false;
   }
 
   /// Get the version of liboqs

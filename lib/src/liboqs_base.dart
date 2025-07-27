@@ -14,6 +14,7 @@ class LibOQSBase {
   static LibOQSBindings get bindings => _bindings;
 
   /// Initialize liboqs (call this before using any other functions)
+  /// performs CPU feature detection and sets up optimized code paths. Without it liboqs will use generic implementations instead of optimized ones
   static void init() {
     bindings.OQS_init();
   }
@@ -21,6 +22,20 @@ class LibOQSBase {
   /// Clean up liboqs resources
   static void cleanup() {
     bindings.OQS_destroy();
+  }
+
+  /// Clean up thread-specific liboqs resources
+  ///
+  /// Call this on each thread before the thread terminates
+  /// in multithreaded applications. This prevents OpenSSL
+  /// thread-local storage leaks.
+  static void cleanupThread() {
+    LibOQSBase.bindings.OQS_thread_stop();
+  }
+
+  static void cleanupAll() {
+    cleanupThread();
+    cleanup();
   }
 
   static String getVersion() {
