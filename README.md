@@ -159,6 +159,8 @@ cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ninja install
 ```
 
+##Examples
+
 ### list of all KEM algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 kemAlgorithms = [
@@ -187,7 +189,7 @@ kemAlgorithms = [
 'FrodoKEM-1344-SHAKE',
 ];
 ```
-## Examples
+
 ### list of all Signature algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 sigAlgorithms = [
