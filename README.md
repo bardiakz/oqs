@@ -40,7 +40,7 @@ Add this to your package's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  oqs: ^0.1.0
+  oqs: ^1.0.0
 ```
 
 Then run:
