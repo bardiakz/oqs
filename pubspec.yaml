@@ -5,7 +5,7 @@ description: >
   ML-DSA, Falcon, SPHINCS+, and more for both key encapsulation and digital
   signatures.
 
-version: 1.0.3
+version: 1.0.4
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs

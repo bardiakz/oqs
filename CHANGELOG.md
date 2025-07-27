@@ -1,3 +1,3 @@
-## 1.0.3
+## 1.0.4
 
-- refactored code for pub.dev.
+- updated description.
