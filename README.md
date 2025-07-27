@@ -51,6 +51,114 @@ dart pub get
 
 ## Quick Start
 
+## Using Prebuilt Binaries
+
+For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
+
+### Quick Setup with Prebuilt Binaries
+
+
+**You can just place the bin directory in root of your project and you will be good to go:**
+   ```
+   your_project/
+   ├── lib/
+   ├── bin/          # Create this directory
+   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
+   └── pubspec.yaml
+   ```
+
+### Library Loading Configuration
+
+The package uses flexible library loading with automatic fallbacks:
+
+```dart
+// The package automatically tries multiple loading strategies:
+// 1. Environment variable (LIBOQS_PATH)
+// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
+// 3. Relative paths (./bin/, ../lib/, etc.)
+// 4. Platform-specific locations
+
+// Manual configuration (advanced users):
+import 'package:oqs/src/platform/library_loader.dart';
+
+final library = LibOQSLoader.loadLibrary(
+  explicitPath: '/custom/path/to/liboqs.so',
+  useCache: false,
+);
+```
+
+### Verifying Installation
+
+Test that the library loads correctly:
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void main() {
+  try {
+    // Initialize the library
+    LibOQS.init();
+
+    // Check version
+    print('liboqs version: ${LibOQS.getVersion()}');
+
+    // List available algorithms
+    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
+    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
+
+    print('✅ liboqs loaded successfully!');
+  } catch (e) {
+    print('❌ Failed to load liboqs: $e');
+  }
+}
+
+## Platform Setup
+
+### Option 1: Use Prebuilt Binaries (Recommended)
+
+The easiest way to get started is using the prebuilt binaries. See the [Using Prebuilt Binaries](#using-prebuilt-binaries) section above for detailed instructions.
+
+### Option 2: Install from Package Manager
+
+#### Ubuntu/Debian
+```bash
+sudo apt update
+sudo apt install liboqs-dev
+```
+
+#### macOS (Homebrew)
+```bash
+brew install liboqs
+```
+
+#### Windows (vcpkg)
+```bash
+vcpkg install liboqs
+```
+### Android
+
+For Android applications, you'll need to build liboqs for Android and include the native libraries in your app. The package supports the following architectures:
+
+- `arm64-v8a` (64-bit ARM)
+- `armeabi-v7a` (32-bit ARM)
+- `x86_64` (64-bit Intel)
+- `x86` (32-bit Intel)
+
+### iOS
+
+For iOS, you'll need to build liboqs as a framework and include it in your iOS project.
+
+
+### Option 3: Build from Source
+
+```bash
+git clone https://github.com/open-quantum-safe/liboqs.git
+cd liboqs
+mkdir build && cd build
+cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
+ninja install
+```
+
 ### list of all KEM algorithms for creating the instance (LibOQS Version: 0.14.1-dev)
 ```dart
 kemAlgorithms = [
@@ -315,53 +423,18 @@ LibOQS.cleanupAll(); // Calls cleanupThread() + cleanup()
 - `LibOQS.init()` is safe to call multiple times
 - Individual KEM/Signature instances should not be shared between threads
 
-## Platform Setup
 
-### Prerequisites
+### Library Loading Order
 
-You need to have the liboqs library installed on your system. Install it using:
+The package attempts to load the liboqs library in the following order:
 
-#### Ubuntu/Debian
-```bash
-sudo apt update
-sudo apt install liboqs-dev
-```
+1. **Environment variable**: `LIBOQS_PATH` if set
+2. **Prebuilt binaries**: `./bin/` directory in your project
+3. **System locations**: `/usr/lib`, `/usr/local/lib`, etc.
+4. **Relative paths**: `../lib/`, `./lib/`, etc.
+5. **Platform-specific paths**: Windows DLL search paths, macOS framework paths
 
-#### macOS (Homebrew)
-```bash
-brew install liboqs
-```
-
-#### Windows (vcpkg)
-```bash
-vcpkg install liboqs
-```
-
-#### From Source
-```bash
-git clone https://github.com/open-quantum-safe/liboqs.git
-cd liboqs
-mkdir build && cd build
-cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
-ninja install
-```
-
-### Android
-
-For Android applications, you'll need to build liboqs for Android and include the native libraries in your app. The package supports the following architectures:
-
-- `arm64-v8a` (64-bit ARM)
-- `armeabi-v7a` (32-bit ARM)
-- `x86_64` (64-bit Intel)
-- `x86` (32-bit Intel)
-
-### iOS
-
-For iOS, you'll need to build liboqs as a framework and include it in your iOS project.
-
-### Desktop Platforms
-
-For Linux, macOS, and Windows, ensure the liboqs library is installed in standard system locations or set the `LIBOQS_PATH` environment variable.
+This ensures maximum compatibility across different deployment scenarios.
 
 ## Advanced Usage
 
@@ -438,16 +511,6 @@ ninja install
 
 3. The library will be installed to `/usr/local/lib` by default.
 
-## Development
-
-### Development Setup
-
-1. Fork and clone the repository
-2. Install dependencies: `dart pub get`
-3. Ensure liboqs is installed on your system
-4. Run tests: `dart test`
-5. Ensure code is formatted: `dart format .`
-6. Run static analysis: `dart analyze`
 
 ### Contributing
 
