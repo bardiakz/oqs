@@ -111,7 +111,7 @@ void main() {
     print('❌ Failed to load liboqs: $e');
   }
 }
-
+```
 ## Platform Setup
 
 ### Option 1: Use Prebuilt Binaries (Recommended)
@@ -135,19 +135,6 @@ brew install liboqs
 ```bash
 vcpkg install liboqs
 ```
-### Android
-
-For Android applications, you'll need to build liboqs for Android and include the native libraries in your app. The package supports the following architectures:
-
-- `arm64-v8a` (64-bit ARM)
-- `armeabi-v7a` (32-bit ARM)
-- `x86_64` (64-bit Intel)
-- `x86` (32-bit Intel)
-
-### iOS
-
-For iOS, you'll need to build liboqs as a framework and include it in your iOS project.
-
 
 ### Option 3: Build from Source
 
@@ -158,6 +145,18 @@ mkdir build && cd build
 cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ninja install
 ```
+
+### Library Loading Order
+
+The package attempts to load the liboqs library in the following order:
+
+1. **Environment variable**: `LIBOQS_PATH` if set
+2. **Prebuilt binaries**: `./bin/` directory in your project
+3. **System locations**: `/usr/lib`, `/usr/local/lib`, etc.
+4. **Relative paths**: `../lib/`, `./lib/`, etc.
+5. **Platform-specific paths**: Windows DLL search paths, macOS framework paths
+
+This ensures maximum compatibility across different deployment scenarios.
 
 ## Examples
 
