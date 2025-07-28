@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
@@ -261,6 +262,26 @@ class KEMKeyPair {
   final Uint8List secretKey;
 
   const KEMKeyPair({required this.publicKey, required this.secretKey});
+
+  /// Returns all Uint8List properties as base64 encoded strings
+  Map<String, String> toStrings() {
+    return {
+      'publicKey': base64Encode(publicKey),
+      'secretKey': base64Encode(secretKey),
+    };
+  }
+
+  /// Alternative method that returns properties as hex strings
+  Map<String, String> toHexStrings() {
+    return {
+      'publicKey': publicKey
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+      'secretKey': secretKey
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+    };
+  }
 }
 
 /// KEM encapsulation result
@@ -272,4 +293,24 @@ class KEMEncapsulationResult {
     required this.ciphertext,
     required this.sharedSecret,
   });
+
+  /// Returns all Uint8List properties as base64 encoded strings
+  Map<String, String> toStrings() {
+    return {
+      'ciphertext': base64Encode(ciphertext),
+      'sharedSecret': base64Encode(sharedSecret),
+    };
+  }
+
+  /// Alternative method that returns properties as hex strings
+  Map<String, String> toHexStrings() {
+    return {
+      'ciphertext': ciphertext
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+      'sharedSecret': sharedSecret
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+    };
+  }
 }
