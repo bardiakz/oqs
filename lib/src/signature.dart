@@ -1,4 +1,5 @@
 // lib/src/signature.dart
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
@@ -306,4 +307,24 @@ class SignatureKeyPair {
   final Uint8List secretKey;
 
   const SignatureKeyPair({required this.publicKey, required this.secretKey});
+
+  /// Returns all Uint8List properties as base64 encoded strings
+  Map<String, String> toStrings() {
+    return {
+      'publicKey': base64Encode(publicKey),
+      'secretKey': base64Encode(secretKey),
+    };
+  }
+
+  /// Alternative method that returns properties as hex strings
+  Map<String, String> toHexStrings() {
+    return {
+      'publicKey': publicKey
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+      'secretKey': secretKey
+          .map((b) => b.toRadixString(16).padLeft(2, '0'))
+          .join(),
+    };
+  }
 }
