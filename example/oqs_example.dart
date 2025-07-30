@@ -40,8 +40,8 @@ void kemExample() {
   print('=== KEM (Key Encapsulation Mechanism) Example ===');
 
   // Try different KEM algorithms
-  // final kemAlgorithms = ['Kyber512', 'Kyber768', 'Kyber1024'];
-  final kemAlgorithms = KEM.getSupportedKemAlgorithms();
+  final kemAlgorithms = ['Kyber512', 'Kyber768', 'Kyber1024'];
+  final allKemAlgorithms = KEM.getSupportedKemAlgorithms();
   for (final algName in kemAlgorithms) {
     if (!LibOQS.isKEMSupported(algName)) {
       print('$algName is not supported, skipping...');
@@ -99,8 +99,8 @@ void signatureExample() {
   print('=== Digital Signature Example ===');
 
   // Try different signature algorithms
-  // final sigAlgorithms = ['Dilithium2', 'Dilithium3', 'Falcon-512'];
-  final sigAlgorithms = Signature.getSupportedSignatureAlgorithms();
+  final sigAlgorithms = ['Dilithium2', 'Dilithium3', 'Falcon-512'];
+  final AllSigAlgorithms = Signature.getSupportedSignatureAlgorithms();
   for (final algName in sigAlgorithms) {
     if (!LibOQS.isSignatureSupported(algName)) {
       print('$algName is not supported, skipping...');
