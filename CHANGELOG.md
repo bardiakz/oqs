@@ -1,8 +1,13 @@
 ## 1.0.7
 
-### Added
-- `toStrings()` method to `SignatureKeyPair` class that returns publicKey and secretKey as base64 encoded strings
-- `toHexStrings()` method to `SignatureKeyPair` class that returns publicKey and secretKey as hexadecimal strings
+- Fix library caching issue by enabling useCache in LibOQSLoader
+- Enhance memory safety in LibOQSUtils.pointerToUint8List with proper data copying
+- Add Finalizer-based automatic resource cleanup for KEM and Signature instances
+- Implement disposed state checking to prevent use-after-dispose crashes
+- Improve error handling with enhanced LibOQSException and input validation
+- Add auto-initialization to prevent initialization-related errors
+- Replace nullable create() methods with exception-throwing versions for better error reporting
 
-### Changed
-- Enhanced `SignatureKeyPair` class with string conversion capabilities for better debugging and serialization support
+BREAKING CHANGES:
+- KEM.create() and Signature.create() now throw LibOQSException instead of returning null on failure
+- Enhanced input validation may throw ArgumentError for invalid inputs
