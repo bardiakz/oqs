@@ -1,4 +1,4 @@
-## 1.0.6
+## 1.0.7
 
 ### Added
 - `toStrings()` method to `SignatureKeyPair` class that returns publicKey and secretKey as base64 encoded strings

@@ -3,21 +3,44 @@ import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
-
 import 'bindings/liboqs_bindings.dart';
 import 'liboqs_base.dart';
+
+final Finalizer<Pointer<OQS_KEM>> _kemFinalizer = Finalizer(
+  (ptr) => LibOQSBase.bindings.OQS_KEM_free(ptr),
+);
 
 /// Key Encapsulation Mechanism (KEM) implementation
 class KEM {
   late final Pointer<OQS_KEM> _kemPtr;
   final String algorithmName;
 
-  KEM._(this._kemPtr, this.algorithmName);
+  bool _disposed = false;
 
-  String get algorithmVersion =>
-      _kemPtr.ref.alg_version.cast<Utf8>().toDartString();
-  int get claimedNistLevel => _kemPtr.ref.claimed_nist_level;
-  bool get isIndCcaSecure => _kemPtr.ref.ind_cca;
+  KEM._(this._kemPtr, this.algorithmName) {
+    _kemFinalizer.attach(this, _kemPtr, detach: this);
+  }
+
+  void _checkDisposed() {
+    if (_disposed) {
+      throw StateError('KEM instance has been disposed');
+    }
+  }
+
+  String get algorithmVersion {
+    _checkDisposed();
+    return _kemPtr.ref.alg_version.cast<Utf8>().toDartString();
+  }
+
+  int get claimedNistLevel {
+    _checkDisposed();
+    return _kemPtr.ref.claimed_nist_level;
+  }
+
+  bool get isIndCcaSecure {
+    _checkDisposed();
+    return _kemPtr.ref.ind_cca;
+  }
 
   /// supported KEM algorithms by liboqs
   static void printSupportedKemAlgorithms() {
@@ -132,26 +155,31 @@ class KEM {
 
   /// Get the public key length for this KEM
   int get publicKeyLength {
+    _checkDisposed();
     return _kemPtr.ref.length_public_key;
   }
 
   /// Get the secret key length for this KEM
   int get secretKeyLength {
+    _checkDisposed();
     return _kemPtr.ref.length_secret_key;
   }
 
   /// Get the ciphertext length for this KEM
   int get ciphertextLength {
+    _checkDisposed();
     return _kemPtr.ref.length_ciphertext;
   }
 
   /// Get the shared secret length for this KEM
   int get sharedSecretLength {
+    _checkDisposed();
     return _kemPtr.ref.length_shared_secret;
   }
 
   /// Generate a key pair
   KEMKeyPair generateKeyPair() {
+    _checkDisposed();
     final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
     final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
 
@@ -179,6 +207,7 @@ class KEM {
 
   /// Encapsulate a shared secret using the public key
   KEMEncapsulationResult encapsulate(Uint8List publicKey) {
+    _checkDisposed();
     if (publicKey.length != publicKeyLength) {
       throw LibOQSException(
         'Invalid public key length: expected $publicKeyLength, got ${publicKey.length}',
@@ -225,6 +254,7 @@ class KEM {
 
   /// Decapsulate a shared secret using the secret key
   Uint8List decapsulate(Uint8List ciphertext, Uint8List secretKey) {
+    _checkDisposed();
     if (ciphertext.length != ciphertextLength) {
       throw LibOQSException(
         'Invalid ciphertext length: expected $ciphertextLength, got ${ciphertext.length}',
@@ -267,7 +297,11 @@ class KEM {
 
   /// Clean up resources
   void dispose() {
-    LibOQSBase.bindings.OQS_KEM_free(_kemPtr);
+    if (!_disposed) {
+      _disposed = true;
+      _kemFinalizer.detach(this);
+      LibOQSBase.bindings.OQS_KEM_free(_kemPtr);
+    }
   }
 }
 

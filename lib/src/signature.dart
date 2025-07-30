@@ -6,17 +6,40 @@ import 'package:ffi/ffi.dart';
 import 'bindings/liboqs_bindings.dart';
 import 'liboqs_base.dart';
 
+final Finalizer<Pointer<OQS_SIG>> _sigFinalizer = Finalizer(
+  (ptr) => LibOQSBase.bindings.OQS_SIG_free(ptr),
+);
+
 /// Digital Signature implementation
 class Signature {
   late final Pointer<OQS_SIG> _sigPtr;
   final String algorithmName;
 
-  Signature._(this._sigPtr, this.algorithmName);
+  bool _disposed = false;
 
-  String get algorithmVersion =>
-      _sigPtr.ref.alg_version.cast<Utf8>().toDartString();
-  int get claimedNistLevel => _sigPtr.ref.claimed_nist_level;
-  bool get isEufCmaSecure => _sigPtr.ref.euf_cma;
+  Signature._(this._sigPtr, this.algorithmName) {
+    _sigFinalizer.attach(this, _sigPtr, detach: this);
+  }
+  void _checkDisposed() {
+    if (_disposed) {
+      throw StateError('Signature instance has been disposed');
+    }
+  }
+
+  String get algorithmVersion {
+    _checkDisposed();
+    return _sigPtr.ref.alg_version.cast<Utf8>().toDartString();
+  }
+
+  int get claimedNistLevel {
+    _checkDisposed();
+    return _sigPtr.ref.claimed_nist_level;
+  }
+
+  bool get isEufCmaSecure {
+    _checkDisposed();
+    return _sigPtr.ref.euf_cma;
+  }
 
   /// supported Signature algorithms by liboqs
   static void printSupportedSignatureAlgorithms() {
@@ -168,21 +191,25 @@ class Signature {
 
   /// Get the public key length for this signature algorithm
   int get publicKeyLength {
+    _checkDisposed();
     return _sigPtr.ref.length_public_key;
   }
 
   /// Get the secret key length for this signature algorithm
   int get secretKeyLength {
+    _checkDisposed();
     return _sigPtr.ref.length_secret_key;
   }
 
   /// Get the maximum signature length for this algorithm
   int get maxSignatureLength {
+    _checkDisposed();
     return _sigPtr.ref.length_signature;
   }
 
   /// Generate a key pair
   SignatureKeyPair generateKeyPair() {
+    _checkDisposed();
     final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
     final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
 
@@ -210,6 +237,7 @@ class Signature {
 
   /// Sign a message
   Uint8List sign(Uint8List message, Uint8List secretKey) {
+    _checkDisposed();
     if (secretKey.length != secretKeyLength) {
       throw LibOQSException(
         'Invalid secret key length: expected $secretKeyLength, got ${secretKey.length}',
@@ -260,6 +288,7 @@ class Signature {
 
   /// Verify a signature
   bool verify(Uint8List message, Uint8List signature, Uint8List publicKey) {
+    _checkDisposed();
     if (publicKey.length != publicKeyLength) {
       throw LibOQSException(
         'Invalid public key length: expected $publicKeyLength, got ${publicKey.length}',
@@ -301,7 +330,11 @@ class Signature {
 
   /// Clean up resources
   void dispose() {
-    LibOQSBase.bindings.OQS_SIG_free(_sigPtr);
+    if (!_disposed) {
+      _disposed = true;
+      _sigFinalizer.detach(this);
+      LibOQSBase.bindings.OQS_SIG_free(_sigPtr);
+    }
   }
 }
 
