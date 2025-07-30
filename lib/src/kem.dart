@@ -14,6 +14,11 @@ class KEM {
 
   KEM._(this._kemPtr, this.algorithmName);
 
+  String get algorithmVersion =>
+      _kemPtr.ref.alg_version.cast<Utf8>().toDartString();
+  int get claimedNistLevel => _kemPtr.ref.claimed_nist_level;
+  bool get isIndCcaSecure => _kemPtr.ref.ind_cca;
+
   /// supported KEM algorithms by liboqs
   static void printSupportedKemAlgorithms() {
     print("Supported KEMs:");
@@ -54,15 +59,25 @@ class KEM {
 
   /// Create a new KEM instance with the specified algorithm
   static KEM? create(String algorithmName) {
+    LibOQSBase.init(); // Auto-initialize
+
+    if (algorithmName.isEmpty) {
+      throw ArgumentError('Algorithm name cannot be empty');
+    }
+
     final namePtr = algorithmName.toNativeUtf8();
     try {
       final kemPtr = LibOQSBase.bindings.OQS_KEM_new(namePtr.cast());
       if (kemPtr == nullptr) {
-        return null;
+        throw LibOQSException(
+          'Failed to create KEM instance. Algorithm may not be supported or enabled.',
+          null,
+          algorithmName,
+        );
       }
       return KEM._(kemPtr.cast<OQS_KEM>(), algorithmName);
     } finally {
-      calloc.free(namePtr);
+      LibOQSUtils.freePointer(namePtr);
     }
   }
 

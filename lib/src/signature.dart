@@ -1,4 +1,3 @@
-// lib/src/signature.dart
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
@@ -13,6 +12,11 @@ class Signature {
   final String algorithmName;
 
   Signature._(this._sigPtr, this.algorithmName);
+
+  String get algorithmVersion =>
+      _sigPtr.ref.alg_version.cast<Utf8>().toDartString();
+  int get claimedNistLevel => _sigPtr.ref.claimed_nist_level;
+  bool get isEufCmaSecure => _sigPtr.ref.euf_cma;
 
   /// supported Signature algorithms by liboqs
   static void printSupportedSignatureAlgorithms() {

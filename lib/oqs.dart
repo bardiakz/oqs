@@ -37,7 +37,7 @@ class LibOQS {
   /// Call this when you're done using the library
   /// This function frees prefetched OpenSSL objects
   static void cleanup() {
-    LibOQSBase.cleanupAll();
+    LibOQSBase.cleanup();
     _initialized = false;
   }
 
