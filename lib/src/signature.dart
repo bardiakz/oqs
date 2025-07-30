@@ -81,17 +81,26 @@ class Signature {
   }
 
   /// Create a new Signature instance with the specified algorithm
-  static Signature? create(String algorithmName) {
+  static Signature create(String algorithmName) {
+    LibOQSBase.init(); // Ensure LibOQS is initialized
+
+    if (algorithmName.isEmpty) {
+      throw ArgumentError('Algorithm name cannot be empty');
+    }
+
     final namePtr = algorithmName.toNativeUtf8();
     try {
       final sigPtr = LibOQSBase.bindings.OQS_SIG_new(namePtr.cast());
       if (sigPtr == nullptr) {
-        return null;
+        throw LibOQSException(
+          'Failed to create Signature instance. Algorithm may not be supported or enabled.',
+          null,
+          algorithmName,
+        );
       }
-      // Cast to the correct type
       return Signature._(sigPtr.cast<OQS_SIG>(), algorithmName);
     } finally {
-      calloc.free(namePtr);
+      LibOQSUtils.freePointer(namePtr);
     }
   }
 
