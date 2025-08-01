@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/oqs.svg)](https://pub.dev/packages/oqs)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Dart](https://img.shields.io/badge/dart-%3E%3D2.17.0-brightgreen.svg)](https://dart.dev)
+[![Dart](https://img.shields.io/badge/dart-%3E%3D3.8.1-brightgreen.svg)](https://dart.dev)
 
 A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), providing access to post-quantum cryptographic algorithms including key encapsulation mechanisms (KEMs) and digital signatures.
 
@@ -13,7 +13,6 @@ A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), pr
 - 🌐 **Cross-Platform**: Support for Android, iOS, Linux, macOS, and Windows
 - 🚀 **High Performance**: Direct FFI bindings with minimal overhead
 - 🔧 **Flexible Loading**: Multiple library loading strategies with automatic fallbacks
-- 📱 **Mobile Ready**: Optimized for Flutter applications
 
 ## Supported Algorithms
 
@@ -33,6 +32,79 @@ A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), pr
 - MAYO signatures
 - Cross-Tree signatures
 - And more...
+
+## Using Prebuilt Binaries
+
+For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
+
+### Quick Setup with Prebuilt Binaries
+
+**For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
+   ```
+   your_project/
+   ├── lib/
+   ├── bin/          # Create this directory
+   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
+   └── pubspec.yaml
+   ```
+**For Android in Flutter, native libraries must be placed in the jniLibs folder to be automatically included in the APK:**
+```
+    android/app/src/main/jniLibs/
+    ├── arm64-v8a/
+    │   └── liboqs.so
+    ├── armeabi-v7a/
+    │   └── liboqs.so
+    └── x86_64/
+        └── liboqs.so
+```
+
+### Library Loading Configuration
+
+The package uses flexible library loading with automatic fallbacks:
+
+```dart
+import 'package:oqs/oqs.dart';
+
+// The package automatically tries multiple loading strategies:
+// 1. Environment variable (LIBOQS_PATH)
+// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
+// 3. Relative paths (./bin/, ../lib/, etc.)
+// 4. Platform-specific locations
+
+// Manual configuration (advanced users):
+import 'package:oqs/src/platform/library_loader.dart';
+
+final library = LibOQSLoader.loadLibrary(
+  explicitPath: '/custom/path/to/liboqs.so',
+  useCache: false,
+);
+```
+
+### Verifying Installation
+
+Test that the library loads correctly:
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void main() {
+  try {
+    // Initialize the library
+    LibOQS.init();
+
+    // Check version
+    print('liboqs version: ${LibOQS.getVersion()}');
+
+    // List available algorithms
+    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
+    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
+
+    print('✅ liboqs loaded successfully!');
+  } catch (e) {
+    print('❌ Failed to load liboqs: $e');
+  }
+}
+```
 
 ## Quick Start
 
@@ -98,10 +170,6 @@ void main() {
   
   // Create signature instance
   final sig = Signature.create('ML-DSA-65');
-  if (sig == null) {
-    print('Algorithm not supported');
-    return;
-  }
   
   try {
     // Generate a key pair
@@ -124,75 +192,6 @@ void main() {
 }
 ```
 
-## Using Prebuilt Binaries
-
-For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
-
-### Quick Setup with Prebuilt Binaries
-
-**For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
-   ```
-   your_project/
-   ├── lib/
-   ├── bin/          # Create this directory
-   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
-   └── pubspec.yaml
-   ```
-**For Android in Flutter, native libraries must be placed in the jniLibs folder to be automatically included in the APK
-```
-    android/app/src/main/jniLibs/
-    ├── arm64-v8a/
-    │   └── liboqs.so
-    ├── armeabi-v7a/
-    │   └── liboqs.so
-    └── x86_64/
-    └── liboqs.so
-```
-### Library Loading Configuration
-
-The package uses flexible library loading with automatic fallbacks:
-
-```dart
-// The package automatically tries multiple loading strategies:
-// 1. Environment variable (LIBOQS_PATH)
-// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
-// 3. Relative paths (./bin/, ../lib/, etc.)
-// 4. Platform-specific locations
-
-// Manual configuration (advanced users):
-import 'package:oqs/src/platform/library_loader.dart';
-
-final library = LibOQSLoader.loadLibrary(
-  explicitPath: '/custom/path/to/liboqs.so',
-  useCache: false,
-);
-```
-
-### Verifying Installation
-
-Test that the library loads correctly:
-
-```dart
-import 'package:oqs/oqs.dart';
-
-void main() {
-  try {
-    // Initialize the library
-    LibOQS.init();
-
-    // Check version
-    print('liboqs version: ${LibOQS.getVersion()}');
-
-    // List available algorithms
-    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
-    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
-
-    print('✅ liboqs loaded successfully!');
-  } catch (e) {
-    print('❌ Failed to load liboqs: $e');
-  }
-}
-```
 
 ## Available Algorithms
 
@@ -266,39 +265,51 @@ sigAlgorithms = [
 Basic usage doesn't require explicit cleanup for most applications:
 
 ```dart
-final kem = KEM.create('ML-KEM-768')!;
-final keyPair = kem.generateKeyPair();
-// Use KEM... automatic cleanup on app termination
-kem.dispose(); // Clean up KEM instance when done
+import 'package:oqs/oqs.dart';
+
+void main() {
+  final kem = KEM.create('ML-KEM-768')!;
+  final keyPair = kem.generateKeyPair();
+  // Use KEM... automatic cleanup on app termination
+  kem.dispose(); // Clean up KEM instance when done
+}
 ```
 
 ### Performance Optimization
 For better performance, initialize once at app start:
 
 ```dart
-// At app startup
-LibOQS.init(); // Enables CPU optimizations and faster algorithms
+import 'package:oqs/oqs.dart';
 
-// Then use normally throughout your app
-final kem = KEM.create('ML-KEM-768')!;
-// ...
+void main() {
+  // At app startup
+  LibOQS.init(); // Enables CPU optimizations and faster algorithms
+
+  // Then use normally throughout your app
+  final kem = KEM.create('ML-KEM-768')!;
+  // ...
+}
 ```
 
 ### Advanced Cleanup (Optional)
 For advanced scenarios like long-running servers or testing:
 
 ```dart
-// Long-running server applications
-LibOQS.init();
-// ... use library extensively
-LibOQS.cleanup(); // Clean shutdown to free OpenSSL resources
+import 'package:oqs/oqs.dart';
 
-// Multithreaded applications
-// On each worker thread before termination:
-LibOQS.cleanupThread(); // Prevents OpenSSL thread-local storage leaks
+void main() {
+  // Long-running server applications
+  LibOQS.init();
+  // ... use library extensively
+  LibOQS.cleanup(); // Clean shutdown to free OpenSSL resources
 
-// Complete cleanup (convenience method)
-LibOQS.cleanupAll(); // Calls cleanupThread() + cleanup()
+  // Multithreaded applications
+  // On each worker thread before termination:
+  LibOQS.cleanupThread(); // Prevents OpenSSL thread-local storage leaks
+
+  // Complete cleanup (convenience method)
+  LibOQS.cleanupAll(); // Calls cleanupThread() + cleanup()
+}
 ```
 
 ### Thread Safety
@@ -389,6 +400,129 @@ void main() {
 }
 ```
 
+## Complete Working Examples
+
+### Full KEM Example with Error Handling
+
+```dart
+import 'package:oqs/oqs.dart';
+import 'dart:typed_data';
+
+void kemExample() {
+  print('=== KEM Example ===');
+  
+  try {
+    // Initialize library
+    LibOQS.init();
+    
+    // Create KEM instance
+    final kem = KEM.create('ML-KEM-768');
+    if (kem == null) {
+      print('ML-KEM-768 not supported');
+      return;
+    }
+    
+    print('Algorithm: ${kem.algorithmName}');
+    print('Public key length: ${kem.publicKeyLength}');
+    print('Secret key length: ${kem.secretKeyLength}');
+    print('Ciphertext length: ${kem.ciphertextLength}');
+    print('Shared secret length: ${kem.sharedSecretLength}');
+    
+    // Generate key pair
+    final keyPair = kem.generateKeyPair();
+    print('\n✓ Key pair generated');
+    
+    // Alice encapsulates
+    final encResult = kem.encapsulate(keyPair.publicKey);
+    print('✓ Secret encapsulated');
+    
+    // Bob decapsulates
+    final bobSecret = kem.decapsulate(encResult.ciphertext, keyPair.secretKey);
+    print('✓ Secret decapsulated');
+    
+    // Verify secrets match
+    bool secretsMatch = true;
+    if (encResult.sharedSecret.length != bobSecret.length) {
+      secretsMatch = false;
+    } else {
+      for (int i = 0; i < encResult.sharedSecret.length; i++) {
+        if (encResult.sharedSecret[i] != bobSecret[i]) {
+          secretsMatch = false;
+          break;
+        }
+      }
+    }
+    
+    print('✓ Secrets match: $secretsMatch');
+    
+    // Clean up
+    kem.dispose();
+    
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+void main() {
+  kemExample();
+}
+```
+
+### Full Signature Example with Error Handling
+
+```dart
+import 'package:oqs/oqs.dart';
+import 'dart:convert';
+
+void signatureExample() {
+  print('=== Signature Example ===');
+  
+  try {
+    // Initialize library
+    LibOQS.init();
+    
+    // Create signature instance
+    final sig = Signature.create('ML-DSA-65');
+    
+    print('Algorithm: ${sig.algorithmName}');
+    print('Public key length: ${sig.publicKeyLength}');
+    print('Secret key length: ${sig.secretKeyLength}');
+    print('Max signature length: ${sig.maxSignatureLength}');
+    
+    // Generate key pair
+    final keyPair = sig.generateKeyPair();
+    print('\n✓ Key pair generated');
+    
+    // Message to sign
+    final message = utf8.encode('Hello, post-quantum cryptography!');
+    print('Message: "${utf8.decode(message)}"');
+    
+    // Sign message
+    final signature = sig.sign(message, keyPair.secretKey);
+    print('✓ Message signed (signature length: ${signature.length})');
+    
+    // Verify signature
+    final isValid = sig.verify(message, signature, keyPair.publicKey);
+    print('✓ Signature valid: $isValid');
+    
+    // Test with wrong message
+    final wrongMessage = utf8.encode('Wrong message');
+    final isInvalid = sig.verify(wrongMessage, signature, keyPair.publicKey);
+    print('✓ Wrong message verification: $isInvalid (should be false)');
+    
+    // Clean up
+    sig.dispose();
+    
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+void main() {
+  signatureExample();
+}
+```
+
 ## Performance Considerations
 
 - **Initialization**: Call `LibOQS.init()` once at startup for optimal performance
@@ -401,13 +535,10 @@ void main() {
 
 ⚠️ **Important Security Considerations:**
 
-- This package provides access to **post-quantum cryptographic algorithms**
 - ML-KEM and ML-DSA are NIST-standardized and suitable for production use
 - Other algorithms may be experimental - validate against current security recommendations
 - Keep the liboqs library updated to the latest version
-- Use cryptographically secure random number generators (handled automatically by liboqs)
 - Properly dispose of secret key material by calling `dispose()`
-- Never reuse key pairs across different sessions
 
 ## Building from Source
 
@@ -429,24 +560,6 @@ ninja install
 3. The library will be installed to `/usr/local/lib` by default.
 
 ## Development
-
-### Contributing
-
-Contributions are welcome! Please:
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting PRs
-
-## Examples
-
-Check out the [example](example/) directory for more comprehensive examples including:
-
-- Basic KEM and signature operations
-- Performance benchmarking
-- Error handling patterns
-- Resource management examples
-- Platform-specific considerations
 
 ## Troubleshooting
 
@@ -472,22 +585,12 @@ If you encounter library loading errors:
 If you encounter issues:
 1. Check the [troubleshooting section](#troubleshooting) above
 2. Review the [examples](example/) directory
-3. Search existing [GitHub issues](https://github.com/yourusername/dart-oqs/issues)
+3. Search existing [GitHub issues](https://github.com/bardiakz/oqs/issues)
 4. Open a new issue with details about your platform and error messages
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for a list of changes in each version.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- [Open Quantum Safe](https://openquantumsafe.org/) project for liboqs
-- NIST Post-Quantum Cryptography Standardization effort
-- The Dart and Flutter communities
 
 ## Related Projects
 
@@ -497,4 +600,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-For more information about post-quantum cryptography and the algorithms provided by this package, visit [OpenQuantumSafe.org](https://openquantumsafe.org/).
+For more information about post-quantum cryptography and the algorithms provided by this package, visit [OpenQuantumSafe.org](https://openquantumsafe.org/)

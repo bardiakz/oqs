@@ -248,7 +248,6 @@ class LibOQSUtils {
     try {
       calloc.free(ptr);
     } catch (e) {
-      // Log but don't throw - cleanup should never fail the program
       print('Warning: Error freeing pointer: $e');
     }
   }
