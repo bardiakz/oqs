@@ -1,7 +1,7 @@
 name: oqs
 description: Dart FFI bindings for liboqs — high-performance post-quantum cryptography (PQC) with ML-KEM, ML-DSA, Falcon, SPHINCS+ for key encapsulation and signatures.
 
-version: 1.0.9
+version: 1.1.0
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs

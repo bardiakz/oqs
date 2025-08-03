@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:oqs/oqs.dart';
+import 'package:oqs/src/random.dart';
 
 void main() {
   print('=== LibOQS Dart Example ===\n');
@@ -20,6 +21,8 @@ void main() {
     print(
       'Supported Signature algorithms: ${LibOQS.getSupportedSignatureAlgorithms().length}\n',
     );
+    //random example
+    randomExample();
 
     // KEM Example
     kemExample();
@@ -110,10 +113,6 @@ void signatureExample() {
     print('\nTesting $algName:');
 
     final sig = Signature.create(algName);
-    if (sig == null) {
-      print('Failed to create Signature instance for $algName');
-      continue;
-    }
 
     try {
       // Print algorithm details
@@ -155,6 +154,74 @@ void signatureExample() {
     } finally {
       sig.dispose();
     }
+  }
+}
+
+void randomExample() {
+  print('=== Random Number Generation Example ===');
+
+  try {
+    // Generate random bytes
+    print('Generating random bytes...');
+    final randomBytes = OQSRandom.generateBytes(32);
+    print(
+      '  ✓ Generated 32 random bytes: ${_bytesToHex(randomBytes.take(16).toList())}...',
+    );
+
+    // Generate a cryptographic seed
+    print('\nGenerating cryptographic seed...');
+    final seed = OQSRandom.generateSeed(32);
+    print('  ✓ Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
+
+    // Generate random integers
+    print('\nGenerating random integers...');
+    final randomInts = List.generate(5, (_) => OQSRandom.generateInt(1, 100));
+    print('  ✓ Random integers (1-99): $randomInts');
+
+    // Generate random boolean values
+    print('\nGenerating random booleans...');
+    final randomBools = List.generate(
+      10,
+      (_) => OQSRandomExtensions.generateBool(),
+    );
+    print('  ✓ Random booleans: $randomBools');
+
+    // Generate random double
+    print('\nGenerating random doubles...');
+    final randomDoubles = List.generate(
+      5,
+      (_) => OQSRandomExtensions.generateDouble(),
+    );
+    print(
+      '  ✓ Random doubles (0.0-1.0): ${randomDoubles.map((d) => d.toStringAsFixed(6)).toList()}',
+    );
+
+    // Test list shuffling
+    print('\nTesting cryptographic shuffle...');
+    final testList = List.generate(10, (i) => i);
+    print('  Original list: $testList');
+    OQSRandomExtensions.shuffleList(testList);
+    print('  ✓ Shuffled list: $testList');
+
+    // Show available RNG algorithms
+    print('\nAvailable RNG algorithms:');
+    final algorithms = OQSRandom.getAvailableAlgorithms();
+    for (final alg in algorithms) {
+      final supported = OQSRandom.isAlgorithmLikelySupported(alg) ? '✓' : '?';
+      print('  $supported $alg');
+    }
+
+    // Test algorithm switching (optional, be careful with this)
+    print('\nTesting RNG algorithm info...');
+    print('  Current algorithm: system (default)');
+
+    // Generate some bytes with default algorithm
+    final defaultBytes = OQSRandom.generateBytes(16);
+    print(
+      '  ✓ Generated with default: ${_bytesToHex(defaultBytes.take(8).toList())}...',
+    );
+  } catch (e) {
+    print('  ✗ Random generation error: $e');
   }
 }
 

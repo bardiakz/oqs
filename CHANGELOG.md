@@ -1,7 +1,10 @@
-## 1.0.9
+## 1.1.0
 
--BREAKING: Fixed all import statements in README examples from package:liboqs/liboqs.dart to package:oqs/oqs.dart
--Updated Dart SDK requirement documentation from >=2.17.0 to >=3.8.1 to match pubspec.yaml
--Fixed signature example to properly handle non-nullable return from Signature.create()
--Added missing error handling in all README examples
--Fixed incomplete code examples that were missing necessary imports
+### Added Random Number Generation: New OQSRandom class providing cryptographically secure random number generation
+
+- generateBytes(int length) - Generate random bytes using liboqs RNG
+- generateSeed([int seedLength]) - Generate cryptographic seeds (default 32 bytes)
+- generateInt(int min, int max) - Generate random integers in specified range
+- switchAlgorithm(String algorithm) - Switch between RNG algorithms (system, OpenSSL, etc.)
+- getAvailableAlgorithms() - List available RNG algorithms
+- resetToDefault() - Reset to system RNG
