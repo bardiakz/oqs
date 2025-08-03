@@ -4,12 +4,13 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Dart](https://img.shields.io/badge/dart-%3E%3D3.8.1-brightgreen.svg)](https://dart.dev)
 
-A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), providing access to post-quantum cryptographic algorithms including key encapsulation mechanisms (KEMs) and digital signatures.
+A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), providing access to post-quantum cryptographic algorithms including key encapsulation mechanisms (KEMs), digital signatures, and cryptographically secure random number generation.
 
 ## Features
 
 - 🔐 **Key Encapsulation Mechanisms (KEMs)**: ML-KEM (Kyber), Classic McEliece, FrodoKEM, NTRU Prime, and more
 - ✍️ **Digital Signatures**: ML-DSA (Dilithium), Falcon, SPHINCS+, and other post-quantum signature schemes
+- 🎲 **Cryptographically Secure Random**: Hardware-backed random number generation with algorithm switching
 - 🌐 **Cross-Platform**: Support for Android, iOS, Linux, macOS, and Windows
 - 🚀 **High Performance**: Direct FFI bindings with minimal overhead
 - 🔧 **Flexible Loading**: Multiple library loading strategies with automatic fallbacks
@@ -32,6 +33,13 @@ A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), pr
 - MAYO signatures
 - Cross-Tree signatures
 - And more...
+
+### Random Number Generation
+- System-level cryptographically secure random bytes
+- Multiple RNG algorithm support (system, OpenSSL, etc.)
+- Convenience functions for integers, booleans, and doubles
+- Cryptographically secure list shuffling
+- Seed generation for key derivation
 
 ## Using Prebuilt Binaries
 
@@ -57,6 +65,9 @@ For convenience, some prebuilt liboqs binaries (v0.14.0) are available for commo
     └── x86_64/
         └── liboqs.so
 ```
+**For Windows just put the oqs.dll in the build directory before packing the msix**
+
+**For Linux oqs.so can be placed in /bundle/lib before creating the AppImage**
 
 ### Library Loading Configuration
 
@@ -99,6 +110,10 @@ void main() {
     print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
     print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
 
+    // Test random generation
+    final randomBytes = OQSRandom.generateBytes(32);
+    print('Generated ${randomBytes.length} random bytes');
+
     print('✅ liboqs loaded successfully!');
   } catch (e) {
     print('❌ Failed to load liboqs: $e');
@@ -107,6 +122,44 @@ void main() {
 ```
 
 ## Quick Start
+
+### Cryptographically Secure Random Generation
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void main() {
+  // Generate random bytes
+  final randomBytes = OQSRandom.generateBytes(32);
+  print('Random bytes: ${randomBytes.take(8).toList()}...');
+  
+  // Generate a cryptographic seed
+  final seed = OQSRandom.generateSeed(); // Default 32 bytes
+  print('Seed: ${seed.take(8).toList()}...');
+  
+  // Generate random integers
+  final randomInt = OQSRandom.generateInt(1, 100);
+  print('Random integer (1-99): $randomInt');
+  
+  // Generate random boolean
+  final randomBool = OQSRandomExtensions.generateBool();
+  print('Random boolean: $randomBool');
+  
+  // Generate random double (0.0 to 1.0)
+  final randomDouble = OQSRandomExtensions.generateDouble();
+  print('Random double: $randomDouble');
+  
+  // Cryptographically secure shuffle
+  final list = [1, 2, 3, 4, 5];
+  OQSRandomExtensions.shuffleList(list);
+  print('Shuffled list: $list');
+  
+  // Switch RNG algorithm (advanced)
+  print('Available RNG algorithms: ${OQSRandom.getAvailableAlgorithms()}');
+  final switched = OQSRandom.switchAlgorithm('system');
+  print('Switched to system RNG: $switched');
+}
+```
 
 ### Key Encapsulation (KEM) Example
 
@@ -192,6 +245,103 @@ void main() {
 }
 ```
 
+## Random Number Generation
+
+The `OQSRandom` class provides cryptographically secure random number generation using liboqs's RNG implementation.
+
+### Basic Random Generation
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void randomExamples() {
+  // Generate random bytes
+  final bytes = OQSRandom.generateBytes(16);
+  print('16 random bytes: $bytes');
+  
+  // Generate cryptographic seed (default 32 bytes)
+  final seed = OQSRandom.generateSeed();
+  print('32-byte seed: ${seed.length} bytes');
+  
+  // Generate custom seed length
+  final customSeed = OQSRandom.generateSeed(64);
+  print('64-byte seed: ${customSeed.length} bytes');
+  
+  // Generate random integer in range
+  final randomInt = OQSRandom.generateInt(10, 100);
+  print('Random int (10-99): $randomInt');
+}
+```
+
+### Extended Random Utilities
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void extendedRandomExamples() {
+  // Random boolean
+  final bool randomBool = OQSRandomExtensions.generateBool();
+  print('Random boolean: $randomBool');
+  
+  // Random double (0.0 to 1.0)
+  final double randomDouble = OQSRandomExtensions.generateDouble();
+  print('Random double: $randomDouble');
+  
+  // Cryptographically secure list shuffling
+  final List<String> items = ['A', 'B', 'C', 'D', 'E'];
+  print('Original: $items');
+  OQSRandomExtensions.shuffleList(items);
+  print('Shuffled: $items');
+}
+```
+
+### Advanced RNG Configuration
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void advancedRandomExamples() {
+  // List available RNG algorithms
+  final algorithms = OQSRandom.getAvailableAlgorithms();
+  print('Available RNG algorithms: $algorithms');
+  
+  // Check if algorithm is supported
+  final isSupported = OQSRandom.isAlgorithmLikelySupported('system');
+  print('System RNG supported: $isSupported');
+  
+  // Switch RNG algorithm (use with caution)
+  final success = OQSRandom.switchAlgorithm('system');
+  print('Switched to system RNG: $success');
+  
+  // Reset to default
+  OQSRandom.resetToDefault();
+  print('Reset to default RNG');
+}
+```
+
+### Using Random with Cryptographic Operations
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void cryptographicRandomExamples() {
+  // Generate random salt for key derivation
+  final salt = OQSRandom.generateBytes(16);
+  print('Salt for key derivation: ${salt.length} bytes');
+  
+  // Generate random IV for encryption
+  final iv = OQSRandom.generateBytes(12); // Typical AES-GCM IV size
+  print('IV for encryption: ${iv.length} bytes');
+  
+  // Generate random session ID
+  final sessionId = OQSRandom.generateBytes(32);
+  print('Session ID: ${sessionId.length} bytes');
+  
+  // Generate random nonce for protocols
+  final nonce = OQSRandom.generateBytes(24);
+  print('Protocol nonce: ${nonce.length} bytes');
+}
+```
 
 ## Available Algorithms
 
@@ -402,6 +552,64 @@ void main() {
 
 ## Complete Working Examples
 
+### Full Random Generation Example
+
+```dart
+import 'package:oqs/oqs.dart';
+
+void randomExample() {
+  print('=== Random Generation Example ===');
+  
+  try {
+    // Basic random generation
+    print('\n1. Basic Random Generation:');
+    final randomBytes = OQSRandom.generateBytes(32);
+    print('   32 random bytes: ${_bytesToHex(randomBytes.take(16).toList())}...');
+    
+    final seed = OQSRandom.generateSeed();
+    print('   Crypto seed (32 bytes): ${_bytesToHex(seed.take(8).toList())}...');
+    
+    // Random numbers and booleans
+    print('\n2. Random Numbers:');
+    final randomInts = List.generate(5, (_) => OQSRandom.generateInt(1, 100));
+    print('   Random integers (1-99): $randomInts');
+    
+    final randomBools = List.generate(8, (_) => OQSRandomExtensions.generateBool());
+    print('   Random booleans: $randomBools');
+    
+    final randomDoubles = List.generate(3, (_) => OQSRandomExtensions.generateDouble());
+    print('   Random doubles: ${randomDoubles.map((d) => d.toStringAsFixed(4)).toList()}');
+    
+    // Cryptographic shuffling
+    print('\n3. Cryptographic Shuffling:');
+    final testList = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
+    print('   Original: $testList');
+    OQSRandomExtensions.shuffleList(testList);
+    print('   Shuffled: $testList');
+    
+    // RNG algorithms
+    print('\n4. RNG Algorithms:');
+    final algorithms = OQSRandom.getAvailableAlgorithms();
+    print('   Available: $algorithms');
+    
+    final systemSupported = OQSRandom.isAlgorithmLikelySupported('system');
+    print('   System RNG supported: $systemSupported');
+    
+  } catch (e) {
+    print('Error: $e');
+  }
+}
+
+String _bytesToHex(List<int> bytes) {
+  return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join('');
+}
+
+void main() {
+  LibOQS.init();
+  randomExample();
+}
+```
+
 ### Full KEM Example with Error Handling
 
 ```dart
@@ -454,6 +662,10 @@ void kemExample() {
     }
     
     print('✓ Secrets match: $secretsMatch');
+    
+    // Demonstrate using random data
+    final randomSalt = OQSRandom.generateBytes(16);
+    print('✓ Generated random salt: ${randomSalt.length} bytes');
     
     // Clean up
     kem.dispose();
@@ -510,6 +722,12 @@ void signatureExample() {
     final isInvalid = sig.verify(wrongMessage, signature, keyPair.publicKey);
     print('✓ Wrong message verification: $isInvalid (should be false)');
     
+    // Demonstrate with random message
+    final randomMessage = OQSRandom.generateBytes(64);
+    final randomSignature = sig.sign(randomMessage, keyPair.secretKey);
+    final randomValid = sig.verify(randomMessage, randomSignature, keyPair.publicKey);
+    print('✓ Random message signature valid: $randomValid');
+    
     // Clean up
     sig.dispose();
     
@@ -530,6 +748,7 @@ void main() {
 - **Thread Safety**: liboqs operations are thread-safe, but don't share instance objects
 - **Key Reuse**: Generate fresh key pairs for each session when possible
 - **Algorithm Selection**: ML-KEM and ML-DSA are NIST-standardized and recommended
+- **Random Generation**: `OQSRandom` uses hardware-backed sources when available
 
 ## Security Notes
 
@@ -539,6 +758,9 @@ void main() {
 - Other algorithms may be experimental - validate against current security recommendations
 - Keep the liboqs library updated to the latest version
 - Properly dispose of secret key material by calling `dispose()`
+- The random number generator uses cryptographically secure sources
+- Be cautious when switching RNG algorithms - stick with 'system' for most use cases
+- Use `OQSRandom.generateSeed()` for cryptographic key derivation
 
 ## Building from Source
 
@@ -579,6 +801,7 @@ If you encounter library loading errors:
 - `Algorithm 'X' is not supported`: Algorithm not compiled into your liboqs build
 - `Invalid key length`: Key material doesn't match expected size for algorithm
 - `Failed to generate key pair`: Usually indicates library loading or initialization issues
+- `Failed to generate random bytes`: RNG initialization failed - check library installation
 
 ### Getting Help
 
