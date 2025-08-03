@@ -1,4 +1,4 @@
-## 1.1.0
+## 2.0.1
 
 ### Added Random Number Generation: New OQSRandom class providing cryptographically secure random number generation
 
