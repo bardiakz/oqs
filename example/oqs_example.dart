@@ -90,6 +90,36 @@ void kemExample() {
           '  Shared secret (hex): ${_bytesToHex(sharedSecret.take(16).toList())}...',
         );
       }
+
+      // Test deterministic key generation if supported
+      if (kem.supportsDeterministicGeneration) {
+        print('\n  Testing deterministic generation...');
+        print('  Seed length required: ${kem.seedLength} bytes');
+        
+        // Generate a seed
+        final seed = OQSRandom.generateSeed(kem.seedLength!);
+        print('  Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
+        
+        // Generate two key pairs with same seed
+        final keyPair1 = kem.generateKeyPairDerand(seed);
+        final keyPair2 = kem.generateKeyPairDerand(seed);
+        
+        // Verify they're identical
+        final publicKeysMatch = _compareUint8Lists(keyPair1.publicKey, keyPair2.publicKey);
+        final secretKeysMatch = _compareUint8Lists(keyPair1.secretKey, keyPair2.secretKey);
+        
+        print('  ✓ Deterministic generation: Public keys match: $publicKeysMatch');
+        print('  ✓ Deterministic generation: Secret keys match: $secretKeysMatch');
+        
+        // Generate with different seed to verify they're different
+        final seed2 = OQSRandom.generateSeed(kem.seedLength!);
+        final keyPair3 = kem.generateKeyPairDerand(seed2);
+        
+        final differentKeys = !_compareUint8Lists(keyPair1.publicKey, keyPair3.publicKey);
+        print('  ✓ Different seeds produce different keys: $differentKeys');
+      } else {
+        print('  ℹ Deterministic generation not supported for $algName');
+      }
     } catch (e) {
       print('  ✗ Error: $e');
     } finally {
