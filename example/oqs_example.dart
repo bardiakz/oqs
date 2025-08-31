@@ -43,7 +43,7 @@ void kemExample() {
   print('=== KEM (Key Encapsulation Mechanism) Example ===');
 
   // Try different KEM algorithms
-  final kemAlgorithms = ['Kyber512', 'Kyber768', 'Kyber1024'];
+  final kemAlgorithms = ['ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024'];
   final allKemAlgorithms = KEM.getSupportedKemAlgorithms();
   for (final algName in kemAlgorithms) {
     if (!LibOQS.isKEMSupported(algName)) {
@@ -95,27 +95,40 @@ void kemExample() {
       if (kem.supportsDeterministicGeneration) {
         print('\n  Testing deterministic generation...');
         print('  Seed length required: ${kem.seedLength} bytes');
-        
+
         // Generate a seed
         final seed = OQSRandom.generateSeed(kem.seedLength!);
         print('  Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
-        
+
         // Generate two key pairs with same seed
         final keyPair1 = kem.generateKeyPairDerand(seed);
         final keyPair2 = kem.generateKeyPairDerand(seed);
-        
+
         // Verify they're identical
-        final publicKeysMatch = _compareUint8Lists(keyPair1.publicKey, keyPair2.publicKey);
-        final secretKeysMatch = _compareUint8Lists(keyPair1.secretKey, keyPair2.secretKey);
-        
-        print('  ✓ Deterministic generation: Public keys match: $publicKeysMatch');
-        print('  ✓ Deterministic generation: Secret keys match: $secretKeysMatch');
-        
+        final publicKeysMatch = _compareUint8Lists(
+          keyPair1.publicKey,
+          keyPair2.publicKey,
+        );
+        final secretKeysMatch = _compareUint8Lists(
+          keyPair1.secretKey,
+          keyPair2.secretKey,
+        );
+
+        print(
+          '  ✓ Deterministic generation: Public keys match: $publicKeysMatch',
+        );
+        print(
+          '  ✓ Deterministic generation: Secret keys match: $secretKeysMatch',
+        );
+
         // Generate with different seed to verify they're different
         final seed2 = OQSRandom.generateSeed(kem.seedLength!);
         final keyPair3 = kem.generateKeyPairDerand(seed2);
-        
-        final differentKeys = !_compareUint8Lists(keyPair1.publicKey, keyPair3.publicKey);
+
+        final differentKeys = !_compareUint8Lists(
+          keyPair1.publicKey,
+          keyPair3.publicKey,
+        );
         print('  ✓ Different seeds produce different keys: $differentKeys');
       } else {
         print('  ℹ Deterministic generation not supported for $algName');
@@ -132,7 +145,7 @@ void signatureExample() {
   print('=== Digital Signature Example ===');
 
   // Try different signature algorithms
-  final sigAlgorithms = ['Dilithium2', 'Dilithium3', 'Falcon-512'];
+  final sigAlgorithms = ['ML-DSA-44', 'ML-DSA-65', 'Falcon-512'];
   final AllSigAlgorithms = Signature.getSupportedSignatureAlgorithms();
   for (final algName in sigAlgorithms) {
     if (!LibOQS.isSignatureSupported(algName)) {
