@@ -1,3 +1,4 @@
-## 2.1.0
+## 2.1.2
 
-### feat: Add deterministic key generation support for KEMs
+### Fix: Kyber768 test - Now checks if deterministic generation is supported rather than asserting it must be supported.
+### Fix: final KEM Deterministic test - Changed from testing Kyber variants (which don't support deterministic generation) to testing ML-KEM variants (which do).
