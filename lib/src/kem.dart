@@ -177,6 +177,81 @@ class KEM {
     return _kemPtr.ref.length_shared_secret;
   }
 
+  /// Get the seed length required for deterministic key generation
+  int? get seedLength {
+    _checkDisposed();
+    final length = _kemPtr.ref.length_keypair_seed;
+    return length > 0 ? length : null;
+  }
+
+  /// Check if this KEM supports deterministic key generation
+  bool get supportsDeterministicGeneration {
+    _checkDisposed();
+    return _kemPtr.ref.keypair_derand != nullptr && seedLength != null;
+  }
+
+  /// Generate a key pair deterministically from a seed
+  ///
+  /// The [seed] must be exactly [seedLength] bytes long. Returns a [KEMKeyPair]
+  /// containing the generated public and secret keys. Throws [LibOQSException]
+  /// if the algorithm doesn't support deterministic generation or if the seed
+  /// length is invalid.
+  KEMKeyPair generateKeyPairDerand(Uint8List seed) {
+    _checkDisposed();
+
+    if (!supportsDeterministicGeneration) {
+      throw LibOQSException(
+        'Algorithm $algorithmName does not support deterministic key generation',
+      );
+    }
+
+    final requiredSeedLength = seedLength;
+    if (requiredSeedLength == null) {
+      throw LibOQSException(
+        'Cannot determine required seed length for $algorithmName',
+      );
+    }
+
+    if (seed.length != requiredSeedLength) {
+      throw LibOQSException(
+        'Invalid seed length: expected $requiredSeedLength, got ${seed.length}',
+      );
+    }
+
+    final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
+    final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+    final seedPtr = LibOQSUtils.uint8ListToPointer(seed);
+
+    try {
+      // Call the keypair_derand function pointer from the struct
+      final keypairDerandFn = _kemPtr.ref.keypair_derand
+          .asFunction<
+            int Function(
+              Pointer<Uint8> publicKey,
+              Pointer<Uint8> secretKey,
+              Pointer<Uint8> seed,
+            )
+          >();
+
+      final result = keypairDerandFn(publicKey, secretKey, seedPtr);
+      if (result != 0) {
+        throw LibOQSException(
+          'Failed to generate deterministic key pair',
+          result,
+        );
+      }
+
+      return KEMKeyPair(
+        publicKey: LibOQSUtils.pointerToUint8List(publicKey, publicKeyLength),
+        secretKey: LibOQSUtils.pointerToUint8List(secretKey, secretKeyLength),
+      );
+    } finally {
+      LibOQSUtils.freePointer(publicKey);
+      LibOQSUtils.freePointer(secretKey);
+      LibOQSUtils.freePointer(seedPtr);
+    }
+  }
+
   /// Generate a key pair
   KEMKeyPair generateKeyPair() {
     _checkDisposed();
