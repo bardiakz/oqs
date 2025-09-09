@@ -308,28 +308,6 @@ export LIBOQS_PATH=/path/to/your/liboqs.so
 dart run your_app.dart
 ```
 
-### Error Handling
-
-```dart
-import 'package:oqs/oqs.dart';
-
-void main() {
-  try {
-    final kem = KEM.create('NonExistentAlgorithm');
-    if (kem == null) {
-      print('Algorithm not supported');
-      return;
-    }
-    
-    // Use KEM...
-  } on LibOQSException catch (e) {
-    print('LibOQS error: $e');
-  } catch (e) {
-    print('Other error: $e');
-  }
-}
-```
-
 ## Complete Working Examples
 
 ### Full Random Generation Example
