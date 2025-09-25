@@ -1,4 +1,4 @@
-## 2.1.4
+## 2.2.0
 
-## Changed
-- moved examples from readme to example/
+### Added
+- Custom library path option via `LibOQSLoader.customPath` for more flexible loading.
