@@ -1,4 +1,3 @@
-markdown
 # OQS - Post-Quantum Cryptography for Dart
 
 [![pub package](https://img.shields.io/pub/v/oqs.svg)](https://pub.dev/packages/oqs)
