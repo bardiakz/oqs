@@ -5,6 +5,9 @@ import 'package:oqs/oqs.dart';
 void main() {
   print('=== LibOQS Dart Example ===\n');
 
+  //custom library path before initialization
+  LibOQSLoader.customPath = 'bin/linux/liboqs.so';
+
   // Initialize the library
   LibOQS.init();
 

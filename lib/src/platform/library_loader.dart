@@ -213,14 +213,18 @@ String _getLibraryFileName() {
 class LibOQSLoader {
   static DynamicLibrary? _cachedLibrary;
 
+  /// Optional custom path to the library, set this before calling loadLibrary to use a custom path.
+  static String? customPath;
+
   /// Loads the liboqs dynamic library using a strategy pattern with multiple fallbacks.
   ///
   /// The loading strategies are tried in the following order:
   /// 1. Explicit path (if provided)
-  /// 2. Environment variable (LIBOQS_PATH)
-  /// 3. Package-relative paths
-  /// 4. System library locations
-  /// 5. Default platform-specific locations
+  /// 2. Custom path (if set via LibOQSLoader.customPath)
+  /// 3. Environment variable (LIBOQS_PATH)
+  /// 4. Package-relative paths
+  /// 5. System library locations
+  /// 6. Default platform-specific locations
   ///
   /// [explicitPath] - Optional explicit path to the library
   /// [useCache] - Whether to cache the loaded library (default: true)
@@ -240,6 +244,7 @@ class LibOQSLoader {
 
     final strategies = <LibraryLoadStrategy>[
       if (explicitPath != null) ExplicitPathStrategy(explicitPath),
+      if (customPath != null) ExplicitPathStrategy(customPath!),
       EnvironmentVariableStrategy(envVarName),
       PackageRelativeStrategy(),
       SystemLocationStrategy(),
