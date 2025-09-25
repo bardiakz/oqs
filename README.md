@@ -1,4 +1,4 @@
-```markdown
+markdown
 # OQS - Post-Quantum Cryptography for Dart
 
 [![pub package](https://img.shields.io/pub/v/oqs.svg)](https://pub.dev/packages/oqs)
@@ -49,7 +49,7 @@ For convenience, some prebuilt liboqs binaries (v0.14.0) are available for commo
 ### Quick Setup with Prebuilt Binaries
 
 **For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
-   ```
+
 your_project/
 ├── lib/
 ├── bin/          # Create this directory
