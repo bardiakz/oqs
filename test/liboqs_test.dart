@@ -60,7 +60,7 @@ void main() {
       final sig = Signature.create('Dilithium2');
       expect(sig, isNotNull);
 
-      final keyPair = sig!.generateKeyPair();
+      final keyPair = sig.generateKeyPair();
       expect(keyPair.publicKey.length, equals(1312));
       expect(keyPair.secretKey.length, equals(2528));
 
