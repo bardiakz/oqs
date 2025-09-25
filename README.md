@@ -48,12 +48,12 @@ For convenience, some prebuilt liboqs binaries (v0.14.0) are available for commo
 ### Quick Setup with Prebuilt Binaries
 
 **For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
-
-your_project/
-├── lib/
-├── bin/          # Create this directory
-│   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
-└── pubspec.yaml
+   ```
+   your_project/
+   ├── lib/
+   ├── bin/          # Create this directory
+   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
+   └── pubspec.yaml
    ```
 **For Android in Flutter, native libraries must be placed in the jniLibs folder to be automatically included in the APK:**
 ```
@@ -77,18 +77,14 @@ The package uses flexible library loading with automatic fallbacks:
 import 'package:oqs/oqs.dart';
 
 // The package automatically tries multiple loading strategies:
-// 1. Explicit path (if provided)
-// 2. Custom path (if set)
-// 3. Environment variable (LIBOQS_PATH)
-// 4. Package-relative paths
-// 5. System locations
-// 6. Default platform-specific locations
-
-// Set custom path
-import 'package:oqs/platform/library_loader.dart';
-LibOQSLoader.customPath = 'native_libs/oqs_x86.so';
+// 1. Environment variable (LIBOQS_PATH)
+// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
+// 3. Relative paths (./bin/, ../lib/, etc.)
+// 4. Platform-specific locations
 
 // Manual configuration (advanced users):
+import 'package:oqs/src/platform/library_loader.dart';
+
 final library = LibOQSLoader.loadLibrary(
   explicitPath: '/custom/path/to/liboqs.so',
   useCache: false,
@@ -290,12 +286,11 @@ ninja install
 
 The package attempts to load the liboqs library in the following order:
 
-1. Explicit path (if provided in loadLibrary)
-2. Custom path (if set via LibOQSLoader.customPath)
-3. Environment variable (LIBOQS_PATH)
-4. Package-relative paths
-5. System library locations
-6. Default platform-specific locations
+1. **Environment variable**: `LIBOQS_PATH` if set
+2. **Prebuilt binaries**: `./bin/` directory in your project
+3. **System locations**: `/usr/lib`, `/usr/local/lib`, etc.
+4. **Relative paths**: `../lib/`, `./lib/`, etc.
+5. **Platform-specific paths**: Windows DLL search paths, macOS framework paths
 
 This ensures maximum compatibility across different deployment scenarios.
 
@@ -555,9 +550,8 @@ If you encounter library loading errors:
 1. **Install liboqs**: Ensure the liboqs library is installed (`liboqs-dev` package on Ubuntu)
 2. **Check library path**: Verify the library is in standard locations (`/usr/lib`, `/usr/local/lib`)
 3. **Set environment variable**: Use `LIBOQS_PATH` to specify custom location
-4. **Set custom path in code**: Use `LibOQSLoader.customPath`
-5. **Verify architecture**: Ensure library matches your platform architecture
-6. **Check dependencies**: Ensure OpenSSL and other dependencies are installed
+4. **Verify architecture**: Ensure library matches your platform architecture
+5. **Check dependencies**: Ensure OpenSSL and other dependencies are installed
 
 ### Common Error Messages
 
