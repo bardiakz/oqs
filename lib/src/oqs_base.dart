@@ -1,10 +1,11 @@
 import 'dart:ffi';
-import 'dart:typed_data';
 import 'dart:isolate';
+import 'dart:typed_data';
+
 import 'package:ffi/ffi.dart';
 
-import 'bindings/liboqs_bindings.dart';
-import 'platform/library_loader.dart';
+import 'package:oqs/src/bindings/liboqs_bindings.dart';
+import 'package:oqs/src/platform/library_loader.dart';
 
 /// Thread-safe base class for liboqs functionality
 class LibOQSBase {

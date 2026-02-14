@@ -1,5 +1,6 @@
-import 'package:oqs/oqs.dart';
 import 'dart:convert';
+
+import 'package:oqs/oqs.dart';
 
 void main() {
   // Initialize the library (optional, but recommended for performance)

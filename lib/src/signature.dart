@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:ffi' as ffi;
 import 'dart:typed_data';
+
 import 'package:ffi/ffi.dart';
-import 'bindings/liboqs_bindings.dart';
-import 'oqs_base.dart';
+import 'package:oqs/src/bindings/liboqs_bindings.dart';
+import 'package:oqs/src/oqs_base.dart';
 
 final Finalizer<Pointer<OQS_SIG>> _sigFinalizer = Finalizer(
   (ptr) => LibOQSBase.bindings.OQS_SIG_free(ptr),

@@ -1,7 +1,7 @@
 name: oqs
 description: Dart FFI bindings for liboqs — high-performance post-quantum cryptography (PQC) with ML-KEM, ML-DSA, Falcon, SPHINCS+ for key encapsulation and signatures.
 
-version: 3.0.2
+version: 3.0.3
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs
@@ -13,9 +13,9 @@ dependencies:
   ffi: ^2.1.4
 
 dev_dependencies:
+  ffigen: ^20.1.1
   lints: ^6.1.0
   test: ^1.24.0
-  ffigen: ^20.1.1
 
 platforms:
   android:
@@ -34,6 +34,8 @@ topics:
 ffigen:
   name: LibOQSBindings
   description: 'Cross-platform bindings for liboqs'
+  preamble: |
+    // ignore_for_file: unused_element, unused_field
   output: 'lib/src/bindings/liboqs_bindings.dart'
   headers:
     entry-points:

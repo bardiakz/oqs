@@ -1,17 +1,15 @@
 library;
 
+import 'package:oqs/src/kem.dart';
 import 'package:oqs/src/oqs_base.dart';
+import 'package:oqs/src/signature.dart';
 
-import 'oqs.dart';
 export 'src/kem.dart';
-export 'src/signature.dart' show Signature;
+export 'src/oqs_base.dart' show LibOQSException;
 export 'src/platform/library_loader.dart'
     show LibOQSLoader, LibraryLoadException, LibraryPaths;
-export 'src/oqs_base.dart' show LibOQSException;
 export 'src/random.dart' show OQSRandom, OQSRandomExtensions;
-
-// Export data classes
-export 'src/kem.dart' show KEMKeyPair, KEMEncapsulationResult;
+export 'src/signature.dart' show Signature;
 
 /// Main LibOQS class for initialization and global operations
 class LibOQS {

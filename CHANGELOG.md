@@ -1,3 +1,9 @@
+## 3.0.3
+
+### Fixed
+- Reduced pub.dev analyzer noise from generated FFI bindings by adding a `ffigen` preamble that ignores `unused_element` and `unused_field` in `lib/src/bindings/liboqs_bindings.dart`.
+- Regenerated bindings so `dart pub publish --dry-run` no longer reports generated-code analyzer warnings.
+
 ## 3.0.2
 
 ### Changed
