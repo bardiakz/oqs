@@ -2,272 +2,264 @@
 
 [![pub package](https://img.shields.io/pub/v/oqs.svg)](https://pub.dev/packages/oqs)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Dart](https://img.shields.io/badge/dart-%3E%3D3.8.1-brightgreen.svg)](https://dart.dev)
 
-A Dart FFI wrapper for [liboqs](https://github.com/open-quantum-safe/liboqs), providing access to post-quantum cryptographic algorithms including key encapsulation mechanisms (KEMs), digital signatures, and cryptographically secure random number generation.
+Dart bindings for [liboqs](https://github.com/open-quantum-safe/liboqs) - quantum-resistant cryptography.
 
-## Features
+## What You Get
 
-- 🔐 **Key Encapsulation Mechanisms (KEMs)**: ML-KEM (Kyber), Classic McEliece, FrodoKEM, NTRU Prime, and more
-- ✍️ **Digital Signatures**: ML-DSA (Dilithium), Falcon, SPHINCS+, and other post-quantum signature schemes
-- 🎲 **Cryptographically Secure Random**: Hardware-backed random number generation with algorithm switching
-- 🌐 **Cross-Platform**: Support for Android, iOS, Linux, macOS, and Windows
-- 🚀 **High Performance**: Direct FFI bindings with minimal overhead
-- 🔧 **Flexible Loading**: Multiple library loading strategies with automatic fallbacks
-
-## Supported Algorithms
-
-### Key Encapsulation Mechanisms (KEMs)
-- ML-KEM-512, ML-KEM-768, ML-KEM-1024 (NIST standardized)
-- Kyber512, Kyber768, Kyber1024 (legacy names)
-- Classic McEliece variants
-- FrodoKEM variants
-- NTRU Prime (sntrup761)
-- And more...
-
-### Digital Signatures
-- ML-DSA-44, ML-DSA-65, ML-DSA-87 (NIST standardized)
-- Dilithium2, Dilithium3, Dilithium5 (legacy names)
-- Falcon-512, Falcon-1024
-- SPHINCS+ variants
-- MAYO signatures
-- Cross-Tree signatures
-- And more...
-
-### Random Number Generation
-- System-level cryptographically secure random bytes
-- Multiple RNG algorithm support (system, OpenSSL, etc.)
-- Convenience functions for integers, booleans, and doubles
-- Cryptographically secure list shuffling
-- Seed generation for key derivation
-
-## Using Prebuilt Binaries
-
-For convenience, some prebuilt liboqs binaries (v0.14.0) are available for common platforms. You can download them from the [liboqs-prebuilt-binaries](https://github.com/bardiakz/liboqs-prebuilt-binaries-v0.14.0) repository.
-
-### Quick Setup with Prebuilt Binaries
-
-**For Dart projects you can just place the bin directory in root of your project and you will be good to go:**
-   ```
-   your_project/
-   ├── lib/
-   ├── bin/          # Create this directory
-   │   └── linux/liboqs.so # (or .dylib/.dll depending on platform)
-   └── pubspec.yaml
-   ```
-**For Android in Flutter, native libraries must be placed in the jniLibs folder to be automatically included in the APK:**
-```
-    android/app/src/main/jniLibs/
-    ├── arm64-v8a/
-    │   └── liboqs.so
-    ├── armeabi-v7a/
-    │   └── liboqs.so
-    └── x86_64/
-        └── liboqs.so
-```
-**For Windows just put the oqs.dll in the build directory before packing the msix**
-
-**For Linux oqs.so can be placed in /bundle/lib before creating the AppImage**
-
-### Library Loading Configuration
-
-The package uses flexible library loading with automatic fallbacks:
-
-```dart
-import 'package:oqs/oqs.dart';
-
-// The package automatically tries multiple loading strategies:
-// 1. Environment variable (LIBOQS_PATH)
-// 2. Standard system locations (/usr/lib, /usr/local/lib, etc.)
-// 3. Relative paths (./bin/, ../lib/, etc.)
-// 4. Platform-specific locations
-
-// Manual configuration (advanced users):
-import 'package:oqs/src/platform/library_loader.dart';
-
-final library = LibOQSLoader.loadLibrary(
-  explicitPath: '/custom/path/to/liboqs.so',
-  useCache: false,
-);
-```
-
-### Verifying Installation
-
-Test that the library loads correctly:
-
-```dart
-import 'package:oqs/oqs.dart';
-
-void main() {
-  try {
-    // Initialize the library
-    LibOQS.init();
-
-    // Check version
-    print('liboqs version: ${LibOQS.getVersion()}');
-
-    // List available algorithms
-    print('Available KEMs: ${LibOQS.getSupportedKEMAlgorithms().length}');
-    print('Available Signatures: ${LibOQS.getSupportedSignatureAlgorithms().length}');
-
-    // Test random generation
-    final randomBytes = OQSRandom.generateBytes(32);
-    print('Generated ${randomBytes.length} random bytes');
-
-    print('✅ liboqs loaded successfully!');
-  } catch (e) {
-    print('❌ Failed to load liboqs: $e');
-  }
-}
-```
+- **Key Exchange (KEM)**: ML-KEM (Kyber), FrodoKEM, Classic McEliece, NTRU Prime
+- **Digital Signatures**: ML-DSA (Dilithium), Falcon, SPHINCS+, MAYO
+- **Secure Random**: Hardware-backed cryptographic RNG
+- **Cross-Platform**: Android, iOS, Linux, macOS, Windows
 
 ## Quick Start
 
-## Available Algorithms
+### 1. Add Dependency
 
-Get lists of supported algorithms at runtime:
+```yaml
+dependencies:
+  oqs: ^1.0.0
+```
+
+### 2. Get liboqs Binaries
+
+Download pre-built binaries from [liboqs-binaries releases](https://github.com/YOUR_USERNAME/liboqs-binaries/releases).
+
+**Extract and place files:**
+
+```
+# Dart/Flutter project
+your_project/
+├── bin/
+│   ├── oqs.dll           # Windows
+│   └── linux/liboqs.so   # Linux
+├── lib/liboqs.dylib      # macOS
+└── pubspec.yaml
+
+# Flutter Android (jniLibs)
+android/app/src/main/jniLibs/
+├── arm64-v8a/liboqs.so
+├── armeabi-v7a/liboqs.so
+└── x86_64/liboqs.so
+
+# Flutter iOS
+# Drag liboqs.xcframework into Xcode project
+```
+
+**Or configure manually:**
+
+```dart
+import 'package:oqs/oqs.dart';
+
+LibOQSLoader.customPaths = LibraryPaths(
+  windows: 'C:/libs/oqs.dll',
+  linux: '/usr/local/lib/liboqs.so',
+  macOS: '/opt/homebrew/lib/liboqs.dylib',
+);
+```
+
+### 3. Use It
+
+**Key Exchange:**
 
 ```dart
 import 'package:oqs/oqs.dart';
 
 void main() {
-  // List all supported KEMs
-  final kemAlgorithms = LibOQS.getSupportedKEMAlgorithms();
-  print('Supported KEMs: $kemAlgorithms');
-  
-  // List all supported signature algorithms  
-  final sigAlgorithms = LibOQS.getSupportedSignatureAlgorithms();
-  print('Supported signatures: $sigAlgorithms');
-  
-  // Check if a specific algorithm is supported
-  print('ML-KEM-768 supported: ${LibOQS.isKEMSupported('ML-KEM-768')}');
-  print('ML-DSA-65 supported: ${LibOQS.isSignatureSupported('ML-DSA-65')}');
-  
-  // Print all supported algorithms
-  KEM.printSupportedKemAlgorithms();
-  Signature.printSupportedSignatureAlgorithms();
-}
-```
-
-### Complete Algorithm Lists
-
-#### KEM Algorithms (LibOQS Version: 0.14.1-dev)
-```dart
-kemAlgorithms = [
-  'Classic-McEliece-348864', 'Classic-McEliece-348864f',
-  'Classic-McEliece-460896', 'Classic-McEliece-460896f',
-  'Classic-McEliece-6688128', 'Classic-McEliece-6688128f',
-  'Classic-McEliece-6960119', 'Classic-McEliece-6960119f',
-  'Classic-McEliece-8192128', 'Classic-McEliece-8192128f',
-  'Kyber512', 'Kyber768', 'Kyber1024',
-  'ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024',
-  'sntrup761',
-  'FrodoKEM-640-AES', 'FrodoKEM-640-SHAKE',
-  'FrodoKEM-976-AES', 'FrodoKEM-976-SHAKE',
-  'FrodoKEM-1344-AES', 'FrodoKEM-1344-SHAKE',
-];
-```
-
-#### Signature Algorithms (LibOQS Version: 0.14.1-dev)
-```dart
-sigAlgorithms = [
-  'Dilithium2', 'Dilithium3', 'Dilithium5',
-  'ML-DSA-44', 'ML-DSA-65', 'ML-DSA-87',
-  'Falcon-512', 'Falcon-1024', 'Falcon-padded-512', 'Falcon-padded-1024',
-  'SPHINCS+-SHA2-128f-simple', 'SPHINCS+-SHA2-128s-simple',
-  'SPHINCS+-SHA2-192f-simple', 'SPHINCS+-SHA2-192s-simple',
-  'SPHINCS+-SHA2-256f-simple', 'SPHINCS+-SHA2-256s-simple',
-  'SPHINCS+-SHAKE-128f-simple', 'SPHINCS+-SHAKE-128s-simple',
-  'SPHINCS+-SHAKE-192f-simple', 'SPHINCS+-SHAKE-192s-simple',
-  'SPHINCS+-SHAKE-256f-simple', 'SPHINCS+-SHAKE-256s-simple',
-  'MAYO-1', 'MAYO-2', 'MAYO-3', 'MAYO-5',
-  // Cross-Tree variants
-  'cross-rsdp-128-balanced', 'cross-rsdp-128-fast', 'cross-rsdp-128-small',
-  'cross-rsdp-192-balanced', 'cross-rsdp-192-fast', 'cross-rsdp-192-small',
-  'cross-rsdp-256-balanced', 'cross-rsdp-256-fast', 'cross-rsdp-256-small',
-  // And many more SNOVA and OV variants...
-];
-```
-
-## Resource Management
-
-### Basic Usage
-Basic usage doesn't require explicit cleanup for most applications:
-
-```dart
-import 'package:oqs/oqs.dart';
-
-void main() {
+  // Create KEM instance
   final kem = KEM.create('ML-KEM-768')!;
+  
+  // Alice generates keys
   final keyPair = kem.generateKeyPair();
-  // Use KEM... automatic cleanup on app termination
-  kem.dispose(); // Clean up KEM instance when done
+  
+  // Bob encapsulates
+  final result = kem.encapsulate(keyPair.publicKey);
+  
+  // Alice decapsulates
+  final aliceSecret = kem.decapsulate(result.ciphertext, keyPair.secretKey);
+  
+  // Secrets match!
+  print(aliceSecret == result.sharedSecret); // true
+  
+  kem.dispose();
 }
 ```
 
-### Performance Optimization
-For better performance, initialize once at app start:
+**Digital Signatures:**
+
+```dart
+import 'dart:convert';
+import 'package:oqs/oqs.dart';
+
+void main() {
+  final sig = Signature.create('ML-DSA-65');
+  
+  // Generate keys
+  final keys = sig.generateKeyPair();
+  
+  // Sign
+  final message = utf8.encode('Hello quantum world');
+  final signature = sig.sign(message, keys.secretKey);
+  
+  // Verify
+  final valid = sig.verify(message, signature, keys.publicKey);
+  print(valid); // true
+  
+  sig.dispose();
+}
+```
+
+**Random Generation:**
 
 ```dart
 import 'package:oqs/oqs.dart';
 
 void main() {
-  // At app startup
-  LibOQS.init(); // Enables CPU optimizations and faster algorithms
-
-  // Then use normally throughout your app
-  final kem = KEM.create('ML-KEM-768')!;
-  // ...
+  // Generate random bytes
+  final bytes = OQSRandom.generateBytes(32);
+  
+  // Generate seed for key derivation
+  final seed = OQSRandom.generateSeed();
+  
+  // Random integers
+  final dice = OQSRandom.generateInt(1, 7); // 1-6
+  
+  // Cryptographically shuffle
+  final deck = [1, 2, 3, 4, 5];
+  OQSRandomExtensions.shuffleList(deck);
 }
 ```
 
-### Advanced Cleanup (Optional)
-For advanced scenarios like long-running servers or testing:
+## API Reference
+
+### KEM (Key Exchange)
 
 ```dart
-import 'package:oqs/oqs.dart';
+// Create
+final kem = KEM.create('ML-KEM-768')!;
 
-void main() {
-  // Long-running server applications
-  LibOQS.init();
-  // ... use library extensively
-  LibOQS.cleanup(); // Clean shutdown to free OpenSSL resources
+// Properties
+kem.algorithmName         // "ML-KEM-768"
+kem.publicKeyLength       // 1184
+kem.secretKeyLength       // 2400
+kem.ciphertextLength      // 1088
+kem.sharedSecretLength    // 32
 
-  // Multithreaded applications
-  // On each worker thread before termination:
-  LibOQS.cleanupThread(); // Prevents OpenSSL thread-local storage leaks
+// Operations
+final keyPair = kem.generateKeyPair();
+final result = kem.encapsulate(publicKey);
+final secret = kem.decapsulate(ciphertext, secretKey);
 
-  // Complete cleanup (convenience method)
-  LibOQS.cleanupAll(); // Calls cleanupThread() + cleanup()
-}
+// Cleanup
+kem.dispose();
 ```
 
-### Thread Safety
-- All operations are thread-safe after initialization
-- Call `LibOQS.cleanupThread()` on each thread before termination in multithreaded apps
-- `LibOQS.init()` is safe to call multiple times
-- Individual KEM/Signature instances should not be shared between threads
+### Signature
+
+```dart
+// Create
+final sig = Signature.create('ML-DSA-65');
+
+// Properties
+sig.algorithmName         // "ML-DSA-65"
+sig.publicKeyLength       // 1952
+sig.secretKeyLength       // 4032
+sig.maxSignatureLength    // 3309
+
+// Operations
+final keyPair = sig.generateKeyPair();
+final signature = sig.sign(message, secretKey);
+final valid = sig.verify(message, signature, publicKey);
+
+// Cleanup
+sig.dispose();
+```
+
+### Random
+
+```dart
+// Bytes
+OQSRandom.generateBytes(32);
+OQSRandom.generateSeed();
+
+// Numbers
+OQSRandom.generateInt(1, 100);
+OQSRandomExtensions.generateBool();
+OQSRandomExtensions.generateDouble();
+
+// Utilities
+OQSRandomExtensions.shuffleList(myList);
+```
+
+### Discovery
+
+```dart
+// List supported algorithms
+final kems = LibOQS.getSupportedKEMAlgorithms();
+final sigs = LibOQS.getSupportedSignatureAlgorithms();
+
+// Check support
+LibOQS.isKEMSupported('ML-KEM-768');       // true
+LibOQS.isSignatureSupported('ML-DSA-65');  // true
+
+// Version
+LibOQS.getVersion(); // "0.15.0"
+```
+
+## Algorithms
+
+<details>
+<summary><b>Key Exchange (KEM)</b></summary>
+
+**NIST Standardized:**
+- `ML-KEM-512`, `ML-KEM-768`, `ML-KEM-1024` ⭐ (recommended)
+
+**Legacy Names:**
+- `Kyber512`, `Kyber768`, `Kyber1024`
+
+**Others:**
+- Classic McEliece (10 variants)
+- FrodoKEM (6 variants)
+- `sntrup761`
+</details>
+
+<details>
+<summary><b>Digital Signatures</b></summary>
+
+**NIST Standardized:**
+- `ML-DSA-44`, `ML-DSA-65`, `ML-DSA-87` ⭐ (recommended)
+
+**Legacy Names:**
+- `Dilithium2`, `Dilithium3`, `Dilithium5`
+
+**Others:**
+- Falcon (4 variants)
+- SPHINCS+ (12 variants)
+- MAYO (4 variants)
+- Cross-Tree (9 variants)
+- SNOVA (14 variants)
+- OV (12 variants)
+</details>
 
 ## Platform Setup
 
-### Option 1: Use Prebuilt Binaries (Recommended)
+### Option 1: Pre-built Binaries (Easiest)
 
-The easiest way to get started is using the prebuilt binaries. See the [Using Prebuilt Binaries](#using-prebuilt-binaries) section above for detailed instructions.
+Download from [releases](https://github.com/YOUR_USERNAME/liboqs-binaries/releases) and place in your project.
 
-### Option 2: Install from Package Manager
+### Option 2: System Install
 
-#### Ubuntu/Debian
+**Ubuntu/Debian:**
 ```bash
-sudo apt update
 sudo apt install liboqs-dev
 ```
 
-#### macOS (Homebrew)
+**macOS:**
 ```bash
 brew install liboqs
 ```
 
-#### Windows (vcpkg)
+**Windows:**
 ```bash
 vcpkg install liboqs
 ```
@@ -276,309 +268,127 @@ vcpkg install liboqs
 
 ```bash
 git clone https://github.com/open-quantum-safe/liboqs.git
-cd liboqs
-mkdir build && cd build
+cd liboqs && mkdir build && cd build
 cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
 ninja install
 ```
 
-### Library Loading Order
+## Advanced
 
-The package attempts to load the liboqs library in the following order:
+### Library Loading
 
-1. **Environment variable**: `LIBOQS_PATH` if set
-2. **Prebuilt binaries**: `./bin/` directory in your project
-3. **System locations**: `/usr/lib`, `/usr/local/lib`, etc.
-4. **Relative paths**: `../lib/`, `./lib/`, etc.
-5. **Platform-specific paths**: Windows DLL search paths, macOS framework paths
+The package tries multiple strategies automatically:
 
-This ensures maximum compatibility across different deployment scenarios.
+1. Explicit path (if provided)
+2. Platform-specific custom paths
+3. Environment variable (`LIBOQS_PATH`)
+4. Project directories (`bin/`, `lib/`)
+5. System locations (`/usr/lib`, `/usr/local/lib`)
 
-## Advanced Usage
-
-### Custom Library Path
-
-You can specify custom library loading behavior by setting environment variables:
-
-```bash
-# Set custom library path
-export LIBOQS_PATH=/path/to/your/liboqs.so
-
-# Run your Dart application
-dart run your_app.dart
-```
-
-## Complete Working Examples
-
-### Full Random Generation Example
+**Manual configuration:**
 
 ```dart
-import 'package:oqs/oqs.dart';
+// Per-platform paths
+LibOQSLoader.customPaths = LibraryPaths(
+  windows: 'C:/libs/oqs.dll',
+  linux: '/usr/local/lib/liboqs.so',
+  macOS: '/usr/local/lib/liboqs.dylib',
+  androidArm64: '/data/app/libs/liboqs.so',
+);
 
-void randomExample() {
-  print('=== Random Generation Example ===');
-  
-  try {
-    // Basic random generation
-    print('\n1. Basic Random Generation:');
-    final randomBytes = OQSRandom.generateBytes(32);
-    print('   32 random bytes: ${_bytesToHex(randomBytes.take(16).toList())}...');
-    
-    final seed = OQSRandom.generateSeed();
-    print('   Crypto seed (32 bytes): ${_bytesToHex(seed.take(8).toList())}...');
-    
-    // Random numbers and booleans
-    print('\n2. Random Numbers:');
-    final randomInts = List.generate(5, (_) => OQSRandom.generateInt(1, 100));
-    print('   Random integers (1-99): $randomInts');
-    
-    final randomBools = List.generate(8, (_) => OQSRandomExtensions.generateBool());
-    print('   Random booleans: $randomBools');
-    
-    final randomDoubles = List.generate(3, (_) => OQSRandomExtensions.generateDouble());
-    print('   Random doubles: ${randomDoubles.map((d) => d.toStringAsFixed(4)).toList()}');
-    
-    // Cryptographic shuffling
-    print('\n3. Cryptographic Shuffling:');
-    final testList = ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'];
-    print('   Original: $testList');
-    OQSRandomExtensions.shuffleList(testList);
-    print('   Shuffled: $testList');
-    
-    // RNG algorithms
-    print('\n4. RNG Algorithms:');
-    final algorithms = OQSRandom.getAvailableAlgorithms();
-    print('   Available: $algorithms');
-    
-    final systemSupported = OQSRandom.isAlgorithmLikelySupported('system');
-    print('   System RNG supported: $systemSupported');
-    
-  } catch (e) {
-    print('Error: $e');
-  }
-}
+// From extracted binary release
+LibOQSLoader.customPaths = LibraryPaths.fromBinaryRoot(
+  '/path/to/liboqs-0.15.0'
+);
 
-String _bytesToHex(List<int> bytes) {
-  return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join('');
-}
-
-void main() {
-  LibOQS.init();
-  randomExample();
-}
+// Single explicit path
+final lib = LibOQSLoader.loadLibrary(
+  explicitPath: '/custom/path/liboqs.so'
+);
 ```
 
-### Full KEM Example with Error Handling
+### Performance
 
 ```dart
-import 'package:oqs/oqs.dart';
-import 'dart:typed_data';
-
-void kemExample() {
-  print('=== KEM Example ===');
-  
-  try {
-    // Initialize library
-    LibOQS.init();
-    
-    // Create KEM instance
-    final kem = KEM.create('ML-KEM-768');
-    if (kem == null) {
-      print('ML-KEM-768 not supported');
-      return;
-    }
-    
-    print('Algorithm: ${kem.algorithmName}');
-    print('Public key length: ${kem.publicKeyLength}');
-    print('Secret key length: ${kem.secretKeyLength}');
-    print('Ciphertext length: ${kem.ciphertextLength}');
-    print('Shared secret length: ${kem.sharedSecretLength}');
-    
-    // Generate key pair
-    final keyPair = kem.generateKeyPair();
-    print('\n✓ Key pair generated');
-    
-    // Alice encapsulates
-    final encResult = kem.encapsulate(keyPair.publicKey);
-    print('✓ Secret encapsulated');
-    
-    // Bob decapsulates
-    final bobSecret = kem.decapsulate(encResult.ciphertext, keyPair.secretKey);
-    print('✓ Secret decapsulated');
-    
-    // Verify secrets match
-    bool secretsMatch = true;
-    if (encResult.sharedSecret.length != bobSecret.length) {
-      secretsMatch = false;
-    } else {
-      for (int i = 0; i < encResult.sharedSecret.length; i++) {
-        if (encResult.sharedSecret[i] != bobSecret[i]) {
-          secretsMatch = false;
-          break;
-        }
-      }
-    }
-    
-    print('✓ Secrets match: $secretsMatch');
-    
-    // Demonstrate using random data
-    final randomSalt = OQSRandom.generateBytes(16);
-    print('✓ Generated random salt: ${randomSalt.length} bytes');
-    
-    // Clean up
-    kem.dispose();
-    
-  } catch (e) {
-    print('Error: $e');
-  }
-}
-
+// Initialize once at app startup
 void main() {
-  kemExample();
+  LibOQS.init(); // Enables optimizations
+  runApp(MyApp());
 }
+
+// Always dispose when done
+final kem = KEM.create('ML-KEM-768')!;
+// ... use kem ...
+kem.dispose(); // Free resources
 ```
 
-### Full Signature Example with Error Handling
+### Thread Safety
 
 ```dart
-import 'package:oqs/oqs.dart';
-import 'dart:convert';
+// Safe: Each thread can use library independently
+// Just call LibOQS.init() once globally
 
-void signatureExample() {
-  print('=== Signature Example ===');
-  
-  try {
-    // Initialize library
-    LibOQS.init();
-    
-    // Create signature instance
-    final sig = Signature.create('ML-DSA-65');
-    
-    print('Algorithm: ${sig.algorithmName}');
-    print('Public key length: ${sig.publicKeyLength}');
-    print('Secret key length: ${sig.secretKeyLength}');
-    print('Max signature length: ${sig.maxSignatureLength}');
-    
-    // Generate key pair
-    final keyPair = sig.generateKeyPair();
-    print('\n✓ Key pair generated');
-    
-    // Message to sign
-    final message = utf8.encode('Hello, post-quantum cryptography!');
-    print('Message: "${utf8.decode(message)}"');
-    
-    // Sign message
-    final signature = sig.sign(message, keyPair.secretKey);
-    print('✓ Message signed (signature length: ${signature.length})');
-    
-    // Verify signature
-    final isValid = sig.verify(message, signature, keyPair.publicKey);
-    print('✓ Signature valid: $isValid');
-    
-    // Test with wrong message
-    final wrongMessage = utf8.encode('Wrong message');
-    final isInvalid = sig.verify(wrongMessage, signature, keyPair.publicKey);
-    print('✓ Wrong message verification: $isInvalid (should be false)');
-    
-    // Demonstrate with random message
-    final randomMessage = OQSRandom.generateBytes(64);
-    final randomSignature = sig.sign(randomMessage, keyPair.secretKey);
-    final randomValid = sig.verify(randomMessage, randomSignature, keyPair.publicKey);
-    print('✓ Random message signature valid: $randomValid');
-    
-    // Clean up
-    sig.dispose();
-    
-  } catch (e) {
-    print('Error: $e');
-  }
-}
-
-void main() {
-  signatureExample();
+// Long-running server cleanup
+void shutdown() {
+  LibOQS.cleanup(); // Clean OpenSSL resources
 }
 ```
-
-## Performance Considerations
-
-- **Initialization**: Call `LibOQS.init()` once at startup for optimal performance
-- **Memory Management**: Always call `dispose()` on KEM/Signature instances when done
-- **Thread Safety**: liboqs operations are thread-safe, but don't share instance objects
-- **Key Reuse**: Generate fresh key pairs for each session when possible
-- **Algorithm Selection**: ML-KEM and ML-DSA are NIST-standardized and recommended
-- **Random Generation**: `OQSRandom` uses hardware-backed sources when available
-
-## Security Notes
-
-⚠️ **Important Security Considerations:**
-
-- ML-KEM and ML-DSA are NIST-standardized and suitable for production use
-- Other algorithms may be experimental - validate against current security recommendations
-- Keep the liboqs library updated to the latest version
-- Properly dispose of secret key material by calling `dispose()`
-- The random number generator uses cryptographically secure sources
-- Be cautious when switching RNG algorithms - stick with 'system' for most use cases
-- Use `OQSRandom.generateSeed()` for cryptographic key derivation
-
-## Building from Source
-
-To build the native liboqs library yourself:
-
-1. Clone the liboqs repository:
-```bash
-git clone https://github.com/open-quantum-safe/liboqs.git
-```
-
-2. Build for your target platform:
-```bash
-cd liboqs
-mkdir build && cd build
-cmake -GNinja -DCMAKE_INSTALL_PREFIX=/usr/local ..
-ninja install
-```
-
-3. The library will be installed to `/usr/local/lib` by default.
-
-## Development
 
 ## Troubleshooting
 
-### Library Loading Issues
+**Library not found:**
+```dart
+// Set environment variable
+export LIBOQS_PATH=/path/to/liboqs.so
 
-If you encounter library loading errors:
+// Or configure paths
+LibOQSLoader.customPaths = LibraryPaths(
+  linux: '/usr/local/lib/liboqs.so',
+);
+```
 
-1. **Install liboqs**: Ensure the liboqs library is installed (`liboqs-dev` package on Ubuntu)
-2. **Check library path**: Verify the library is in standard locations (`/usr/lib`, `/usr/local/lib`)
-3. **Set environment variable**: Use `LIBOQS_PATH` to specify custom location
-4. **Verify architecture**: Ensure library matches your platform architecture
-5. **Check dependencies**: Ensure OpenSSL and other dependencies are installed
+**Algorithm not supported:**
+```dart
+// Check if enabled
+if (!LibOQS.isKEMSupported('ML-KEM-768')) {
+  print('Not available in this build');
+}
 
-### Common Error Messages
+// List what's available
+print(LibOQS.getSupportedKEMAlgorithms());
+```
 
-- `Failed to load liboqs library`: Library not found - install liboqs or set `LIBOQS_PATH`
-- `Algorithm 'X' is not supported`: Algorithm not compiled into your liboqs build
-- `Invalid key length`: Key material doesn't match expected size for algorithm
-- `Failed to generate key pair`: Usually indicates library loading or initialization issues
-- `Failed to generate random bytes`: RNG initialization failed - check library installation
+**Invalid key length:**
+```dart
+// Get expected sizes first
+final kem = KEM.create('ML-KEM-768')!;
+print('Public key: ${kem.publicKeyLength}');
+print('Secret key: ${kem.secretKeyLength}');
+```
 
-### Getting Help
+## Security Notes
 
-If you encounter issues:
-1. Check the [troubleshooting section](#troubleshooting) above
-2. Review the [examples](example/) directory
-3. Search existing [GitHub issues](https://github.com/bardiakz/oqs/issues)
-4. Open a new issue with details about your platform and error messages
+⚠️ **Important:**
+- Use `ML-KEM` and `ML-DSA` for production (NIST standardized)
+- Keep liboqs updated
+- Always call `dispose()` on KEM/Signature instances
+- Don't share instance objects between threads
+- Use `OQSRandom.generateSeed()` for key derivation
+
+## Examples
+
+See [example/](example/) directory for complete working examples.
+
+## Links
+
+- [liboqs](https://github.com/open-quantum-safe/liboqs) - C library
+- [Open Quantum Safe](https://openquantumsafe.org/) - Project homepage
+- [NIST PQC](https://csrc.nist.gov/projects/post-quantum-cryptography) - Standardization
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Related Projects
-
-- [liboqs](https://github.com/open-quantum-safe/liboqs) - The underlying C library
-- [OQS-OpenSSL](https://github.com/open-quantum-safe/openssl) - OpenSSL integration
-- [Post-Quantum Cryptography](https://csrc.nist.gov/projects/post-quantum-cryptography) - NIST PQC project
+MIT License - see [LICENSE](LICENSE) file.
 
 ---
 
-For more information about post-quantum cryptography and the algorithms provided by this package, visit [OpenQuantumSafe.org](https://openquantumsafe.org/)
+**Need help?** [Open an issue](https://github.com/bardiakz/oqs/issues)
