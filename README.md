@@ -5,8 +5,6 @@
 
 Dart bindings for [liboqs](https://github.com/open-quantum-safe/liboqs) - quantum-resistant cryptography.
 
-## What You Get
-
 - **Key Exchange (KEM)**: ML-KEM (Kyber), FrodoKEM, Classic McEliece, NTRU Prime
 - **Digital Signatures**: ML-DSA (Dilithium), Falcon, SPHINCS+, MAYO
 - **Secure Random**: Hardware-backed cryptographic RNG
@@ -18,12 +16,12 @@ Dart bindings for [liboqs](https://github.com/open-quantum-safe/liboqs) - quantu
 
 ```yaml
 dependencies:
-  oqs: ^1.0.0
+  oqs: ^2.4.0
 ```
 
 ### 2. Get liboqs Binaries
 
-Download pre-built binaries from [liboqs-binaries releases](https://github.com/YOUR_USERNAME/liboqs-binaries/releases).
+Download pre-built binaries from [liboqs-binaries releases](https://github.com/bardiakz/liboqs-binaries/releases).
 
 **Extract and place files:**
 
@@ -58,7 +56,7 @@ LibOQSLoader.customPaths = LibraryPaths(
 );
 ```
 
-### 3. Use It
+### 3. Usage
 
 **Key Exchange:**
 
@@ -384,11 +382,3 @@ See [example/](example/) directory for complete working examples.
 - [liboqs](https://github.com/open-quantum-safe/liboqs) - C library
 - [Open Quantum Safe](https://openquantumsafe.org/) - Project homepage
 - [NIST PQC](https://csrc.nist.gov/projects/post-quantum-cryptography) - Standardization
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file.
-
----
-
-**Need help?** [Open an issue](https://github.com/bardiakz/oqs/issues)
