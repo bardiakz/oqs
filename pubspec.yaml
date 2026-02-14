@@ -1,7 +1,7 @@
 name: oqs
 description: Dart FFI bindings for liboqs — high-performance post-quantum cryptography (PQC) with ML-KEM, ML-DSA, Falcon, SPHINCS+ for key encapsulation and signatures.
 
-version: 2.4.0
+version: 3.0.0
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs
@@ -10,13 +10,12 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
-
   ffi: ^2.1.4
 
 dev_dependencies:
-  lints: ^5.0.0
+  lints: ^6.1.0
   test: ^1.24.0
-  ffigen: ^19.0.0
+  ffigen: ^20.1.1
 
 platforms:
   android:
@@ -39,22 +38,14 @@ ffigen:
   headers:
     entry-points:
       - 'headers/oqs/oqs.h'
-    include-directives:
-      - 'headers/oqs/*.h'
   compiler-opts:
     - '-Iheaders'
+    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include'
+    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed'
   functions:
     include:
-      - 'OQS_KEM_.*'
-      - 'OQS_SIG_.*'
-      - 'OQS_init'
-      - 'OQS_destroy'
-      - 'OQS_.*_enabled'
-      - 'OQS_.*_supported'
-  structs:
+      - 'OQS_.*'  # Catches all liboqs API (KEM, SIG, randombytes, MEM, etc.)
+  enums:
     include:
-      - 'OQS_KEM'
-      - 'OQS_SIG'
-  type-map:
-    'size_t': 'IntPtr'
-    'uint8_t*': 'Pointer<Uint8>'
+      - 'OQS_STATUS'
+  silence-enum-warning: true

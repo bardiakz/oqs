@@ -50,7 +50,7 @@ class Signature {
       if (sigNamePtr != ffi.nullptr) {
         final sigName = sigNamePtr.cast<Utf8>().toDartString();
         final isEnabled = LibOQSBase.bindings.OQS_SIG_alg_is_enabled(
-          sigName.toNativeUtf8().cast<ffi.Char>(),
+          sigNamePtr,
         );
         if (isEnabled == 1) {
           print("- $sigName");
@@ -69,7 +69,7 @@ class Signature {
       if (sigNamePtr != ffi.nullptr) {
         final sigName = sigNamePtr.cast<Utf8>().toDartString();
         final isEnabled = LibOQSBase.bindings.OQS_SIG_alg_is_enabled(
-          sigName.toNativeUtf8().cast<ffi.Char>(),
+          sigNamePtr,
         );
         if (isEnabled == 1) {
           supportedSigs.add(sigName);
@@ -116,86 +116,7 @@ class Signature {
 
   /// Get hard coded list of supported signature algorithms
   static List<String> getSupportedSignatureAlgorithmsHardCodedList() {
-    final List<String> algorithms = [];
-
-    final sigAlgorithms = [
-      'Dilithium2',
-      'Dilithium3',
-      'Dilithium5',
-      'ML-DSA-44',
-      'ML-DSA-65',
-      'ML-DSA-87',
-      'Falcon-512',
-      'Falcon-1024',
-      'Falcon-padded-512',
-      'Falcon-padded-1024',
-      'SPHINCS+-SHA2-128f-simple',
-      'SPHINCS+-SHA2-128s-simple',
-      'SPHINCS+-SHA2-192f-simple',
-      'SPHINCS+-SHA2-192s-simple',
-      'SPHINCS+-SHA2-256f-simple',
-      'SPHINCS+-SHA2-256s-simple',
-      'SPHINCS+-SHAKE-128f-simple',
-      'SPHINCS+-SHAKE-128s-simple',
-      'SPHINCS+-SHAKE-192f-simple',
-      'SPHINCS+-SHAKE-192s-simple',
-      'SPHINCS+-SHAKE-256f-simple',
-      'SPHINCS+-SHAKE-256s-simple',
-      'MAYO-1',
-      'MAYO-2',
-      'MAYO-3',
-      'MAYO-5',
-      'cross-rsdp-128-balanced',
-      'cross-rsdp-128-fast',
-      'cross-rsdp-128-small',
-      'cross-rsdp-192-balanced',
-      'cross-rsdp-192-fast',
-      'cross-rsdp-192-small',
-      'cross-rsdp-256-balanced',
-      'cross-rsdp-256-fast',
-      'cross-rsdp-256-small',
-      'cross-rsdpg-128-balanced',
-      'cross-rsdpg-128-fast',
-      'cross-rsdpg-128-small',
-      'cross-rsdpg-192-balanced',
-      'cross-rsdpg-192-fast',
-      'cross-rsdpg-192-small',
-      'cross-rsdpg-256-balanced',
-      'cross-rsdpg-256-fast',
-      'cross-rsdpg-256-small',
-      'OV-Is',
-      'OV-Ip',
-      'OV-III',
-      'OV-V',
-      'OV-Is-pkc',
-      'OV-Ip-pkc',
-      'OV-III-pkc',
-      'OV-V-pkc',
-      'OV-Is-pkc-skc',
-      'OV-Ip-pkc-skc',
-      'OV-III-pkc-skc',
-      'OV-V-pkc-skc',
-      'SNOVA_24_5_4',
-      'SNOVA_24_5_4_SHAKE',
-      'SNOVA_24_5_4_esk',
-      'SNOVA_24_5_4_SHAKE_esk',
-      'SNOVA_37_17_2',
-      'SNOVA_25_8_3',
-      'SNOVA_56_25_2',
-      'SNOVA_49_11_3',
-      'SNOVA_37_8_4',
-      'SNOVA_24_5_5',
-      'SNOVA_60_10_4',
-      'SNOVA_29_6_5',
-    ];
-
-    for (final alg in sigAlgorithms) {
-      if (isSupported(alg)) {
-        algorithms.add(alg);
-      }
-    }
-
-    return algorithms;
+    return getSupportedSignatureAlgorithms();
   }
 
   /// Get the public key length for this signature algorithm
@@ -223,15 +144,13 @@ class Signature {
     final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
 
     try {
-      // Call the keypair function pointer from the struct
-      final keypairFn = _sigPtr.ref.keypair
-          .asFunction<
-            int Function(Pointer<Uint8> publicKey, Pointer<Uint8> secretKey)
-          >();
-
-      final result = keypairFn(publicKey, secretKey);
-      if (result != 0) {
-        throw LibOQSException('Failed to generate key pair', result);
+      final status = LibOQSBase.bindings.OQS_SIG_keypair(
+        _sigPtr,
+        publicKey,
+        secretKey,
+      );
+      if (status != OQS_STATUS.OQS_SUCCESS) {
+        throw LibOQSException('Failed to generate key pair', status.value);
       }
 
       return SignatureKeyPair(
@@ -261,19 +180,8 @@ class Signature {
     final secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
 
     try {
-      // Call the sign function pointer from the struct
-      final signFn = _sigPtr.ref.sign
-          .asFunction<
-            int Function(
-              Pointer<Uint8> signature,
-              Pointer<Size> signatureLen,
-              Pointer<Uint8> message,
-              int messageLen,
-              Pointer<Uint8> secretKey,
-            )
-          >();
-
-      final result = signFn(
+      final status = LibOQSBase.bindings.OQS_SIG_sign(
+        _sigPtr,
         signature,
         signatureLength,
         messagePtr,
@@ -281,8 +189,8 @@ class Signature {
         secretKeyPtr,
       );
 
-      if (result != 0) {
-        throw LibOQSException('Failed to sign message', result);
+      if (status != OQS_STATUS.OQS_SUCCESS) {
+        throw LibOQSException('Failed to sign message', status.value);
       }
 
       final actualLength = signatureLength.value;
@@ -309,19 +217,8 @@ class Signature {
     final publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
 
     try {
-      // Call the verify function pointer from the struct
-      final verifyFn = _sigPtr.ref.verify
-          .asFunction<
-            int Function(
-              Pointer<Uint8> message,
-              int messageLen,
-              Pointer<Uint8> signature,
-              int signatureLen,
-              Pointer<Uint8> publicKey,
-            )
-          >();
-
-      final result = verifyFn(
+      final status = LibOQSBase.bindings.OQS_SIG_verify(
+        _sigPtr,
         messagePtr,
         message.length,
         signaturePtr,
@@ -329,7 +226,7 @@ class Signature {
         publicKeyPtr,
       );
 
-      return result == 0;
+      return status == OQS_STATUS.OQS_SUCCESS;
     } finally {
       LibOQSUtils.freePointer(messagePtr);
       LibOQSUtils.freePointer(signaturePtr);

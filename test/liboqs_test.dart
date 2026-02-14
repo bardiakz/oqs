@@ -4,6 +4,26 @@ import 'package:oqs/oqs.dart';
 import 'package:test/test.dart';
 
 void main() {
+  String _pickKEMAlgorithm(List<String> algorithms) {
+    const preferred = ['ML-KEM-768', 'ML-KEM-512', 'Kyber768', 'Kyber512'];
+    for (final candidate in preferred) {
+      if (algorithms.contains(candidate)) {
+        return candidate;
+      }
+    }
+    return algorithms.first;
+  }
+
+  String _pickSignatureAlgorithm(List<String> algorithms) {
+    const preferred = ['ML-DSA-65', 'ML-DSA-44', 'Dilithium3', 'Dilithium2'];
+    for (final candidate in preferred) {
+      if (algorithms.contains(candidate)) {
+        return candidate;
+      }
+    }
+    return algorithms.first;
+  }
+
   setUpAll(() {
     LibOQS.init();
   });
@@ -22,28 +42,29 @@ void main() {
     test('should list supported KEM algorithms', () {
       final kems = LibOQS.getSupportedKEMAlgorithms();
       expect(kems, isNotEmpty);
-      expect(kems, contains('Kyber512'));
+      expect(kems.every((alg) => alg.isNotEmpty), isTrue);
     });
 
     test('should list supported signature algorithms', () {
       final sigs = LibOQS.getSupportedSignatureAlgorithms();
       expect(sigs, isNotEmpty);
-      expect(sigs, contains('Dilithium2'));
+      expect(sigs.every((alg) => alg.isNotEmpty), isTrue);
     });
   });
 
   group('KEM Operations', () {
-    test('Kyber512 key generation and encapsulation', () {
-      final kem = KEM.create('Kyber512');
-      expect(kem, isNotNull);
+    test('key generation and encapsulation for an enabled algorithm', () {
+      final kems = LibOQS.getSupportedKEMAlgorithms();
+      final algorithm = _pickKEMAlgorithm(kems);
+      final kem = KEM.create(algorithm);
 
       final keyPair = kem!.generateKeyPair();
-      expect(keyPair.publicKey.length, equals(800));
-      expect(keyPair.secretKey.length, equals(1632));
+      expect(keyPair.publicKey.length, equals(kem.publicKeyLength));
+      expect(keyPair.secretKey.length, equals(kem.secretKeyLength));
 
       final encResult = kem.encapsulate(keyPair.publicKey);
-      expect(encResult.ciphertext.length, equals(768));
-      expect(encResult.sharedSecret.length, equals(32));
+      expect(encResult.ciphertext.length, equals(kem.ciphertextLength));
+      expect(encResult.sharedSecret.length, equals(kem.sharedSecretLength));
 
       final decryptedSecret = kem.decapsulate(
         encResult.ciphertext,
@@ -56,17 +77,18 @@ void main() {
   });
 
   group('Signature Operations', () {
-    test('Dilithium2 key generation and signing', () {
-      final sig = Signature.create('Dilithium2');
-      expect(sig, isNotNull);
+    test('key generation and signing for an enabled algorithm', () {
+      final sigs = LibOQS.getSupportedSignatureAlgorithms();
+      final algorithm = _pickSignatureAlgorithm(sigs);
+      final sig = Signature.create(algorithm);
 
       final keyPair = sig.generateKeyPair();
-      expect(keyPair.publicKey.length, equals(1312));
-      expect(keyPair.secretKey.length, equals(2528));
+      expect(keyPair.publicKey.length, equals(sig.publicKeyLength));
+      expect(keyPair.secretKey.length, equals(sig.secretKeyLength));
 
       final message = Uint8List.fromList('Hello World'.codeUnits);
       final signature = sig.sign(message, keyPair.secretKey);
-      expect(signature.length, lessThanOrEqualTo(2420));
+      expect(signature.length, lessThanOrEqualTo(sig.maxSignatureLength));
 
       final isValid = sig.verify(message, signature, keyPair.publicKey);
       expect(isValid, isTrue);

@@ -51,7 +51,7 @@ class KEM {
       if (kemNamePtr != ffi.nullptr) {
         final kemName = kemNamePtr.cast<Utf8>().toDartString();
         final isEnabled = LibOQSBase.bindings.OQS_KEM_alg_is_enabled(
-          kemName.toNativeUtf8().cast<ffi.Char>(),
+          kemNamePtr,
         );
         if (isEnabled == 1) {
           print("- $kemName");
@@ -70,7 +70,7 @@ class KEM {
       if (kemNamePtr != ffi.nullptr) {
         final kemName = kemNamePtr.cast<Utf8>().toDartString();
         final isEnabled = LibOQSBase.bindings.OQS_KEM_alg_is_enabled(
-          kemName.toNativeUtf8().cast<ffi.Char>(),
+          kemNamePtr,
         );
         if (isEnabled == 1) {
           supportedKems.add(kemName);
@@ -116,41 +116,7 @@ class KEM {
 
   /// Get hard coded list of supported KEM algorithms
   static List<String> getSupportedKemAlgorithmsHardCodedList() {
-    final List<String> algorithms = [];
-
-    final kemAlgorithms = [
-      'Classic-McEliece-348864',
-      'Classic-McEliece-348864f',
-      'Classic-McEliece-460896',
-      'Classic-McEliece-460896f',
-      'Classic-McEliece-6688128',
-      'Classic-McEliece-6688128f',
-      'Classic-McEliece-6960119',
-      'Classic-McEliece-6960119f',
-      'Classic-McEliece-8192128',
-      'Classic-McEliece-8192128f',
-      'Kyber512',
-      'Kyber768',
-      'Kyber1024',
-      'ML-KEM-512',
-      'ML-KEM-768',
-      'ML-KEM-1024',
-      'sntrup761',
-      'FrodoKEM-640-AES',
-      'FrodoKEM-640-SHAKE',
-      'FrodoKEM-976-AES',
-      'FrodoKEM-976-SHAKE',
-      'FrodoKEM-1344-AES',
-      'FrodoKEM-1344-SHAKE',
-    ];
-
-    for (final alg in kemAlgorithms) {
-      if (isSupported(alg)) {
-        algorithms.add(alg);
-      }
-    }
-
-    return algorithms;
+    return getSupportedKemAlgorithms();
   }
 
   /// Get the public key length for this KEM
@@ -223,21 +189,16 @@ class KEM {
     final seedPtr = LibOQSUtils.uint8ListToPointer(seed);
 
     try {
-      // Call the keypair_derand function pointer from the struct
-      final keypairDerandFn = _kemPtr.ref.keypair_derand
-          .asFunction<
-            int Function(
-              Pointer<Uint8> publicKey,
-              Pointer<Uint8> secretKey,
-              Pointer<Uint8> seed,
-            )
-          >();
-
-      final result = keypairDerandFn(publicKey, secretKey, seedPtr);
-      if (result != 0) {
+      final status = LibOQSBase.bindings.OQS_KEM_keypair_derand(
+        _kemPtr,
+        publicKey,
+        secretKey,
+        seedPtr,
+      );
+      if (status != OQS_STATUS.OQS_SUCCESS) {
         throw LibOQSException(
           'Failed to generate deterministic key pair',
-          result,
+          status.value,
         );
       }
 
@@ -259,15 +220,13 @@ class KEM {
     final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
 
     try {
-      // Call the keypair function pointer from the struct
-      final keypairFn = _kemPtr.ref.keypair
-          .asFunction<
-            int Function(Pointer<Uint8> publicKey, Pointer<Uint8> secretKey)
-          >();
-
-      final result = keypairFn(publicKey, secretKey);
-      if (result != 0) {
-        throw LibOQSException('Failed to generate key pair', result);
+      final status = LibOQSBase.bindings.OQS_KEM_keypair(
+        _kemPtr,
+        publicKey,
+        secretKey,
+      );
+      if (status != OQS_STATUS.OQS_SUCCESS) {
+        throw LibOQSException('Failed to generate key pair', status.value);
       }
 
       return KEMKeyPair(
@@ -294,20 +253,14 @@ class KEM {
     final publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
 
     try {
-      // Call the encaps function pointer from the struct
-      final encapsFn = _kemPtr.ref.encaps
-          .asFunction<
-            int Function(
-              Pointer<Uint8> ciphertext,
-              Pointer<Uint8> sharedSecret,
-              Pointer<Uint8> publicKey,
-            )
-          >();
-
-      final result = encapsFn(ciphertext, sharedSecret, publicKeyPtr);
-
-      if (result != 0) {
-        throw LibOQSException('Failed to encapsulate', result);
+      final status = LibOQSBase.bindings.OQS_KEM_encaps(
+        _kemPtr,
+        ciphertext,
+        sharedSecret,
+        publicKeyPtr,
+      );
+      if (status != OQS_STATUS.OQS_SUCCESS) {
+        throw LibOQSException('Failed to encapsulate', status.value);
       }
 
       return KEMEncapsulationResult(
@@ -346,20 +299,14 @@ class KEM {
     final secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
 
     try {
-      // Call the decaps function pointer from the struct
-      final decapsFn = _kemPtr.ref.decaps
-          .asFunction<
-            int Function(
-              Pointer<Uint8> sharedSecret,
-              Pointer<Uint8> ciphertext,
-              Pointer<Uint8> secretKey,
-            )
-          >();
-
-      final result = decapsFn(sharedSecret, ciphertextPtr, secretKeyPtr);
-
-      if (result != 0) {
-        throw LibOQSException('Failed to decapsulate', result);
+      final status = LibOQSBase.bindings.OQS_KEM_decaps(
+        _kemPtr,
+        sharedSecret,
+        ciphertextPtr,
+        secretKeyPtr,
+      );
+      if (status != OQS_STATUS.OQS_SUCCESS) {
+        throw LibOQSException('Failed to decapsulate', status.value);
       }
 
       return LibOQSUtils.pointerToUint8List(sharedSecret, sharedSecretLength);
