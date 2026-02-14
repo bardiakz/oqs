@@ -4,7 +4,7 @@ import 'package:oqs/oqs.dart';
 import 'package:test/test.dart';
 
 void main() {
-  String _pickKEMAlgorithm(List<String> algorithms) {
+  String pickKEMAlgorithm(List<String> algorithms) {
     const preferred = ['ML-KEM-768', 'ML-KEM-512', 'Kyber768', 'Kyber512'];
     for (final candidate in preferred) {
       if (algorithms.contains(candidate)) {
@@ -14,7 +14,7 @@ void main() {
     return algorithms.first;
   }
 
-  String _pickSignatureAlgorithm(List<String> algorithms) {
+  String pickSignatureAlgorithm(List<String> algorithms) {
     const preferred = ['ML-DSA-65', 'ML-DSA-44', 'Dilithium3', 'Dilithium2'];
     for (final candidate in preferred) {
       if (algorithms.contains(candidate)) {
@@ -50,7 +50,7 @@ void main() {
 
   group('KEM Safety Checks', () {
     test('operations throw after dispose', () {
-      final algorithm = _pickKEMAlgorithm(LibOQS.getSupportedKEMAlgorithms());
+      final algorithm = pickKEMAlgorithm(LibOQS.getSupportedKEMAlgorithms());
       final kem = KEM.create(algorithm)!;
       kem.dispose();
 
@@ -59,7 +59,7 @@ void main() {
     });
 
     test('invalid key material lengths throw LibOQSException', () {
-      final algorithm = _pickKEMAlgorithm(LibOQS.getSupportedKEMAlgorithms());
+      final algorithm = pickKEMAlgorithm(LibOQS.getSupportedKEMAlgorithms());
       final kem = KEM.create(algorithm)!;
       final keyPair = kem.generateKeyPair();
 
@@ -88,7 +88,7 @@ void main() {
 
   group('Signature Safety Checks', () {
     test('operations throw after dispose', () {
-      final algorithm = _pickSignatureAlgorithm(
+      final algorithm = pickSignatureAlgorithm(
         LibOQS.getSupportedSignatureAlgorithms(),
       );
       final sig = Signature.create(algorithm);
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('invalid key lengths throw LibOQSException', () {
-      final algorithm = _pickSignatureAlgorithm(
+      final algorithm = pickSignatureAlgorithm(
         LibOQS.getSupportedSignatureAlgorithms(),
       );
       final sig = Signature.create(algorithm);
@@ -120,7 +120,7 @@ void main() {
     });
 
     test('verification fails on tampered signature', () {
-      final algorithm = _pickSignatureAlgorithm(
+      final algorithm = pickSignatureAlgorithm(
         LibOQS.getSupportedSignatureAlgorithms(),
       );
       final sig = Signature.create(algorithm);

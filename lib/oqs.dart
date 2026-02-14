@@ -6,7 +6,7 @@ import 'oqs.dart';
 export 'src/kem.dart';
 export 'src/signature.dart' show Signature;
 export 'src/platform/library_loader.dart'
-    show LibOQSLoader, LibraryLoadException;
+    show LibOQSLoader, LibraryLoadException, LibraryPaths;
 export 'src/oqs_base.dart' show LibOQSException;
 export 'src/random.dart' show OQSRandom, OQSRandomExtensions;
 

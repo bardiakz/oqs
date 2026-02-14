@@ -1,4 +1,6 @@
-///The `OQSRandom` class provides cryptographically secure random number generation using liboqs's RNG implementation.
+/// The `OQSRandom` class provides cryptographically secure random number
+/// generation using liboqs's RNG implementation.
+library;
 
 import 'package:oqs/oqs.dart';
 

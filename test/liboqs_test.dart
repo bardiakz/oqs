@@ -4,7 +4,7 @@ import 'package:oqs/oqs.dart';
 import 'package:test/test.dart';
 
 void main() {
-  String _pickKEMAlgorithm(List<String> algorithms) {
+  String pickKEMAlgorithm(List<String> algorithms) {
     const preferred = ['ML-KEM-768', 'ML-KEM-512', 'Kyber768', 'Kyber512'];
     for (final candidate in preferred) {
       if (algorithms.contains(candidate)) {
@@ -14,7 +14,7 @@ void main() {
     return algorithms.first;
   }
 
-  String _pickSignatureAlgorithm(List<String> algorithms) {
+  String pickSignatureAlgorithm(List<String> algorithms) {
     const preferred = ['ML-DSA-65', 'ML-DSA-44', 'Dilithium3', 'Dilithium2'];
     for (final candidate in preferred) {
       if (algorithms.contains(candidate)) {
@@ -55,7 +55,7 @@ void main() {
   group('KEM Operations', () {
     test('key generation and encapsulation for an enabled algorithm', () {
       final kems = LibOQS.getSupportedKEMAlgorithms();
-      final algorithm = _pickKEMAlgorithm(kems);
+      final algorithm = pickKEMAlgorithm(kems);
       final kem = KEM.create(algorithm);
 
       final keyPair = kem!.generateKeyPair();
@@ -79,7 +79,7 @@ void main() {
   group('Signature Operations', () {
     test('key generation and signing for an enabled algorithm', () {
       final sigs = LibOQS.getSupportedSignatureAlgorithms();
-      final algorithm = _pickSignatureAlgorithm(sigs);
+      final algorithm = pickSignatureAlgorithm(sigs);
       final sig = Signature.create(algorithm);
 
       final keyPair = sig.generateKeyPair();

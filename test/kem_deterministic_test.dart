@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 import 'package:oqs/oqs.dart';
 
 void main() {
-  KEM? _createFirstSupported(List<String> candidates) {
+  KEM? createFirstSupported(List<String> candidates) {
     for (final algorithm in candidates) {
       if (KEM.isSupported(algorithm)) {
         return KEM.create(algorithm);
@@ -12,9 +12,9 @@ void main() {
     return null;
   }
 
-  KEM? _createDeterministicKem() {
+  KEM? createDeterministicKem() {
     final preferred = ['ML-KEM-768', 'ML-KEM-512', 'ML-KEM-1024'];
-    final kem = _createFirstSupported(preferred);
+    final kem = createFirstSupported(preferred);
     if (kem != null && kem.supportsDeterministicGeneration) {
       return kem;
     }
@@ -41,7 +41,7 @@ void main() {
     });
 
     test('reports deterministic support metadata correctly', () {
-      final kem = _createFirstSupported(['ML-KEM-768', 'ML-KEM-512']);
+      final kem = createFirstSupported(['ML-KEM-768', 'ML-KEM-512']);
       if (kem == null) {
         return;
       }
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('same seed produces identical keys', () {
-      final kem = _createDeterministicKem();
+      final kem = createDeterministicKem();
       if (kem == null) {
         return;
       }
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('different seeds produce different keys', () {
-      final kem = _createDeterministicKem();
+      final kem = createDeterministicKem();
       if (kem == null) {
         return;
       }
@@ -97,7 +97,7 @@ void main() {
     });
 
     test('invalid seed length throws', () {
-      final kem = _createDeterministicKem();
+      final kem = createDeterministicKem();
       if (kem == null) {
         return;
       }
@@ -111,7 +111,7 @@ void main() {
     });
 
     test('deterministic keys are valid for encapsulation/decapsulation', () {
-      final kem = _createDeterministicKem();
+      final kem = createDeterministicKem();
       if (kem == null) {
         return;
       }

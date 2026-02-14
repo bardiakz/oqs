@@ -1,0 +1,6 @@
+include: package:lints/recommended.yaml
+
+analyzer:
+  exclude:
+    # ffigen output: machine-generated declarations produce many unused hints.
+    - lib/src/bindings/liboqs_bindings.dart

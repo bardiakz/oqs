@@ -5,8 +5,8 @@ import 'package:oqs/oqs.dart';
 void main() {
   print('=== LibOQS Dart Example ===\n');
 
-  //custom library path before initialization
-  LibOQSLoader.customPath = 'bin/linux/liboqs.so';
+  // Configure platform-specific path before initialization.
+  LibOQSLoader.customPaths = const LibraryPaths(linux: 'bin/linux/liboqs.so');
 
   // Initialize the library
   LibOQS.init();
@@ -29,7 +29,7 @@ void main() {
     // KEM Example
     kemExample();
 
-    print('\n' + '=' * 50 + '\n');
+    print('\n${'=' * 50}\n');
 
     // Signature Example
     signatureExample();
@@ -46,7 +46,6 @@ void kemExample() {
 
   // Try different KEM algorithms
   final kemAlgorithms = ['ML-KEM-512', 'ML-KEM-768', 'ML-KEM-1024'];
-  final allKemAlgorithms = KEM.getSupportedKemAlgorithms();
   for (final algName in kemAlgorithms) {
     if (!LibOQS.isKEMSupported(algName)) {
       print('$algName is not supported, skipping...');
@@ -148,7 +147,6 @@ void signatureExample() {
 
   // Try different signature algorithms
   final sigAlgorithms = ['ML-DSA-44', 'ML-DSA-65', 'Falcon-512'];
-  final AllSigAlgorithms = Signature.getSupportedSignatureAlgorithms();
   for (final algName in sigAlgorithms) {
     if (!LibOQS.isSignatureSupported(algName)) {
       print('$algName is not supported, skipping...');

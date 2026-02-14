@@ -1,3 +1,14 @@
+## 3.0.2
+
+### Changed
+- Improved analyzer hygiene for better package quality scoring.
+- Added `analysis_options.yaml` and excluded generated FFI bindings from analyzer noise.
+- Updated examples to use non-deprecated loader configuration (`LibOQSLoader.customPaths` + `LibraryPaths`).
+- Cleaned minor lint issues in examples/tests.
+
+### Fixed
+- `dart analyze` now reports no issues in the package source/test/example set.
+
 ## 3.0.1
 
 ### Changed
