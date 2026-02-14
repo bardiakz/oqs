@@ -18,7 +18,7 @@ Dart FFI bindings for [liboqs](https://github.com/open-quantum-safe/liboqs), pro
 
 ```yaml
 dependencies:
-  oqs: ^3.0.0
+  oqs: ^3.0.1
 ```
 
 ## Native Library Setup
@@ -27,7 +27,7 @@ You still need a native `liboqs` library for your platform.
 
 ### Option 1: Prebuilt binaries
 
-Use your own binaries or releases such as:
+Use Pre-Built binaries:
 - https://github.com/bardiakz/liboqs-binaries/releases
 
 ### Option 2: Build from source
@@ -52,6 +52,81 @@ LibOQSLoader.customPaths = LibraryPaths(
   macOS: '/opt/homebrew/lib/liboqs.dylib',
 );
 ```
+
+## Library Loading Guide
+
+`LibOQSLoader.loadLibrary()` uses fallback strategies in this exact order:
+
+1. `explicitPath` argument
+2. `LibOQSLoader.customPaths` (`LibraryPaths`)
+3. Deprecated `LibOQSLoader.customPath`
+4. Environment variable (`LIBOQS_PATH`, or `envVarName`)
+5. `binaryRoot` extracted release layout
+6. Package-relative paths
+7. System loader/default name (`liboqs.so`, `oqs.dll`, `liboqs.dylib`)
+8. Legacy default paths (`bin/<platform>/...`)
+
+If all fail, `LibraryLoadException` includes all attempted strategies.
+
+### Auto Path Selection (Package-relative)
+
+`PackageRelativeStrategy` checks:
+
+- `./bin/<library-file>`
+- `./lib/<library-file>`
+- `./lib/native/<library-file>`
+- `./native/<library-file>`
+- `./blobs/<library-file>`
+- Android extras:
+  - `./lib/arm64-v8a/liboqs.so`
+  - `./lib/armeabi-v7a/liboqs.so`
+  - `./lib/x86_64/liboqs.so`
+  - `./lib/x86/liboqs.so`
+
+### Platform Notes
+
+- iOS uses `DynamicLibrary.process()` (XCFramework/static linking), not `DynamicLibrary.open(...)`.
+- Android ABI-specific selection is supported through `LibraryPaths.currentPlatformPath`.
+- On Linux/macOS/Windows, system resolution can work when the library is installed in standard paths.
+
+### Recommended Config Patterns
+
+Use explicit, deterministic config for production:
+
+```dart
+final lib = LibOQSLoader.loadLibrary(
+  explicitPath: '/opt/liboqs/lib/liboqs.so',
+);
+```
+
+Or per-platform config:
+
+```dart
+LibOQSLoader.customPaths = LibraryPaths(
+  windows: r'C:\oqs\oqs.dll',
+  linux: '/usr/local/lib/liboqs.so',
+  macOS: '/opt/homebrew/lib/liboqs.dylib',
+  androidArm64: '/data/local/tmp/liboqs.so',
+);
+```
+
+Or extracted release root:
+
+```dart
+final lib = LibOQSLoader.loadLibrary(binaryRoot: '/opt/liboqs-0.15.0');
+```
+
+### Cache Behavior
+
+- Loader caches resolved `DynamicLibrary` by default.
+- Update paths at runtime: set `LibOQSLoader.customPaths = ...` (this clears cache).
+- Manual reset: `LibOQSLoader.clearCache()`.
+
+### Debug Checklist
+
+1. Verify `LibOQS.getVersion()` returns non-empty string.
+2. Print `LibOQS.getSupportedKEMAlgorithms()` to confirm expected build features.
+3. If loading fails, inspect thrown `LibraryLoadException` strategy list and fix the earliest intended path.
 
 ## Quick Start
 
@@ -116,9 +191,9 @@ void main() {
 }
 ```
 
-## Migration to 3.0.0 (`liboqs 0.15.0`)
+## Migration to 3.x (`liboqs 0.15.0`)
 
-1. Upgrade dependency in `pubspec.yaml` to `^3.0.0`.
+1. Upgrade dependency in `pubspec.yaml` to `^3.0.1`.
 2. Ensure native `liboqs` binary is `0.15.x`.
 3. Replace fixed algorithm assumptions (`Kyber*`, `Dilithium*`) with runtime discovery.
 4. Remove hard-coded size assertions and read lengths from each algorithm instance.

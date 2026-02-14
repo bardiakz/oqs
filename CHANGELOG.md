@@ -1,3 +1,11 @@
+## 3.0.1
+
+### Changed
+- Expanded `README.md` into a practical loading guide for `liboqs` integration.
+- Documented exact dynamic library loading strategy precedence used by `LibOQSLoader`.
+- Added platform-specific auto-path selection details (including Android ABI and iOS static linking behavior).
+- Added cache behavior and debugging workflow for resolving load failures consistently.
+
 ## 3.0.0
 
 ### Breaking Changes
