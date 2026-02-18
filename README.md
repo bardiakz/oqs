@@ -18,17 +18,45 @@ Dart FFI bindings for [liboqs](https://github.com/open-quantum-safe/liboqs), pro
 
 ```yaml
 dependencies:
-  oqs: ^3.0.1
+  oqs: ^3.1.0
 ```
 
 ## Native Library Setup
 
-You still need a native `liboqs` library for your platform.
+You need a native `liboqs` library for your platform.
 
-### Option 1: Prebuilt binaries
+### Option 1: Prebuilt binaries (Recommended)
 
-Use Pre-Built binaries:
+Download pre-built binaries from:
 - https://github.com/bardiakz/liboqs-binaries/releases
+
+**Supported platforms:**
+- Linux: x86_64, ARM64 (aarch64)
+- macOS: ARM64 (Apple Silicon)
+- Windows: x64
+- iOS: XCFramework (device + simulator)
+- Android: armeabi-v7a, arm64-v8a, x86, x86_64
+
+**Using the all-platforms archive:**
+
+```bash
+# Extract the combined archive
+tar -xzf liboqs-0.15.0-all-platforms.tar.gz
+
+# Use in your Dart code
+LibOQSLoader.loadLibrary(binaryRoot: '/path/to/liboqs-0.15.0');
+```
+
+The all-platforms archive contains architecture-separated binaries:
+```
+liboqs-0.15.0/
+  lib/x86_64/liboqs.so      # Linux x86_64
+  lib/aarch64/liboqs.so     # Linux ARM64
+  lib/liboqs.dylib          # macOS ARM64
+  bin/oqs.dll               # Windows x64
+  android/arm64-v8a/        # Android binaries
+  liboqs.xcframework/       # iOS
+```
 
 ### Option 2: Build from source
 
@@ -48,7 +76,8 @@ import 'package:oqs/oqs.dart';
 
 LibOQSLoader.customPaths = LibraryPaths(
   windows: r'C:\libs\oqs.dll',
-  linux: '/usr/local/lib/liboqs.so',
+  linuxX64: '/usr/local/lib/liboqs.so',
+  linuxArm64: '/usr/local/lib/liboqs.so',  // For ARM64 systems
   macOS: '/opt/homebrew/lib/liboqs.dylib',
 );
 ```
@@ -85,9 +114,10 @@ If all fail, `LibraryLoadException` includes all attempted strategies.
 
 ### Platform Notes
 
-- iOS uses `DynamicLibrary.process()` (XCFramework/static linking), not `DynamicLibrary.open(...)`.
-- Android ABI-specific selection is supported through `LibraryPaths.currentPlatformPath`.
-- On Linux/macOS/Windows, system resolution can work when the library is installed in standard paths.
+- **Linux**: Automatically detects x86_64 vs ARM64 (aarch64) architecture
+- **iOS**: Uses `DynamicLibrary.process()` (XCFramework/static linking), not `DynamicLibrary.open(...)`
+- **Android**: ABI-specific selection supported through `LibraryPaths.currentPlatformPath`
+- **macOS/Windows**: System resolution works when library is installed in standard paths
 
 ### Recommended Config Patterns
 
@@ -104,7 +134,8 @@ Or per-platform config:
 ```dart
 LibOQSLoader.customPaths = LibraryPaths(
   windows: r'C:\oqs\oqs.dll',
-  linux: '/usr/local/lib/liboqs.so',
+  linuxX64: '/usr/local/lib/liboqs.so',
+  linuxArm64: '/usr/local/lib/liboqs.so',
   macOS: '/opt/homebrew/lib/liboqs.dylib',
   androidArm64: '/data/local/tmp/liboqs.so',
 );
@@ -193,7 +224,7 @@ void main() {
 
 ## Migration to 3.x (`liboqs 0.15.0`)
 
-1. Upgrade dependency in `pubspec.yaml` to `^3.0.1`.
+1. Upgrade dependency in `pubspec.yaml` to `^3.1.0`.
 2. Ensure native `liboqs` binary is `0.15.x`.
 3. Replace fixed algorithm assumptions (`Kyber*`, `Dilithium*`) with runtime discovery.
 4. Remove hard-coded size assertions and read lengths from each algorithm instance.

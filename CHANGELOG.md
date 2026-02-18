@@ -1,3 +1,33 @@
+## 3.1.0
+
+### Added
+- Linux ARM64 (aarch64) architecture support with automatic detection
+- `linuxX64` and `linuxArm64` fields in `LibraryPaths` for explicit Linux architecture configuration
+- Architecture-separated binary layout support for combined all-platforms archives
+- Android ABI-specific subdirectories in combined archive structure (`android/<abi>/liboqs.so`)
+
+### Changed
+- `LibraryPaths.fromBinaryRoot()` now expects architecture-separated layout:
+  - `lib/x86_64/liboqs.so` for Linux x86_64
+  - `lib/aarch64/liboqs.so` for Linux ARM64
+  - `android/<abi>/liboqs.so` for Android binaries
+- `BinaryReleaseStrategy` automatically detects Linux architecture via `uname -m`
+- Combined binary archives no longer overwrite multi-architecture libraries
+
+### Deprecated
+- `linux` parameter in `LibraryPaths` constructor (use `linuxX64` instead; `linux` still works as alias)
+
+### Fixed
+- Multi-architecture Linux support (x86_64 and ARM64 no longer overwrite each other)
+- Android ABI-specific loading in combined all-platforms archives
+- Binary release archive structure to preserve all platform binaries
+
+### Migration Notes
+- Old `linux` parameter still works (maps to `linuxX64` automatically)
+- Apps using individual platform archives are unaffected
+- Apps using combined archive should re-download latest release with fixed structure
+- To migrate existing code using `linux`, optionally replace with `linuxX64` for clarity
+
 ## 3.0.3
 
 ### Fixed
