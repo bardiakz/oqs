@@ -4,6 +4,7 @@ import 'package:oqs/oqs.dart';
 import 'package:test/test.dart';
 
 void main() {
+  LibOQSLoader.loadLibrary(binaryRoot: 'liboqs-0.15.0');
   KEM? createFirstSupported(List<String> candidates) {
     for (final algorithm in candidates) {
       if (KEM.isSupported(algorithm)) {
