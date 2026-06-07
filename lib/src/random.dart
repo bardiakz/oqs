@@ -60,20 +60,17 @@ class OQSRandom {
   /// @param max Maximum value (exclusive)
   /// @return Random integer in range [min, max)
   static int generateInt(int min, int max) {
-    if (min >= max) {
-      throw ArgumentError('min must be less than max');
-    }
-
+    if (min >= max) throw ArgumentError('min must be less than max');
     final range = max - min;
     final bytesNeeded = (range.bitLength + 7) ~/ 8;
-    final randomBytes = generateBytes(bytesNeeded);
-
-    int value = 0;
-    for (int i = 0; i < bytesNeeded; i++) {
-      value = (value << 8) | randomBytes[i];
+    final cap = 1 << (bytesNeeded * 8);
+    final unbiasedCap = cap - (cap % range);
+    while (true) {
+      final bytes = generateBytes(bytesNeeded);
+      int value = 0;
+      for (int i = 0; i < bytesNeeded; i++) value = (value << 8) | bytes[i];
+      if (value < unbiasedCap) return min + (value % range);
     }
-
-    return min + (value % range);
   }
 
   /// Switch to a different random number generator algorithm
@@ -133,12 +130,13 @@ extension OQSRandomExtensions on OQSRandom {
   /// Generate random double between 0.0 and 1.0
   static double generateDouble() {
     final bytes = OQSRandom.generateBytes(8);
-    int value = 0;
-    for (int i = 0; i < 8; i++) {
-      value = (value << 8) | bytes[i];
-    }
-    // Convert to double in range [0, 1)
-    return (value >>> 11) * (1.0 / (1 << 53));
+    // Assemble as two unsigned 32-bit halves to avoid signed 64-bit overflow
+    int hi = 0, lo = 0;
+    for (int i = 0; i < 4; i++) hi = (hi << 8) | bytes[i];
+    for (int i = 4; i < 8; i++) lo = (lo << 8) | bytes[i];
+    // Use 53 bits (IEEE 754 mantissa) for uniform distribution
+    final value = (hi & 0x1FFFFF) * 4294967296.0 + lo;
+    return value / 9007199254740992.0; // 2^53
   }
 
   /// Shuffle a list in place using cryptographically secure randomness

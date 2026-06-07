@@ -116,6 +116,7 @@ class KEM {
   }
 
   /// Get hard coded list of supported KEM algorithms
+  @Deprecated('Use getSupportedKemAlgorithms() directly')
   static List<String> getSupportedKemAlgorithmsHardCodedList() {
     return getSupportedKemAlgorithms();
   }

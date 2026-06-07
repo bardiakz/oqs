@@ -1,3 +1,25 @@
+## 3.2.0
+
+### Fixed
+- `OQSRandom.generateInt` now uses rejection sampling to eliminate modulo bias.
+  Previously, values in the lower portion of the range were slightly more likely
+  when the byte range did not evenly divide `max - min`.
+- `OQSRandomExtensions.generateDouble` no longer risks signed 64-bit integer
+  overflow when assembling random bytes. The value is now built from two unsigned
+  32-bit halves before conversion, ensuring a correct uniform distribution in [0, 1).
+- `Signature.sign` now frees the `signatureLength` pointer correctly without an
+  unnecessary cast.
+
+### Changed
+- `KEM.getSupportedKemAlgorithmsHardCodedList()` is deprecated. Use
+  `KEM.getSupportedKemAlgorithms()` directly.
+- `Signature.getSupportedSignatureAlgorithmsHardCodedList()` is deprecated. Use
+  `Signature.getSupportedSignatureAlgorithms()` directly.
+- Commented distro-specific GCC include paths from `ffigen` `compiler-opts` in
+  `pubspec.yaml`. Contributors on Fedora/RHEL who regenerate bindings may need
+  to add their local GCC path (e.g. `-I/usr/lib/gcc/x86_64-redhat-linux/15/include`)
+  to a local `pubspec_overrides.yaml` or pass it directly to `dart run ffigen`.
+
 ## 3.1.0
 
 ### Added

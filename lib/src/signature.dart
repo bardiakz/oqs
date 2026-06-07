@@ -116,6 +116,7 @@ class Signature {
   }
 
   /// Get hard coded list of supported signature algorithms
+  @Deprecated('Use getSupportedSignatureAlgorithms() directly')
   static List<String> getSupportedSignatureAlgorithmsHardCodedList() {
     return getSupportedSignatureAlgorithms();
   }
@@ -198,7 +199,7 @@ class Signature {
       return LibOQSUtils.pointerToUint8List(signature, actualLength);
     } finally {
       LibOQSUtils.freePointer(signature);
-      LibOQSUtils.freePointer(signatureLength.cast());
+      calloc.free(signatureLength);
       LibOQSUtils.freePointer(messagePtr);
       LibOQSUtils.freePointer(secretKeyPtr);
     }

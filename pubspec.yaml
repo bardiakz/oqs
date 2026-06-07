@@ -1,7 +1,7 @@
 name: oqs
 description: Dart FFI bindings for liboqs — high-performance post-quantum cryptography (PQC) with ML-KEM, ML-DSA, Falcon, SPHINCS+ for key encapsulation and signatures.
 
-version: 3.1.0
+version: 3.2.0
 license: MIT
 repository: https://github.com/bardiakz/oqs
 homepage: https://github.com/bardiakz/oqs
@@ -42,8 +42,8 @@ ffigen:
       - 'headers/oqs/oqs.h'
   compiler-opts:
     - '-Iheaders'
-    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include'
-    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed'
+#    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include'
+#    - '-I/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed'
   functions:
     include:
       - 'OQS_.*'  # Catches all liboqs API (KEM, SIG, randombytes, MEM, etc.)
