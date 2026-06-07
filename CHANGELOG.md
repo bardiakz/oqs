@@ -1,3 +1,11 @@
+## 3.2.1
+
+### Changed
+- Enabled `package:lints/recommended.yaml` in `analysis_options.yaml`.
+
+### Fixed
+- Fixed minor lint issues in `lib/src/random.dart` regarding curly braces in flow control.
+
 ## 3.2.0
 
 ### Fixed

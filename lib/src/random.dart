@@ -68,7 +68,9 @@ class OQSRandom {
     while (true) {
       final bytes = generateBytes(bytesNeeded);
       int value = 0;
-      for (int i = 0; i < bytesNeeded; i++) value = (value << 8) | bytes[i];
+      for (int i = 0; i < bytesNeeded; i++) {
+        value = (value << 8) | bytes[i];
+      }
       if (value < unbiasedCap) return min + (value % range);
     }
   }
@@ -132,8 +134,12 @@ extension OQSRandomExtensions on OQSRandom {
     final bytes = OQSRandom.generateBytes(8);
     // Assemble as two unsigned 32-bit halves to avoid signed 64-bit overflow
     int hi = 0, lo = 0;
-    for (int i = 0; i < 4; i++) hi = (hi << 8) | bytes[i];
-    for (int i = 4; i < 8; i++) lo = (lo << 8) | bytes[i];
+    for (int i = 0; i < 4; i++) {
+      hi = (hi << 8) | bytes[i];
+    }
+    for (int i = 4; i < 8; i++) {
+      lo = (lo << 8) | bytes[i];
+    }
     // Use 53 bits (IEEE 754 mantissa) for uniform distribution
     final value = (hi & 0x1FFFFF) * 4294967296.0 + lo;
     return value / 9007199254740992.0; // 2^53
