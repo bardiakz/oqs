@@ -1,0 +1,16 @@
+# IDE and local metadata
+.idea/
+*.iml
+.DS_Store
+
+# Native build artifacts and sources
+bin/
+headers/
+oldbin/
+liboqs-0.15.0/
+
+# Internal documentation and audit reports
+gemini.md
+AGENTS.md
+SECURITY_AUDIT.md
+scripts/
