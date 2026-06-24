@@ -186,11 +186,15 @@ class KEM {
       );
     }
 
-    final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
-    final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
-    final seedPtr = LibOQSUtils.uint8ListToPointer(seed);
+    Pointer<Uint8>? publicKey;
+    Pointer<Uint8>? secretKey;
+    Pointer<Uint8>? seedPtr;
 
     try {
+      publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
+      secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+      seedPtr = LibOQSUtils.uint8ListToPointer(seed);
+
       final status = LibOQSBase.bindings.OQS_KEM_keypair_derand(
         _kemPtr,
         publicKey,
@@ -209,19 +213,22 @@ class KEM {
         secretKey: LibOQSUtils.pointerToUint8List(secretKey, secretKeyLength),
       );
     } finally {
-      LibOQSUtils.freePointer(publicKey);
-      LibOQSUtils.freePointer(secretKey);
-      LibOQSUtils.freePointer(seedPtr);
+      LibOQSUtils.freePointer(publicKey); // Public key doesn't strictly need cleansing
+      LibOQSUtils.freeSecure(secretKey, secretKeyLength);
+      LibOQSUtils.freeSecure(seedPtr, seed.length);
     }
   }
 
   /// Generate a key pair
   KEMKeyPair generateKeyPair() {
     _checkDisposed();
-    final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
-    final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+    Pointer<Uint8>? publicKey;
+    Pointer<Uint8>? secretKey;
 
     try {
+      publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
+      secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+
       final status = LibOQSBase.bindings.OQS_KEM_keypair(
         _kemPtr,
         publicKey,
@@ -237,7 +244,7 @@ class KEM {
       );
     } finally {
       LibOQSUtils.freePointer(publicKey);
-      LibOQSUtils.freePointer(secretKey);
+      LibOQSUtils.freeSecure(secretKey, secretKeyLength);
     }
   }
 
@@ -250,11 +257,15 @@ class KEM {
       );
     }
 
-    final ciphertext = LibOQSUtils.allocateBytes(ciphertextLength);
-    final sharedSecret = LibOQSUtils.allocateBytes(sharedSecretLength);
-    final publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
+    Pointer<Uint8>? ciphertext;
+    Pointer<Uint8>? sharedSecret;
+    Pointer<Uint8>? publicKeyPtr;
 
     try {
+      ciphertext = LibOQSUtils.allocateBytes(ciphertextLength);
+      sharedSecret = LibOQSUtils.allocateBytes(sharedSecretLength);
+      publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
+
       final status = LibOQSBase.bindings.OQS_KEM_encaps(
         _kemPtr,
         ciphertext,
@@ -277,7 +288,7 @@ class KEM {
       );
     } finally {
       LibOQSUtils.freePointer(ciphertext);
-      LibOQSUtils.freePointer(sharedSecret);
+      LibOQSUtils.freeSecure(sharedSecret, sharedSecretLength);
       LibOQSUtils.freePointer(publicKeyPtr);
     }
   }
@@ -296,11 +307,15 @@ class KEM {
       );
     }
 
-    final sharedSecret = LibOQSUtils.allocateBytes(sharedSecretLength);
-    final ciphertextPtr = LibOQSUtils.uint8ListToPointer(ciphertext);
-    final secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
+    Pointer<Uint8>? sharedSecret;
+    Pointer<Uint8>? ciphertextPtr;
+    Pointer<Uint8>? secretKeyPtr;
 
     try {
+      sharedSecret = LibOQSUtils.allocateBytes(sharedSecretLength);
+      ciphertextPtr = LibOQSUtils.uint8ListToPointer(ciphertext);
+      secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
+
       final status = LibOQSBase.bindings.OQS_KEM_decaps(
         _kemPtr,
         sharedSecret,
@@ -313,9 +328,9 @@ class KEM {
 
       return LibOQSUtils.pointerToUint8List(sharedSecret, sharedSecretLength);
     } finally {
-      LibOQSUtils.freePointer(sharedSecret);
+      LibOQSUtils.freeSecure(sharedSecret, sharedSecretLength);
       LibOQSUtils.freePointer(ciphertextPtr);
-      LibOQSUtils.freePointer(secretKeyPtr);
+      LibOQSUtils.freeSecure(secretKeyPtr, secretKey.length);
     }
   }
 
@@ -335,6 +350,14 @@ class KEMKeyPair {
   final Uint8List secretKey;
 
   const KEMKeyPair({required this.publicKey, required this.secretKey});
+
+  /// Wipes the key material from the Dart heap.
+  /// Note: This does not guarantee security due to GC movement,
+  /// but is a best-effort cleanup.
+  void dispose() {
+    publicKey.fillRange(0, publicKey.length, 0);
+    secretKey.fillRange(0, secretKey.length, 0);
+  }
 
   /// Returns all Uint8List properties as base64 encoded strings
   Map<String, String> toStrings() {
@@ -366,6 +389,12 @@ class KEMEncapsulationResult {
     required this.ciphertext,
     required this.sharedSecret,
   });
+
+  /// Wipes the shared secret and ciphertext from the Dart heap.
+  void dispose() {
+    ciphertext.fillRange(0, ciphertext.length, 0);
+    sharedSecret.fillRange(0, sharedSecret.length, 0);
+  }
 
   /// Returns all Uint8List properties as base64 encoded strings
   Map<String, String> toStrings() {

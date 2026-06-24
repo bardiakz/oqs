@@ -199,11 +199,11 @@ class LibOQSUtils {
       final data = Uint8List(length);
       final sourceData = ptr.asTypedList(length);
 
-      // Copy in chunks to detect memory access issues early
+      // Copy in chunks to detect memory access issues early without sublist copies
       const chunkSize = 4096;
       for (int i = 0; i < length; i += chunkSize) {
         final end = (i + chunkSize < length) ? i + chunkSize : length;
-        data.setRange(i, end, sourceData.sublist(i, end));
+        data.setRange(i, end, sourceData, i);
       }
 
       return data;
@@ -253,6 +253,32 @@ class LibOQSUtils {
     }
   }
 
+  /// Wipes sensitive data using liboqs and then frees native memory allocated via calloc.
+  ///
+  /// This method is preferred over OQS_MEM_secure_free for memory allocated
+  /// by Dart's calloc to maintain heap symmetry and prevent corruption on Windows.
+  static void freeSecure(Pointer<Uint8>? ptr, int length) {
+    if (ptr == null || ptr == nullptr) return;
+    try {
+      // 1. Securely zero out the memory using liboqs (bypasses compiler optimization)
+      LibOQSBase.bindings.OQS_MEM_cleanse(ptr.cast(), length);
+    } catch (_) {
+      // Fallback: manual zeroing if cleanse fails or is unbound.
+      // Note: Not as reliable as OQS_MEM_cleanse but better than leaving data in RAM.
+      try {
+        ptr.asTypedList(length).fillRange(0, length, 0);
+      } catch (e) {
+        print('Warning: Failed to zero memory manually: $e');
+      }
+    } finally {
+      try {
+        calloc.free(ptr);
+      } catch (e) {
+        print('Warning: Failed to free secure pointer: $e');
+      }
+    }
+  }
+
   /// Validate algorithm name
   static void validateAlgorithmName(String name) {
     if (name.isEmpty) {
@@ -264,7 +290,7 @@ class LibOQSUtils {
     }
 
     // Check for basic validity
-    if (!RegExp(r'^[a-zA-Z0-9\-\+_]+$').hasMatch(name)) {
+    if (!RegExp(r'^[a-zA-Z0-9\-+_]+$').hasMatch(name)) {
       throw ArgumentError('Algorithm name contains invalid characters: $name');
     }
   }
@@ -388,7 +414,7 @@ class SafeSignature {
       return null;
     } finally {
       LibOQSUtils.freePointer(publicKey);
-      LibOQSUtils.freePointer(secretKey);
+      LibOQSUtils.freeSecure(secretKey, secretKeyLength);
     }
   }
 

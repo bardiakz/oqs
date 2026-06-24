@@ -45,3 +45,7 @@
 ## Security & Configuration Tips
 - This package depends on native `liboqs`; verify target binary/version compatibility.
 - Never commit private keys, test secrets, or local absolute library paths.
+- **Secure Memory**: Always use `OQS_MEM_cleanse` to wipe sensitive data (keys, seeds, shared secrets) before freeing native memory.
+- **Safe Allocations**: Use `try-finally` blocks when allocating multiple native pointers to prevent memory leaks if an intermediate allocation fails.
+- **Library Loading**: Avoid loading binaries from the current working directory (`Directory.current`) to prevent DLL hijacking. Use absolute paths or package-relative resolution.
+- **Heap Hygiene**: Be aware that `Uint8List` objects containing keys are managed by the Dart GC and cannot be securely zeroed. Prefer keeping sensitive data in native memory via `SecureBuffer` where possible.

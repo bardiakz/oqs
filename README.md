@@ -249,6 +249,7 @@ print(LibOQS.getSupportedSignatureAlgorithms());
 
 - Use NIST-standardized algorithms (`ML-KEM-*`, `ML-DSA-*`) for production.
 - Dispose algorithm objects (`kem.dispose()`, `sig.dispose()`) when done.
+- Call `dispose()` on key pairs and results (e.g., `kp.dispose()`) to wipe sensitive data from the Dart heap (best-effort).
 - Keep `liboqs` binaries updated and track security advisories.
 - Do not share mutable crypto object state across isolates/threads.
 

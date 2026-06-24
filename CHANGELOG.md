@@ -1,3 +1,19 @@
+## 3.3.0
+
+### Added
+- `LibOQSUtils.freeSecure()` for cryptographic memory cleansing using `OQS_MEM_cleanse`.
+- Added `dispose()` methods to `KEMKeyPair`, `SignatureKeyPair`, and `KEMEncapsulationResult` for best-effort clearing of secret data in the Dart heap.
+
+### Fixed
+- Fixed critical security issue: Private keys and shared secrets are now securely zeroed in native memory before being freed.
+- Fixed potential memory leaks by using `try-finally` blocks for all native pointer allocations.
+- Optimized `LibOQSUtils.pointerToUint8List()` by using `setRange()` instead of `sublist()`, reducing redundant memory copies.
+- Fixed type errors and improved null-safety in `Signature` and `KEM` implementations.
+
+### Security
+- Integrated recommendation to use `OQS_MEM_cleanse` for bypassing compiler optimizations when clearing sensitive material.
+- Enforced heap symmetry for native memory operations to prevent potential heap corruption on Windows.
+
 ## 3.2.1
 
 ### Changed

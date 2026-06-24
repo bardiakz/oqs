@@ -142,10 +142,13 @@ class Signature {
   /// Generate a key pair
   SignatureKeyPair generateKeyPair() {
     _checkDisposed();
-    final publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
-    final secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+    Pointer<Uint8>? publicKey;
+    Pointer<Uint8>? secretKey;
 
     try {
+      publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
+      secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
+
       final status = LibOQSBase.bindings.OQS_SIG_keypair(
         _sigPtr,
         publicKey,
@@ -161,7 +164,7 @@ class Signature {
       );
     } finally {
       LibOQSUtils.freePointer(publicKey);
-      LibOQSUtils.freePointer(secretKey);
+      LibOQSUtils.freeSecure(secretKey, secretKeyLength);
     }
   }
 
@@ -174,14 +177,19 @@ class Signature {
       );
     }
 
-    final signature = LibOQSUtils.allocateBytes(maxSignatureLength);
-    final signatureLength = calloc<Size>();
-    signatureLength.value = maxSignatureLength;
-
-    final messagePtr = LibOQSUtils.uint8ListToPointer(message);
-    final secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
+    Pointer<Uint8>? signature;
+    Pointer<Size>? signatureLength;
+    Pointer<Uint8>? messagePtr;
+    Pointer<Uint8>? secretKeyPtr;
 
     try {
+      signature = LibOQSUtils.allocateBytes(maxSignatureLength);
+      signatureLength = calloc<Size>();
+      signatureLength.value = maxSignatureLength;
+
+      messagePtr = LibOQSUtils.uint8ListToPointer(message);
+      secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
+
       final status = LibOQSBase.bindings.OQS_SIG_sign(
         _sigPtr,
         signature,
@@ -199,9 +207,9 @@ class Signature {
       return LibOQSUtils.pointerToUint8List(signature, actualLength);
     } finally {
       LibOQSUtils.freePointer(signature);
-      calloc.free(signatureLength);
+      LibOQSUtils.freePointer(signatureLength);
       LibOQSUtils.freePointer(messagePtr);
-      LibOQSUtils.freePointer(secretKeyPtr);
+      LibOQSUtils.freeSecure(secretKeyPtr, secretKey.length);
     }
   }
 
@@ -214,11 +222,15 @@ class Signature {
       );
     }
 
-    final messagePtr = LibOQSUtils.uint8ListToPointer(message);
-    final signaturePtr = LibOQSUtils.uint8ListToPointer(signature);
-    final publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
+    Pointer<Uint8>? messagePtr;
+    Pointer<Uint8>? signaturePtr;
+    Pointer<Uint8>? publicKeyPtr;
 
     try {
+      messagePtr = LibOQSUtils.uint8ListToPointer(message);
+      signaturePtr = LibOQSUtils.uint8ListToPointer(signature);
+      publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
+
       final status = LibOQSBase.bindings.OQS_SIG_verify(
         _sigPtr,
         messagePtr,
@@ -252,6 +264,12 @@ class SignatureKeyPair {
   final Uint8List secretKey;
 
   const SignatureKeyPair({required this.publicKey, required this.secretKey});
+
+  /// Wipes the key material from the Dart heap.
+  void dispose() {
+    publicKey.fillRange(0, publicKey.length, 0);
+    secretKey.fillRange(0, secretKey.length, 0);
+  }
 
   /// Returns all Uint8List properties as base64 encoded strings
   Map<String, String> toStrings() {
