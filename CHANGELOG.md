@@ -3,12 +3,17 @@
 ### Added
 - `LibOQSUtils.freeSecure()` for cryptographic memory cleansing using `OQS_MEM_cleanse`.
 - Added `dispose()` methods to `KEMKeyPair`, `SignatureKeyPair`, and `KEMEncapsulationResult` for best-effort clearing of secret data in the Dart heap.
+- New `Heap Hygiene` test suite in `safety_validation_test.dart`.
 
 ### Fixed
 - Fixed critical security issue: Private keys and shared secrets are now securely zeroed in native memory before being freed.
 - Fixed potential memory leaks by using `try-finally` blocks for all native pointer allocations.
 - Optimized `LibOQSUtils.pointerToUint8List()` by using `setRange()` instead of `sublist()`, reducing redundant memory copies.
 - Fixed type errors and improved null-safety in `Signature` and `KEM` implementations.
+- Fixed logic error in `deterministic_key_generation_example.dart` where public keys were printed as a tuple instead of being compared.
+
+### Changed
+- Updated all examples to demonstrate secure resource management and `try-finally` patterns.
 
 ### Security
 - Integrated recommendation to use `OQS_MEM_cleanse` for bypassing compiler optimizations when clearing sensitive material.

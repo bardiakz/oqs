@@ -69,70 +69,98 @@ void kemExample() {
 
       // Generate key pair
       final keyPair = kem.generateKeyPair();
-      print('  ✓ Generated key pair');
+      try {
+        print('  ✓ Generated key pair');
 
-      // Encapsulate
-      final encResult = kem.encapsulate(keyPair.publicKey);
-      print('  ✓ Encapsulated shared secret');
+        // Encapsulate
+        final encResult = kem.encapsulate(keyPair.publicKey);
+        try {
+          print('  ✓ Encapsulated shared secret');
 
-      // Decapsulate
-      final sharedSecret = kem.decapsulate(
-        encResult.ciphertext,
-        keyPair.secretKey,
-      );
-      print('  ✓ Decapsulated shared secret');
+          // Decapsulate
+          final sharedSecret = kem.decapsulate(
+            encResult.ciphertext,
+            keyPair.secretKey,
+          );
+          try {
+            print('  ✓ Decapsulated shared secret');
 
-      // Verify the shared secrets match
-      final match = _compareUint8Lists(encResult.sharedSecret, sharedSecret);
-      print('  ✓ Shared secrets match: $match');
+            // Verify the shared secrets match
+            final match = _compareUint8Lists(encResult.sharedSecret, sharedSecret);
+            print('  ✓ Shared secrets match: $match');
 
-      if (match) {
-        print(
-          '  Shared secret (hex): ${_bytesToHex(sharedSecret.take(16).toList())}...',
-        );
-      }
+            if (match) {
+              print(
+                '  Shared secret (hex): ${_bytesToHex(sharedSecret.take(16).toList())}...',
+              );
+            }
+          } finally {
+            // Best practice: Wipe secrets from memory as soon as possible
+            sharedSecret.fillRange(0, sharedSecret.length, 0);
+          }
+        } finally {
+          encResult.dispose(); // Wipe secrets from heap
+        }
 
-      // Test deterministic key generation if supported
-      if (kem.supportsDeterministicGeneration) {
-        print('\n  Testing deterministic generation...');
-        print('  Seed length required: ${kem.seedLength} bytes');
+        // Test deterministic key generation if supported
+        if (kem.supportsDeterministicGeneration) {
+          print('\n  Testing deterministic generation...');
+          print('  Seed length required: ${kem.seedLength} bytes');
 
-        // Generate a seed
-        final seed = OQSRandom.generateSeed(kem.seedLength!);
-        print('  Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
+          // Generate a seed
+          final seed = OQSRandom.generateSeed(kem.seedLength!);
+          try {
+            print('  Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
 
-        // Generate two key pairs with same seed
-        final keyPair1 = kem.generateKeyPairDerand(seed);
-        final keyPair2 = kem.generateKeyPairDerand(seed);
+            // Generate two key pairs with same seed
+            final keyPair1 = kem.generateKeyPairDerand(seed);
+            final keyPair2 = kem.generateKeyPairDerand(seed);
+            try {
+              // Verify they're identical
+              final publicKeysMatch = _compareUint8Lists(
+                keyPair1.publicKey,
+                keyPair2.publicKey,
+              );
+              final secretKeysMatch = _compareUint8Lists(
+                keyPair1.secretKey,
+                keyPair2.secretKey,
+              );
 
-        // Verify they're identical
-        final publicKeysMatch = _compareUint8Lists(
-          keyPair1.publicKey,
-          keyPair2.publicKey,
-        );
-        final secretKeysMatch = _compareUint8Lists(
-          keyPair1.secretKey,
-          keyPair2.secretKey,
-        );
+              print(
+                '  ✓ Deterministic generation: Public keys match: $publicKeysMatch',
+              );
+              print(
+                '  ✓ Deterministic generation: Secret keys match: $secretKeysMatch',
+              );
 
-        print(
-          '  ✓ Deterministic generation: Public keys match: $publicKeysMatch',
-        );
-        print(
-          '  ✓ Deterministic generation: Secret keys match: $secretKeysMatch',
-        );
-
-        // Generate with different seed to verify they're different
-        final seed2 = OQSRandom.generateSeed(kem.seedLength!);
-        final keyPair3 = kem.generateKeyPairDerand(seed2);
-
-        final differentKeys = !_compareUint8Lists(
-          keyPair1.publicKey,
-          keyPair3.publicKey,
-        );
-        print('  ✓ Different seeds produce different keys: $differentKeys');
-      } else {
-        print('  ℹ Deterministic generation not supported for $algName');
+              // Generate with different seed to verify they're different
+              final seed2 = OQSRandom.generateSeed(kem.seedLength!);
+              try {
+                final keyPair3 = kem.generateKeyPairDerand(seed2);
+                try {
+                  final differentKeys = !_compareUint8Lists(
+                    keyPair1.publicKey,
+                    keyPair3.publicKey,
+                  );
+                  print('  ✓ Different seeds produce different keys: $differentKeys');
+                } finally {
+                  keyPair3.dispose();
+                }
+              } finally {
+                seed2.fillRange(0, seed2.length, 0);
+              }
+            } finally {
+              keyPair1.dispose();
+              keyPair2.dispose();
+            }
+          } finally {
+            seed.fillRange(0, seed.length, 0);
+          }
+        } else {
+          print('  ℹ Deterministic generation not supported for $algName');
+        }
+      } finally {
+        keyPair.dispose(); // Wipe keys from heap
       }
     } catch (e) {
       print('  ✗ Error: $e');
@@ -165,33 +193,37 @@ void signatureExample() {
 
       // Generate key pair
       final keyPair = sig.generateKeyPair();
-      print('  ✓ Generated key pair');
+      try {
+        print('  ✓ Generated key pair');
 
-      // Create a message to sign
-      final message = Uint8List.fromList(
-        utf8.encode(
-          'Hello, Post-Quantum World! This is a test message for $algName.',
-        ),
-      );
+        // Create a message to sign
+        final message = Uint8List.fromList(
+          utf8.encode(
+            'Hello, Post-Quantum World! This is a test message for $algName.',
+          ),
+        );
 
-      // Sign the message
-      final signature = sig.sign(message, keyPair.secretKey);
-      print('  ✓ Signed message (signature length: ${signature.length} bytes)');
+        // Sign the message
+        final signature = sig.sign(message, keyPair.secretKey);
+        print('  ✓ Signed message (signature length: ${signature.length} bytes)');
 
-      // Verify the signature
-      final isValid = sig.verify(message, signature, keyPair.publicKey);
-      print('  ✓ Signature verification: $isValid');
+        // Verify the signature
+        final isValid = sig.verify(message, signature, keyPair.publicKey);
+        print('  ✓ Signature verification: $isValid');
 
-      // Test with invalid signature
-      final invalidSignature = Uint8List.fromList(
-        signature.toList()..shuffle(),
-      );
-      final isInvalid = sig.verify(
-        message,
-        invalidSignature,
-        keyPair.publicKey,
-      );
-      print('  ✓ Invalid signature verification: $isInvalid (should be false)');
+        // Test with invalid signature
+        final invalidSignature = Uint8List.fromList(
+          signature.toList()..shuffle(),
+        );
+        final isInvalid = sig.verify(
+          message,
+          invalidSignature,
+          keyPair.publicKey,
+        );
+        print('  ✓ Invalid signature verification: $isInvalid (should be false)');
+      } finally {
+        keyPair.dispose(); // Wipe keys from heap
+      }
     } catch (e) {
       print('  ✗ Error: $e');
     } finally {

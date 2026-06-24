@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:oqs/oqs.dart';
+import 'package:oqs/src/signature.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -178,6 +179,38 @@ void main() {
 
     test('switchAlgorithm validates input', () {
       expect(() => OQSRandom.switchAlgorithm(''), throwsArgumentError);
+    });
+  });
+
+  group('Heap Hygiene', () {
+    test('KEMKeyPair dispose zeros out memory', () {
+      final kp = KEMKeyPair(
+        publicKey: Uint8List.fromList([1, 2, 3]),
+        secretKey: Uint8List.fromList([4, 5, 6]),
+      );
+      kp.dispose();
+      expect(kp.publicKey, equals(Uint8List.fromList([0, 0, 0])));
+      expect(kp.secretKey, equals(Uint8List.fromList([0, 0, 0])));
+    });
+
+    test('SignatureKeyPair dispose zeros out memory', () {
+      final kp = SignatureKeyPair(
+        publicKey: Uint8List.fromList([1, 2, 3]),
+        secretKey: Uint8List.fromList([4, 5, 6]),
+      );
+      kp.dispose();
+      expect(kp.publicKey, equals(Uint8List.fromList([0, 0, 0])));
+      expect(kp.secretKey, equals(Uint8List.fromList([0, 0, 0])));
+    });
+
+    test('KEMEncapsulationResult dispose zeros out memory', () {
+      final res = KEMEncapsulationResult(
+        ciphertext: Uint8List.fromList([1, 2, 3]),
+        sharedSecret: Uint8List.fromList([4, 5, 6]),
+      );
+      res.dispose();
+      expect(res.ciphertext, equals(Uint8List.fromList([0, 0, 0])));
+      expect(res.sharedSecret, equals(Uint8List.fromList([0, 0, 0])));
     });
   });
 }

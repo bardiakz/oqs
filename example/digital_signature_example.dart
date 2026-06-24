@@ -13,16 +13,21 @@ void main() {
     // Generate a key pair
     final keyPair = sig.generateKeyPair();
 
-    // Message to sign
-    final message = utf8.encode('Hello, post-quantum world!');
+    try {
+      // Message to sign
+      final message = utf8.encode('Hello, post-quantum world!');
 
-    // Sign the message
-    final signature = sig.sign(message, keyPair.secretKey);
-    print('Signature length: ${signature.length}');
+      // Sign the message
+      final signature = sig.sign(message, keyPair.secretKey);
+      print('Signature length: ${signature.length}');
 
-    // Verify the signature
-    final isValid = sig.verify(message, signature, keyPair.publicKey);
-    print('Signature valid: $isValid');
+      // Verify the signature
+      final isValid = sig.verify(message, signature, keyPair.publicKey);
+      print('Signature valid: $isValid');
+    } finally {
+      // Best practice: Wipe secrets from heap
+      keyPair.dispose();
+    }
   } finally {
     // Clean up signature instance
     sig.dispose();

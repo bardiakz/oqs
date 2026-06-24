@@ -14,24 +14,35 @@ void main() {
   try {
     // Generate a key pair
     final keyPair = kem.generateKeyPair();
-    print('Public key length: ${keyPair.publicKey.length}');
-    print('Secret key length: ${keyPair.secretKey.length}');
+    try {
+      print('Public key length: ${keyPair.publicKey.length}');
+      print('Secret key length: ${keyPair.secretKey.length}');
 
-    // Encapsulate a shared secret
-    final encapsulationResult = kem.encapsulate(keyPair.publicKey);
-    print('Ciphertext length: ${encapsulationResult.ciphertext.length}');
-    print('Shared secret length: ${encapsulationResult.sharedSecret.length}');
+      // Encapsulate a shared secret
+      final encapsulationResult = kem.encapsulate(keyPair.publicKey);
+      try {
+        print('Ciphertext length: ${encapsulationResult.ciphertext.length}');
+        print('Shared secret length: ${encapsulationResult.sharedSecret.length}');
 
-    // Decapsulate the shared secret
-    final decapsulatedSecret = kem.decapsulate(
-      encapsulationResult.ciphertext,
-      keyPair.secretKey,
-    );
+        // Decapsulate the shared secret
+        final decapsulatedSecret = kem.decapsulate(
+          encapsulationResult.ciphertext,
+          keyPair.secretKey,
+        );
 
-    // Verify the shared secrets match
-    print(
-      'Secrets match: ${_listsEqual(encapsulationResult.sharedSecret, decapsulatedSecret)}',
-    );
+        // Verify the shared secrets match
+        print(
+          'Secrets match: ${_listsEqual(encapsulationResult.sharedSecret, decapsulatedSecret)}',
+        );
+
+        // Best practice: Wipe shared secret from memory
+        decapsulatedSecret.fillRange(0, decapsulatedSecret.length, 0);
+      } finally {
+        encapsulationResult.dispose(); // Wipe secrets from heap
+      }
+    } finally {
+      keyPair.dispose(); // Wipe keys from heap
+    }
   } finally {
     // Clean up KEM instance
     kem.dispose();
