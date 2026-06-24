@@ -35,6 +35,16 @@ void main() {
   });
 
   group('Algorithm Validation', () {
+    test('invalid algorithm names are rejected before native calls', () {
+      expect(() => KEM.create('ML-KEM-768\u0000anything'), throwsArgumentError);
+      expect(() => KEM.isSupported('../liboqs'), throwsArgumentError);
+      expect(
+        () => Signature.create('ML-DSA-65\u0000anything'),
+        throwsArgumentError,
+      );
+      expect(() => Signature.isSupported('../liboqs'), throwsArgumentError);
+    });
+
     test('unsupported KEM create throws LibOQSException', () {
       expect(
         () => KEM.create('NOT-A-REAL-KEM'),

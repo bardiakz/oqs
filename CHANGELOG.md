@@ -1,3 +1,8 @@
+## 3.3.1
+
+### Security
+- Applied public algorithm-name validation consistently in `KEM.create()`, `KEM.isSupported()`, `Signature.create()`, and `Signature.isSupported()`.
+
 ## 3.3.0
 
 ### Added

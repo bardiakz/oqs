@@ -83,11 +83,8 @@ class KEM {
 
   /// Create a new KEM instance with the specified algorithm
   static KEM? create(String algorithmName) {
+    LibOQSUtils.validateAlgorithmName(algorithmName);
     LibOQSBase.init(); // Auto-initialize
-
-    if (algorithmName.isEmpty) {
-      throw ArgumentError('Algorithm name cannot be empty');
-    }
 
     final namePtr = algorithmName.toNativeUtf8();
     try {
@@ -107,6 +104,8 @@ class KEM {
 
   /// Check if a KEM algorithm is supported
   static bool isSupported(String algorithmName) {
+    LibOQSUtils.validateAlgorithmName(algorithmName);
+
     final namePtr = algorithmName.toNativeUtf8();
     try {
       return LibOQSBase.bindings.OQS_KEM_alg_is_enabled(namePtr.cast()) == 1;
@@ -213,7 +212,7 @@ class KEM {
         secretKey: LibOQSUtils.pointerToUint8List(secretKey, secretKeyLength),
       );
     } finally {
-      LibOQSUtils.freePointer(publicKey); // Public key doesn't strictly need cleansing
+      LibOQSUtils.freePointer(publicKey);
       LibOQSUtils.freeSecure(secretKey, secretKeyLength);
       LibOQSUtils.freeSecure(seedPtr, seed.length);
     }

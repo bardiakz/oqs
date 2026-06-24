@@ -18,7 +18,7 @@ Dart FFI bindings for [liboqs](https://github.com/open-quantum-safe/liboqs), pro
 
 ```yaml
 dependencies:
-  oqs: ^3.1.0
+  oqs: ^3.3.1
 ```
 
 ## Native Library Setup

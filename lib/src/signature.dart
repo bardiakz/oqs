@@ -83,11 +83,8 @@ class Signature {
 
   /// Create a new Signature instance with the specified algorithm
   static Signature create(String algorithmName) {
+    LibOQSUtils.validateAlgorithmName(algorithmName);
     LibOQSBase.init(); // Ensure LibOQS is initialized
-
-    if (algorithmName.isEmpty) {
-      throw ArgumentError('Algorithm name cannot be empty');
-    }
 
     final namePtr = algorithmName.toNativeUtf8();
     try {
@@ -107,6 +104,8 @@ class Signature {
 
   /// Check if a signature algorithm is supported
   static bool isSupported(String algorithmName) {
+    LibOQSUtils.validateAlgorithmName(algorithmName);
+
     final namePtr = algorithmName.toNativeUtf8();
     try {
       return LibOQSBase.bindings.OQS_SIG_alg_is_enabled(namePtr.cast()) == 1;
