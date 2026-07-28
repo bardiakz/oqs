@@ -9,6 +9,7 @@ pubspec.lock
 
 bin/
 headers/
+headers_0.15.0/
 oldbin/
 liboqs-0.15.0/
 

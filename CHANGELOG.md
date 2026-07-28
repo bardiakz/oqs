@@ -1,3 +1,30 @@
+## 4.0.0
+
+### Breaking
+- Aligned with `liboqs 0.16.0`. Native binaries must be upgraded to `0.16.x`
+  to match.
+- **FrodoKEM naming change**: `FrodoKEM-640-AES`, `FrodoKEM-976-AES`,
+  `FrodoKEM-1344-AES` (and `-SHAKE` variants) now refer to the new **salted**
+  FrodoKEM, suitable for keypairs reused across many encapsulations. The
+  previous ephemeral (one-shot) behavior is now under `eFrodoKEM-640-AES`,
+  `eFrodoKEM-976-AES`, `eFrodoKEM-1344-AES`, etc. Code that hardcoded the old
+  names will keep running but silently get different security properties —
+  check which variant your usage actually needs.
+- **SPHINCS+ removed upstream.** `getSupportedSignatureAlgorithms()` will no
+  longer list it; `Signature.create()`/`isSupported()` will report it
+  unavailable. Migrate to ML-DSA or Falcon.
+
+### Changed
+- Regenerated `liboqs_bindings.dart` against `liboqs 0.16.0` headers.
+- Bumped `ffi` to `^2.2.0`.
+- Updated README
+
+### Notes
+- No changes to the Dart-facing API surface (`KEM`, `Signature`, `OQSRandom`,
+  `LibOQSLoader`) — algorithm and struct handling remain runtime-discovered,
+  so existing calling code is unaffected apart from the FrodoKEM/SPHINCS+
+  algorithm-name changes above.
+
 ## 3.3.1
 
 ### Security

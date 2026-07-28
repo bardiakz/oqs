@@ -7,10 +7,14 @@ Dart FFI bindings for [liboqs](https://github.com/open-quantum-safe/liboqs), pro
 
 ## Version Compatibility
 
-| `oqs` package | `liboqs` |
+| `oqs` package | `liboqs`   |
 |---|---|
+| `4.x` | `0.16.x` |
 | `3.x` | `0.15.x` |
 | `2.x` | `0.14.x` (legacy) |
+
+`4.0.0` is a breaking release aligned to `liboqs 0.16.0` (a major bump to force a re-read of the **FrodoKEM naming change** below before
+upgrading.
 
 `3.0.0` is a breaking release aligned to `liboqs 0.15.0`.
 
@@ -224,11 +228,29 @@ void main() {
 
 ## Migration to 3.x (`liboqs 0.15.0`)
 
-1. Upgrade dependency in `pubspec.yaml` to `^3.1.0`.
-2. Ensure native `liboqs` binary is `0.15.x`.
-3. Replace fixed algorithm assumptions (`Kyber*`, `Dilithium*`) with runtime discovery.
-4. Remove hard-coded size assertions and read lengths from each algorithm instance.
-5. Re-run tests against every target platform binary you ship.
+1. Replace fixed algorithm assumptions (`Kyber*`, `Dilithium*`) with runtime discovery.
+2. Remove hard-coded size assertions and read lengths from each algorithm instance.
+3. Re-run tests against every target platform binary you ship.
+
+## Migration to 4.x (`liboqs 0.16.0`)
+1. **Read the FrodoKEM section below before upgrading if you use FrodoKEM.**
+2. SPHINCS+ was removed upstream. If you called `Signature.create('SPHINCS+-...')`
+   or similar, `getSupportedSignatureAlgorithms()` will no longer list it and
+   `create()`/`isSupported()` will report it as unavailable. Migrate to
+   ML-DSA or Falcon.
+3. No Dart API changes are required otherwise
+
+### ⚠️ FrodoKEM naming change (important, not just cosmetic)
+
+Starting with `liboqs 0.16.0`, the **same algorithm names now mean something
+different**:
+
+- `FrodoKEM-640-AES`, `FrodoKEM-976-AES`, `FrodoKEM-1344-AES` (and `-SHAKE`
+  variants) **used to be the ephemeral (one-shot) variant** in `liboqs 0.15.x`.
+- In `0.16.0`, those exact names now point to the new **salted** FrodoKEM,
+  intended for keypairs that will encapsulate many ciphertexts.
+- The old ephemeral behavior is still available, but under new names:
+  `eFrodoKEM-640-AES`, `eFrodoKEM-976-AES`, `eFrodoKEM-1344-AES`, etc.
 
 ## Common Problems
 
