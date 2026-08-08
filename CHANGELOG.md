@@ -1,3 +1,16 @@
+## [4.1.0] - 2026-08-08
+
+### Added
+- `LibraryPaths.fromReleaseArchive()` and `ReleaseArchiveStrategy` for
+  loading from a liboqs-binaries v2.0.0+ combined archive (per-platform,
+  per-architecture subfolders: `linux/x86_64/`, `android/<abi>/`, etc.).
+- `releaseArchiveRoot` parameter on `LibOQSLoader.loadLibrary()`.
+
+### Deprecated
+- `LibraryPaths.fromBinaryRoot()`, `BinaryReleaseStrategy`, and the
+  `binaryRoot` parameter on `loadLibrary()`. These assumed a combined
+  archive layout that liboqs-binaries never actually produced. No behavior
+  change — use `fromReleaseArchive()` / `releaseArchiveRoot` instead.
 ## 4.0.0
 
 ### Breaking

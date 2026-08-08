@@ -4,8 +4,10 @@ import 'package:oqs/oqs.dart';
 import 'package:oqs/src/signature.dart';
 import 'package:test/test.dart';
 
+import 'test_setup.dart';
+
 void main() {
-  LibOQSLoader.loadLibrary(binaryRoot: 'liboqs-0.15.0');
+  setUpAll(initTestLibOQS);
   String pickKEMAlgorithm(List<String> algorithms) {
     const preferred = ['ML-KEM-768', 'ML-KEM-512', 'Kyber768', 'Kyber512'];
     for (final candidate in preferred) {
@@ -25,10 +27,6 @@ void main() {
     }
     return algorithms.first;
   }
-
-  setUpAll(() {
-    LibOQS.init();
-  });
 
   tearDownAll(() {
     LibOQS.cleanup();

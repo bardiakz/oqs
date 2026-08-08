@@ -97,19 +97,19 @@ class LibraryPaths {
     }
   }
 
-  /// Creates a LibraryPaths from an extracted all-platforms archive.
+  /// Deprecated: this assumed an arch-separated combined-archive layout
+  /// (`lib/x86_64/`, `lib/aarch64/`) that liboqs-binaries never actually
+  /// produced, and it can't disambiguate Android ABIs since it points all
+  /// four at the same path. Kept only for source compatibility.
   ///
-  /// Expects the arch-separated layout produced by the build workflow:
-  /// ```
-  /// binaryRoot/
-  ///   lib/
-  ///     x86_64/liboqs.so        ← Linux x86_64
-  ///     aarch64/liboqs.so       ← Linux ARM64
-  ///     liboqs.dylib            ← macOS
-  ///   bin/
-  ///     oqs.dll                 ← Windows
-  ///   liboqs.xcframework/       ← iOS (static, loaded via process())
-  /// ```
+  /// Use [LibraryPaths.fromReleaseArchive] instead, which matches the
+  /// combined archive layout shipped from liboqs-binaries v2.0.0 onward
+  /// (`linux/x86_64/`, `android/<abi>/`, `ios/`, etc.).
+  @Deprecated(
+    'Use LibraryPaths.fromReleaseArchive() instead — this does not match '
+    'the current liboqs-binaries combined archive layout. '
+    'Will be removed in a future major version.',
+  )
   factory LibraryPaths.fromBinaryRoot(String binaryRoot) {
     return LibraryPaths(
       windows: '$binaryRoot/bin/oqs.dll',
@@ -122,6 +122,54 @@ class LibraryPaths {
       androidX64: '$binaryRoot/lib/liboqs.so',
       androidX86: '$binaryRoot/lib/liboqs.so',
     );
+  }
+
+  /// Creates a LibraryPaths from an extracted liboqs-binaries combined
+  /// "all-platforms" archive (v2.0.0+ layout), where every platform/arch
+  /// has its own subfolder:
+  /// ```
+  /// root/
+  ///   linux/x86_64/liboqs.so
+  ///   linux/aarch64/liboqs.so
+  ///   macos/x86_64/liboqs.dylib
+  ///   macos/arm64/liboqs.dylib
+  ///   windows/x86_64/oqs.dll
+  ///   android/arm64-v8a/liboqs.so
+  ///   android/armeabi-v7a/liboqs.so
+  ///   android/x86_64/liboqs.so
+  ///   android/x86/liboqs.so
+  ///   ios/liboqs.xcframework/...
+  /// ```
+  ///
+  /// On Android/iOS this only tells the loader where the file *would* be;
+  /// you must still copy the Android `.so` into `jniLibs/<abi>/` and embed
+  /// the iOS `.xcframework` in Xcode. See the liboqs-binaries README.
+  factory LibraryPaths.fromReleaseArchive(String root) {
+    // macOS is architecture-specific per download but a Dart process only
+    // runs as one architecture at a time; try to match the running arch,
+    // falling back to arm64 (Apple Silicon is now the common case).
+    final macArch = _hostArchIsX64() ? 'x86_64' : 'arm64';
+    return LibraryPaths(
+      windows: '$root/windows/x86_64/oqs.dll',
+      linuxX64: '$root/linux/x86_64/liboqs.so',
+      linuxArm64: '$root/linux/aarch64/liboqs.so',
+      macOS: '$root/macos/$macArch/liboqs.dylib',
+      iOS: null, // DynamicLibrary.process() — must be embedded via Xcode
+      androidArm64: '$root/android/arm64-v8a/liboqs.so',
+      androidArm32: '$root/android/armeabi-v7a/liboqs.so',
+      androidX64: '$root/android/x86_64/liboqs.so',
+      androidX86: '$root/android/x86/liboqs.so',
+    );
+  }
+
+  static bool _hostArchIsX64() {
+    try {
+      final result = Process.runSync('uname', ['-m']);
+      final arch = result.stdout.toString().trim();
+      return arch == 'x86_64';
+    } catch (e) {
+      return false;
+    }
   }
 
   /// Creates a LibraryPaths from separately extracted platform archives.
@@ -284,7 +332,14 @@ class SystemLocationStrategy extends LibraryLoadStrategy {
   String get description => 'System library locations';
 }
 
-/// Strategy that loads library from an extracted binary release directory.
+/// Deprecated: assumed a combined-archive layout liboqs-binaries never
+/// actually produced. Use [ReleaseArchiveStrategy] with a v2.0.0+ combined
+/// archive(from github.com/bardiakz/liboqs-binaries) instead. Kept for source compatibility.
+@Deprecated(
+  'Use ReleaseArchiveStrategy with a v2.0.0+ combined archive instead(check github.com/bardiakz/liboqs-binaries) — this does not match the current '
+  'liboqs-binaries combined archive layout. '
+  'Will be removed in future versions.',
+)
 class BinaryReleaseStrategy extends LibraryLoadStrategy {
   final String binaryRoot;
   BinaryReleaseStrategy(this.binaryRoot);
@@ -298,7 +353,6 @@ class BinaryReleaseStrategy extends LibraryLoadStrategy {
       if (Platform.isWindows) {
         path = '$binaryRoot/bin/oqs.dll';
       } else if (Platform.isLinux) {
-        // Use arch-separated paths
         final arch = _getLinuxArch();
         if (arch == 'aarch64' || arch == 'arm64') {
           path = '$binaryRoot/lib/aarch64/liboqs.so';
@@ -331,6 +385,33 @@ class BinaryReleaseStrategy extends LibraryLoadStrategy {
 
   @override
   String get description => 'Binary release structure at: $binaryRoot';
+}
+
+/// Strategy that loads a library from an extracted liboqs-binaries v2.0.0+ (check github.com/bardiakz/liboqs-binaries)
+/// combined "all-platforms" archive. See [LibraryPaths.fromReleaseArchive]
+/// for the expected layout.
+class ReleaseArchiveStrategy extends LibraryLoadStrategy {
+  final String root;
+  ReleaseArchiveStrategy(this.root);
+
+  late final LibraryPaths _paths = LibraryPaths.fromReleaseArchive(root);
+
+  @override
+  DynamicLibrary? tryLoad() {
+    if (Platform.isIOS) return DynamicLibrary.process();
+
+    final path = _paths.currentPlatformPath;
+    if (path == null) return null;
+    try {
+      if (File(path).existsSync()) return DynamicLibrary.open(path);
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  String get description => 'liboqs-binaries v2.0.0+ release archive at: $root';
 }
 
 /// Legacy strategy for backward compatibility with old project structures.
@@ -428,16 +509,24 @@ class LibOQSLoader {
   /// 2. [customPaths] (`LibraryPaths`)
   /// 3. Deprecated [customPath]
   /// 4. Environment variable (`LIBOQS_PATH` or [envVarName])
-  /// 5. [binaryRoot] extracted release layout
-  /// 6. Package-relative paths
-  /// 7. System loader default name
-  /// 8. Legacy paths (backward compat)
+  /// 5. [releaseArchiveRoot] — an extracted liboqs-binaries v2.0.0+ combined
+  ///    archive (recommended over the deprecated [binaryRoot])
+  /// 6. [binaryRoot] — deprecated, kept for source compatibility only
+  /// 7. Package-relative paths
+  /// 8. System loader default name
+  /// 9. Legacy paths (backward compat)
   ///
   /// Throws [LibraryLoadException] if all strategies fail.
   static DynamicLibrary loadLibrary({
     String? explicitPath,
     bool useCache = true,
     String envVarName = 'LIBOQS_PATH',
+    String? releaseArchiveRoot,
+    @Deprecated(
+      'Use releaseArchiveRoot instead — binaryRoot assumes a combined '
+      'archive layout liboqs-binaries no longer produces. '
+      'Will be removed in a future major version.',
+    )
     String? binaryRoot,
   }) {
     if (useCache && _cachedLibrary != null) return _cachedLibrary!;
@@ -448,6 +537,9 @@ class LibOQSLoader {
       // ignore: deprecated_member_use_from_same_package
       if (customPath != null) ExplicitPathStrategy(customPath!),
       EnvironmentVariableStrategy(envVarName),
+      if (releaseArchiveRoot != null)
+        ReleaseArchiveStrategy(releaseArchiveRoot),
+      // ignore: deprecated_member_use_from_same_package
       if (binaryRoot != null) BinaryReleaseStrategy(binaryRoot),
       PackageRelativeStrategy(),
       SystemLocationStrategy(),

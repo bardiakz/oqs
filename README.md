@@ -36,7 +36,7 @@ Download pre-built binaries from:
 
 **Supported platforms:**
 - Linux: x86_64, ARM64 (aarch64)
-- macOS: ARM64 (Apple Silicon)
+- macOS: x86_64 (Intel), ARM64 (Apple Silicon)
 - Windows: x64
 - iOS: XCFramework (device + simulator)
 - Android: armeabi-v7a, arm64-v8a, x86, x86_64
@@ -45,23 +45,25 @@ Download pre-built binaries from:
 
 ```bash
 # Extract the combined archive
-tar -xzf liboqs-0.15.0-all-platforms.tar.gz
+tar -xzf liboqs-0.16.0-all-platforms.tar.gz
 
 # Use in your Dart code
-LibOQSLoader.loadLibrary(binaryRoot: '/path/to/liboqs-0.15.0');
+LibOQSLoader.customPaths = LibraryPaths.fromReleaseArchive('/path/to/liboqs-0.16.0');
+LibOQS.init();
 ```
 
-The all-platforms archive contains architecture-separated binaries:
+The all-platforms archive keeps every platform/architecture in its own subfolder:
 ```
-liboqs-0.15.0/
-  lib/x86_64/liboqs.so      # Linux x86_64
-  lib/aarch64/liboqs.so     # Linux ARM64
-  lib/liboqs.dylib          # macOS ARM64
-  bin/oqs.dll               # Windows x64
-  android/arm64-v8a/        # Android binaries
-  liboqs.xcframework/       # iOS
+liboqs-0.16.0/
+  linux/x86_64/liboqs.so
+  linux/aarch64/liboqs.so
+  macos/x86_64/liboqs.dylib
+  macos/arm64/liboqs.dylib
+  windows/x86_64/oqs.dll
+  android/arm64-v8a/liboqs.so    # + armeabi-v7a, x86, x86_64
+  ios/liboqs.xcframework/
 ```
-
+**Android/iOS:** the archive only stages the files. You still might need to copy the Android `.so` into `android/app/src/main/jniLibs/<abi>/` and add the iOS `.xcframework` to your Xcode project's embedded frameworks.
 ### Option 2: Build from source
 
 ```bash
@@ -94,10 +96,11 @@ LibOQSLoader.customPaths = LibraryPaths(
 2. `LibOQSLoader.customPaths` (`LibraryPaths`)
 3. Deprecated `LibOQSLoader.customPath`
 4. Environment variable (`LIBOQS_PATH`, or `envVarName`)
-5. `binaryRoot` extracted release layout
-6. Package-relative paths
-7. System loader/default name (`liboqs.so`, `oqs.dll`, `liboqs.dylib`)
-8. Legacy default paths (`bin/<platform>/...`)
+5. `releaseArchiveRoot` — extracted liboqs-binaries v2.0.0+ combined archive (recommended)
+6. Deprecated `binaryRoot` — legacy layout, kept for compatibility only
+7. Package-relative paths
+8. System loader/default name (`liboqs.so`, `oqs.dll`, `liboqs.dylib`)
+9. Legacy default paths (`bin/<platform>/...`)
 
 If all fail, `LibraryLoadException` includes all attempted strategies.
 
@@ -148,7 +151,7 @@ LibOQSLoader.customPaths = LibraryPaths(
 Or extracted release root:
 
 ```dart
-final lib = LibOQSLoader.loadLibrary(binaryRoot: '/opt/liboqs-0.15.0');
+final lib = LibOQSLoader.loadLibrary(releaseArchiveRoot: '/opt/liboqs-0.16.0');
 ```
 
 ### Cache Behavior
