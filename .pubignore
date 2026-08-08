@@ -3,16 +3,16 @@
 *.iml
 .DS_Store
 
-# Native build artifacts and sources
 bin/
 headers/
+headers_0.15.0/
 oldbin/
 liboqs-0.15.0/
+liboqs-0.16.0/
 
-# Internal documentation and audit reports
 gemini.md
 AGENTS.md
-SECURITY_AUDIT.md
-scripts/
+*.iml
+.idea/
 
 FUTURE_IMPLEMENTATIONS.md
