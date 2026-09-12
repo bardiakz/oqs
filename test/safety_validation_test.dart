@@ -144,6 +144,38 @@ void main() {
 
       sig.dispose();
     });
+
+    test('empty message sign and verify round-trip', () {
+      final algorithm = pickSignatureAlgorithm(
+        LibOQS.getSupportedSignatureAlgorithms(),
+      );
+      final sig = Signature.create(algorithm);
+      final keyPair = sig.generateKeyPair();
+
+      // liboqs accepts zero-length messages; the wrapper must not throw.
+      final signature = sig.sign(Uint8List(0), keyPair.secretKey);
+      expect(signature, isNotEmpty);
+      expect(sig.verify(Uint8List(0), signature, keyPair.publicKey), isTrue);
+
+      // Tampered signature over an empty message must be rejected.
+      signature[0] ^= 0x01;
+      expect(sig.verify(Uint8List(0), signature, keyPair.publicKey), isFalse);
+
+      sig.dispose();
+    });
+
+    test('empty signature verify returns false instead of throwing', () {
+      final algorithm = pickSignatureAlgorithm(
+        LibOQS.getSupportedSignatureAlgorithms(),
+      );
+      final sig = Signature.create(algorithm);
+      final keyPair = sig.generateKeyPair();
+      final msg = Uint8List.fromList('hello quantum'.codeUnits);
+
+      expect(sig.verify(msg, Uint8List(0), keyPair.publicKey), isFalse);
+
+      sig.dispose();
+    });
   });
 
   group('Random API Contracts', () {
@@ -174,6 +206,15 @@ void main() {
       }
       expect(() => OQSRandom.generateInt(5, 5), throwsArgumentError);
       expect(() => OQSRandom.generateInt(7, 3), throwsArgumentError);
+    });
+
+    test('generateInt rejects ranges that would overflow 64-bit caps', () {
+      // Ranges needing 8 bytes made 1 << 64 wrap to 0 and hang forever.
+      expect(
+        () => OQSRandom.generateInt(0, 9223372036854775807),
+        throwsArgumentError,
+      );
+      expect(() => OQSRandom.generateInt(-1, 0), returnsNormally);
     });
 
     test('utility extensions return sane values', () {

@@ -32,6 +32,9 @@ class LibOQS {
   /// Clean up liboqs resources
   /// Call this when you're done using the library
   /// This function frees prefetched OpenSSL objects
+  ///
+  /// Dispose all [KEM] and [Signature] instances before calling this —
+  /// their GC finalizers would otherwise call into a destroyed library.
   static void cleanup() {
     LibOQSBase.cleanup();
     // _initialized = false;

@@ -147,8 +147,8 @@ class LibraryPaths {
   factory LibraryPaths.fromReleaseArchive(String root) {
     // macOS is architecture-specific per download but a Dart process only
     // runs as one architecture at a time; try to match the running arch,
-    // falling back to arm64 (Apple Silicon is now the common case).
-    final macArch = _hostArchIsX64() ? 'x86_64' : 'arm64';
+    // falling back to arm64. Only probed on macOS — `uname` isn't available on mobile platforms.
+    final macArch = Platform.isMacOS && _hostArchIsX64() ? 'x86_64' : 'arm64';
     return LibraryPaths(
       windows: '$root/windows/x86_64/oqs.dll',
       linuxX64: '$root/linux/x86_64/liboqs.so',

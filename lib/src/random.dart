@@ -63,6 +63,13 @@ class OQSRandom {
     if (min >= max) throw ArgumentError('min must be less than max');
     final range = max - min;
     final bytesNeeded = (range.bitLength + 7) ~/ 8;
+    // Dart ints are 64-bit two's complement: 1 << 64 wraps to 0, so ranges
+    // needing 8 bytes would make cap/unbiasedCap 0 and loop forever below.
+    if (bytesNeeded >= 8) {
+      throw ArgumentError(
+        'Range too large: max - min must be less than 2^63, got: $range',
+      );
+    }
     final cap = 1 << (bytesNeeded * 8);
     final unbiasedCap = cap - (cap % range);
     while (true) {

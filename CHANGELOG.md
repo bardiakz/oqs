@@ -1,3 +1,20 @@
+## [4.1.1] - 2026-09-12
+
+### Fixed
+- `Signature.sign`/`verify` now accept zero-length messages (and empty
+  signatures return `false` instead of throwing). liboqs has always supported
+  empty messages; the Dart wrapper was incorrectly rejecting them in
+  `LibOQSUtils.uint8ListToPointer`.
+- `OQSRandom.generateInt` no longer hangs forever for ranges ≥ 2^63
+  (`1 << 64` wraps to 0 in Dart, making the rejection cap 0). Such ranges
+  now throw `ArgumentError`. Normal ranges are unaffected.
+
+### Changed
+- readme update
+- Removed unused internal `SafeSignature` class (never exported or referenced).
+- `LibraryPaths.fromReleaseArchive` no longer spawns `uname` on non-macOS
+  platforms.
+
 ## [4.1.0] - 2026-08-08
 
 ### Added

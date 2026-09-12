@@ -145,11 +145,11 @@ class LibOQSUtils {
   static const int _maxAllocationSize = 100 * 1024 * 1024;
 
   /// Convert Uint8List to pointer with safety checks
+  ///
+  /// Empty data is allowed (e.g. zero-length messages for `Signature.sign`
+  /// and `Signature.verify`, which liboqs supports); a 1-byte buffer is
+  /// allocated so callers never receive a null pointer.
   static Pointer<Uint8> uint8ListToPointer(Uint8List data) {
-    if (data.isEmpty) {
-      throw ArgumentError('Data cannot be empty');
-    }
-
     if (data.length > _maxAllocationSize) {
       throw LibOQSException(
         'Data too large: ${data.length} bytes (max: $_maxAllocationSize)',
@@ -158,14 +158,18 @@ class LibOQSUtils {
 
     Pointer<Uint8>? ptr;
     try {
-      ptr = calloc<Uint8>(data.length);
+      // Allocate at least 1 byte so the pointer is never null; liboqs
+      // functions that take a zero length never read from it.
+      ptr = calloc<Uint8>(data.isEmpty ? 1 : data.length);
       if (ptr == nullptr) {
         throw LibOQSException('Failed to allocate ${data.length} bytes');
       }
 
       // Validate the pointer before using it
-      final nativeData = ptr.asTypedList(data.length);
-      nativeData.setAll(0, data);
+      if (data.isNotEmpty) {
+        final nativeData = ptr.asTypedList(data.length);
+        nativeData.setAll(0, data);
+      }
 
       return ptr;
     } catch (e) {
@@ -292,141 +296,6 @@ class LibOQSUtils {
     // Check for basic validity
     if (!RegExp(r'^[a-zA-Z0-9\-+_]+$').hasMatch(name)) {
       throw ArgumentError('Algorithm name contains invalid characters: $name');
-    }
-  }
-}
-
-/// Safe signature implementation with crash protection
-class SafeSignature {
-  final Pointer<OQS_SIG> _sigPtr;
-  final String algorithmName;
-  bool _disposed = false;
-
-  SafeSignature._(this._sigPtr, this.algorithmName);
-
-  /// Create signature instance with comprehensive safety checks
-  static SafeSignature? create(String algorithmName) {
-    try {
-      LibOQSUtils.validateAlgorithmName(algorithmName);
-      LibOQSBase.init();
-
-      final namePtr = algorithmName.toNativeUtf8();
-      try {
-        final sigPtr = LibOQSBase.bindings.OQS_SIG_new(namePtr.cast());
-        if (sigPtr == nullptr) {
-          return null; // Algorithm not supported
-        }
-
-        // Validate the created signature structure
-        final sig = sigPtr.cast<OQS_SIG>();
-        final ref = sig.ref;
-
-        // Basic validation of the structure
-        if (ref.length_public_key <= 0 ||
-            ref.length_public_key > LibOQSUtils._maxAllocationSize ||
-            ref.length_secret_key <= 0 ||
-            ref.length_secret_key > LibOQSUtils._maxAllocationSize ||
-            ref.length_signature <= 0 ||
-            ref.length_signature > LibOQSUtils._maxAllocationSize) {
-          LibOQSBase.bindings.OQS_SIG_free(sig);
-          throw LibOQSException(
-            'Invalid signature parameters for $algorithmName',
-          );
-        }
-
-        return SafeSignature._(sig, algorithmName);
-      } finally {
-        LibOQSUtils.freePointer(namePtr);
-      }
-    } catch (e) {
-      throw LibOQSException(
-        'Failed to create signature for $algorithmName: $e',
-      );
-    }
-  }
-
-  /// Check if algorithm is supported safely
-  static bool isSupported(String algorithmName) {
-    try {
-      LibOQSUtils.validateAlgorithmName(algorithmName);
-      LibOQSBase.init();
-
-      final namePtr = algorithmName.toNativeUtf8();
-      try {
-        return LibOQSBase.bindings.OQS_SIG_alg_is_enabled(namePtr.cast()) == 1;
-      } finally {
-        LibOQSUtils.freePointer(namePtr);
-      }
-    } catch (e) {
-      print('Warning: Error checking algorithm support for $algorithmName: $e');
-      return false;
-    }
-  }
-
-  void _checkDisposed() {
-    if (_disposed) {
-      throw StateError('Signature instance has been disposed');
-    }
-  }
-
-  int get publicKeyLength {
-    _checkDisposed();
-    return _sigPtr.ref.length_public_key;
-  }
-
-  int get secretKeyLength {
-    _checkDisposed();
-    return _sigPtr.ref.length_secret_key;
-  }
-
-  int get maxSignatureLength {
-    _checkDisposed();
-    return _sigPtr.ref.length_signature;
-  }
-
-  /// Generate key pair with extensive error handling
-  Map<String, Uint8List>? generateKeyPair() {
-    _checkDisposed();
-
-    Pointer<Uint8>? publicKey;
-    Pointer<Uint8>? secretKey;
-
-    try {
-      publicKey = LibOQSUtils.allocateBytes(publicKeyLength);
-      secretKey = LibOQSUtils.allocateBytes(secretKeyLength);
-
-      final keypairFn = _sigPtr.ref.keypair
-          .asFunction<
-            int Function(Pointer<Uint8> publicKey, Pointer<Uint8> secretKey)
-          >();
-
-      final result = keypairFn(publicKey, secretKey);
-      if (result != 0) {
-        return null; // Failed to generate
-      }
-
-      return {
-        'publicKey': LibOQSUtils.pointerToUint8List(publicKey, publicKeyLength),
-        'secretKey': LibOQSUtils.pointerToUint8List(secretKey, secretKeyLength),
-      };
-    } catch (e) {
-      print('Error generating key pair for $algorithmName: $e');
-      return null;
-    } finally {
-      LibOQSUtils.freePointer(publicKey);
-      LibOQSUtils.freeSecure(secretKey, secretKeyLength);
-    }
-  }
-
-  /// Safe disposal
-  void dispose() {
-    if (!_disposed) {
-      _disposed = true;
-      try {
-        LibOQSBase.bindings.OQS_SIG_free(_sigPtr);
-      } catch (e) {
-        print('Warning: Error disposing signature: $e');
-      }
     }
   }
 }
