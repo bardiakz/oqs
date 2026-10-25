@@ -22,7 +22,9 @@ void main() {
       final encapsulationResult = kem.encapsulate(keyPair.publicKey);
       try {
         print('Ciphertext length: ${encapsulationResult.ciphertext.length}');
-        print('Shared secret length: ${encapsulationResult.sharedSecret.length}');
+        print(
+          'Shared secret length: ${encapsulationResult.sharedSecret.length}',
+        );
 
         // Decapsulate the shared secret
         final decapsulatedSecret = kem.decapsulate(

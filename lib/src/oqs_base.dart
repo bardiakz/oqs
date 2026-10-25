@@ -283,6 +283,37 @@ class LibOQSUtils {
     }
   }
 
+  /// Constant-time comparison of two byte arrays to prevent timing side-channel attacks.
+  ///
+  /// Returns `true` if [a] and [b] have identical lengths and contents, `false` otherwise.
+  static bool secureCompare(Uint8List a, Uint8List b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    var diff = 0;
+    for (var i = 0; i < a.length; i++) {
+      diff |= a[i] ^ b[i];
+    }
+    return diff == 0;
+  }
+
+  /// Constant-time comparison of native memory buffers using liboqs's [OQS_MEM_secure_bcmp].
+  ///
+  /// Returns `true` if the first [length] bytes of [a] and [b] match, `false` otherwise.
+  static bool secureNativeCompare(
+    Pointer<Void> a,
+    Pointer<Void> b,
+    int length,
+  ) {
+    if (length < 0) {
+      throw ArgumentError.value(length, 'length', 'Must be non-negative');
+    }
+    if (length == 0) return true;
+    if (a == b) return true;
+    if (a == nullptr || b == nullptr) return false;
+    LibOQSBase.init();
+    return LibOQSBase.bindings.OQS_MEM_secure_bcmp(a, b, length) == 0;
+  }
+
   /// Validate algorithm name
   static void validateAlgorithmName(String name) {
     if (name.isEmpty) {

@@ -86,7 +86,10 @@ void kemExample() {
             print('  ✓ Decapsulated shared secret');
 
             // Verify the shared secrets match
-            final match = _compareUint8Lists(encResult.sharedSecret, sharedSecret);
+            final match = _compareUint8Lists(
+              encResult.sharedSecret,
+              sharedSecret,
+            );
             print('  ✓ Shared secrets match: $match');
 
             if (match) {
@@ -110,7 +113,9 @@ void kemExample() {
           // Generate a seed
           final seed = OQSRandom.generateSeed(kem.seedLength!);
           try {
-            print('  Generated seed: ${_bytesToHex(seed.take(16).toList())}...');
+            print(
+              '  Generated seed: ${_bytesToHex(seed.take(16).toList())}...',
+            );
 
             // Generate two key pairs with same seed
             final keyPair1 = kem.generateKeyPairDerand(seed);
@@ -142,7 +147,9 @@ void kemExample() {
                     keyPair1.publicKey,
                     keyPair3.publicKey,
                   );
-                  print('  ✓ Different seeds produce different keys: $differentKeys');
+                  print(
+                    '  ✓ Different seeds produce different keys: $differentKeys',
+                  );
                 } finally {
                   keyPair3.dispose();
                 }
@@ -205,7 +212,9 @@ void signatureExample() {
 
         // Sign the message
         final signature = sig.sign(message, keyPair.secretKey);
-        print('  ✓ Signed message (signature length: ${signature.length} bytes)');
+        print(
+          '  ✓ Signed message (signature length: ${signature.length} bytes)',
+        );
 
         // Verify the signature
         final isValid = sig.verify(message, signature, keyPair.publicKey);
@@ -220,7 +229,9 @@ void signatureExample() {
           invalidSignature,
           keyPair.publicKey,
         );
-        print('  ✓ Invalid signature verification: $isInvalid (should be false)');
+        print(
+          '  ✓ Invalid signature verification: $isInvalid (should be false)',
+        );
       } finally {
         keyPair.dispose(); // Wipe keys from heap
       }

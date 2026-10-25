@@ -45,55 +45,42 @@ class LibraryPaths {
 
   /// Get the path for the current platform and architecture.
   String? get currentPlatformPath {
-    if (Platform.isWindows) return windows;
-    if (Platform.isLinux) {
-      final arch = _getLinuxArch();
-      if (arch == 'aarch64' || arch == 'arm64') {
-        return linuxArm64 ?? linuxX64; // fall back to x64 if arm64 not set
-      }
-      return linuxX64;
-    }
-    if (Platform.isMacOS) return macOS;
-    if (Platform.isIOS) return iOS;
-    if (Platform.isAndroid) {
-      final abi = _getAndroidABI();
-      switch (abi) {
-        case 'arm64-v8a':
-          return androidArm64;
-        case 'armeabi-v7a':
-          return androidArm32;
-        case 'x86_64':
-          return androidX64;
-        case 'x86':
-          return androidX86;
-        default:
+    final abi = Abi.current();
+    switch (abi) {
+      case Abi.windowsX64:
+      case Abi.windowsArm64:
+      case Abi.windowsIA32:
+        return windows;
+      case Abi.linuxArm64:
+        return linuxArm64 ?? linuxX64;
+      case Abi.linuxX64:
+      case Abi.linuxArm:
+      case Abi.linuxRiscv32:
+      case Abi.linuxRiscv64:
+        return linuxX64;
+      case Abi.macosArm64:
+      case Abi.macosX64:
+        return macOS;
+      case Abi.iosArm64:
+      case Abi.iosX64:
+        return iOS;
+      case Abi.androidArm64:
+        return androidArm64;
+      case Abi.androidArm:
+        return androidArm32;
+      case Abi.androidX64:
+        return androidX64;
+      case Abi.androidIA32:
+        return androidX86;
+      default:
+        if (Platform.isWindows) return windows;
+        if (Platform.isLinux) return linuxX64;
+        if (Platform.isMacOS) return macOS;
+        if (Platform.isIOS) return iOS;
+        if (Platform.isAndroid) {
           return androidArm64 ?? androidArm32 ?? androidX64 ?? androidX86;
-      }
-    }
-    return null;
-  }
-
-  /// Detects Linux CPU architecture via `uname -m`.
-  String? _getLinuxArch() {
-    try {
-      final result = Process.runSync('uname', ['-m']);
-      return result.stdout.toString().trim();
-    } catch (e) {
-      return Platform.environment['HOSTTYPE'];
-    }
-  }
-
-  /// Attempts to detect Android ABI from Platform.version.
-  String? _getAndroidABI() {
-    try {
-      final v = Platform.version;
-      if (v.contains('arm64')) return 'arm64-v8a';
-      if (v.contains('arm')) return 'armeabi-v7a';
-      if (v.contains('x86_64')) return 'x86_64';
-      if (v.contains('x86')) return 'x86';
-      return null;
-    } catch (e) {
-      return null;
+        }
+        return null;
     }
   }
 
@@ -146,9 +133,8 @@ class LibraryPaths {
   /// the iOS `.xcframework` in Xcode. See the liboqs-binaries README.
   factory LibraryPaths.fromReleaseArchive(String root) {
     // macOS is architecture-specific per download but a Dart process only
-    // runs as one architecture at a time; try to match the running arch,
-    // falling back to arm64. Only probed on macOS — `uname` isn't available on mobile platforms.
-    final macArch = Platform.isMacOS && _hostArchIsX64() ? 'x86_64' : 'arm64';
+    // runs as one architecture at a time; match the running arch via Abi.current().
+    final macArch = Abi.current() == Abi.macosX64 ? 'x86_64' : 'arm64';
     return LibraryPaths(
       windows: '$root/windows/x86_64/oqs.dll',
       linuxX64: '$root/linux/x86_64/liboqs.so',
@@ -160,16 +146,6 @@ class LibraryPaths {
       androidX64: '$root/android/x86_64/liboqs.so',
       androidX86: '$root/android/x86/liboqs.so',
     );
-  }
-
-  static bool _hostArchIsX64() {
-    try {
-      final result = Process.runSync('uname', ['-m']);
-      final arch = result.stdout.toString().trim();
-      return arch == 'x86_64';
-    } catch (e) {
-      return false;
-    }
   }
 
   /// Creates a LibraryPaths from separately extracted platform archives.
@@ -353,12 +329,10 @@ class BinaryReleaseStrategy extends LibraryLoadStrategy {
       if (Platform.isWindows) {
         path = '$binaryRoot/bin/oqs.dll';
       } else if (Platform.isLinux) {
-        final arch = _getLinuxArch();
-        if (arch == 'aarch64' || arch == 'arm64') {
-          path = '$binaryRoot/lib/aarch64/liboqs.so';
-        } else {
-          path = '$binaryRoot/lib/x86_64/liboqs.so';
-        }
+        final isArm64 = Abi.current() == Abi.linuxArm64;
+        path = isArm64
+            ? '$binaryRoot/lib/aarch64/liboqs.so'
+            : '$binaryRoot/lib/x86_64/liboqs.so';
       } else if (Platform.isAndroid) {
         path = '$binaryRoot/lib/liboqs.so';
       } else if (Platform.isMacOS) {
@@ -371,15 +345,6 @@ class BinaryReleaseStrategy extends LibraryLoadStrategy {
       return null;
     } catch (e) {
       return null;
-    }
-  }
-
-  String? _getLinuxArch() {
-    try {
-      final result = Process.runSync('uname', ['-m']);
-      return result.stdout.toString().trim();
-    } catch (e) {
-      return Platform.environment['HOSTTYPE'];
     }
   }
 

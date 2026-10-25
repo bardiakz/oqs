@@ -1,11 +1,13 @@
 library;
 
+import 'dart:typed_data';
+
 import 'package:oqs/src/kem.dart';
 import 'package:oqs/src/oqs_base.dart';
 import 'package:oqs/src/signature.dart';
 
 export 'src/kem.dart';
-export 'src/oqs_base.dart' show LibOQSException;
+export 'src/oqs_base.dart' show LibOQSException, LibOQSUtils;
 export 'src/platform/library_loader.dart'
     show LibOQSLoader, LibraryLoadException, LibraryPaths;
 export 'src/random.dart' show OQSRandom, OQSRandomExtensions;
@@ -63,5 +65,12 @@ class LibOQS {
   /// Check if a signature algorithm is supported
   static bool isSignatureSupported(String algorithmName) {
     return Signature.isSupported(algorithmName);
+  }
+
+  /// Constant-time comparison of two byte arrays to prevent timing side-channel attacks.
+  ///
+  /// Returns `true` if [a] and [b] have identical lengths and contents, `false` otherwise.
+  static bool secureCompare(Uint8List a, Uint8List b) {
+    return LibOQSUtils.secureCompare(a, b);
   }
 }

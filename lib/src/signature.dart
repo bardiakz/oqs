@@ -42,6 +42,12 @@ class Signature {
     return _sigPtr.ref.euf_cma;
   }
 
+  /// Whether this signature algorithm supports signing with a context string.
+  bool get supportsContextString {
+    _checkDisposed();
+    return _sigPtr.ref.sig_with_ctx_support;
+  }
+
   /// supported Signature algorithms by liboqs
   static void printSupportedSignatureAlgorithms() {
     print("\nSupported Signatures:");
@@ -167,12 +173,21 @@ class Signature {
     }
   }
 
-  /// Sign a message
-  Uint8List sign(Uint8List message, Uint8List secretKey) {
+  /// Sign a message using the secret key.
+  ///
+  /// If [context] is provided, domain-separated signing via `sign_with_ctx_str`
+  /// is performed. Throws [LibOQSException] if the algorithm does not support
+  /// context strings.
+  Uint8List sign(Uint8List message, Uint8List secretKey, {Uint8List? context}) {
     _checkDisposed();
     if (secretKey.length != secretKeyLength) {
       throw LibOQSException(
         'Invalid secret key length: expected $secretKeyLength, got ${secretKey.length}',
+      );
+    }
+    if (context != null && !supportsContextString) {
+      throw LibOQSException(
+        'Algorithm $algorithmName does not support signing with a context string',
       );
     }
 
@@ -180,6 +195,7 @@ class Signature {
     Pointer<Size>? signatureLength;
     Pointer<Uint8>? messagePtr;
     Pointer<Uint8>? secretKeyPtr;
+    Pointer<Uint8>? contextPtr;
 
     try {
       signature = LibOQSUtils.allocateBytes(maxSignatureLength);
@@ -188,15 +204,29 @@ class Signature {
 
       messagePtr = LibOQSUtils.uint8ListToPointer(message);
       secretKeyPtr = LibOQSUtils.uint8ListToPointer(secretKey);
+      if (context != null) {
+        contextPtr = LibOQSUtils.uint8ListToPointer(context);
+      }
 
-      final status = LibOQSBase.bindings.OQS_SIG_sign(
-        _sigPtr,
-        signature,
-        signatureLength,
-        messagePtr,
-        message.length,
-        secretKeyPtr,
-      );
+      final status = context != null
+          ? LibOQSBase.bindings.OQS_SIG_sign_with_ctx_str(
+              _sigPtr,
+              signature,
+              signatureLength,
+              messagePtr,
+              message.length,
+              contextPtr!,
+              context.length,
+              secretKeyPtr,
+            )
+          : LibOQSBase.bindings.OQS_SIG_sign(
+              _sigPtr,
+              signature,
+              signatureLength,
+              messagePtr,
+              message.length,
+              secretKeyPtr,
+            );
 
       if (status != OQS_STATUS.OQS_SUCCESS) {
         throw LibOQSException('Failed to sign message', status.value);
@@ -209,41 +239,76 @@ class Signature {
       LibOQSUtils.freePointer(signatureLength);
       LibOQSUtils.freePointer(messagePtr);
       LibOQSUtils.freeSecure(secretKeyPtr, secretKey.length);
+      if (contextPtr != null) {
+        LibOQSUtils.freePointer(contextPtr);
+      }
     }
   }
 
-  /// Verify a signature
-  bool verify(Uint8List message, Uint8List signature, Uint8List publicKey) {
+  /// Verify a signature.
+  ///
+  /// If [context] is provided, domain-separated verification via
+  /// `verify_with_ctx_str` is performed. Throws [LibOQSException] if the
+  /// algorithm does not support context strings.
+  bool verify(
+    Uint8List message,
+    Uint8List signature,
+    Uint8List publicKey, {
+    Uint8List? context,
+  }) {
     _checkDisposed();
     if (publicKey.length != publicKeyLength) {
       throw LibOQSException(
         'Invalid public key length: expected $publicKeyLength, got ${publicKey.length}',
       );
     }
+    if (context != null && !supportsContextString) {
+      throw LibOQSException(
+        'Algorithm $algorithmName does not support verifying with a context string',
+      );
+    }
 
     Pointer<Uint8>? messagePtr;
     Pointer<Uint8>? signaturePtr;
     Pointer<Uint8>? publicKeyPtr;
+    Pointer<Uint8>? contextPtr;
 
     try {
       messagePtr = LibOQSUtils.uint8ListToPointer(message);
       signaturePtr = LibOQSUtils.uint8ListToPointer(signature);
       publicKeyPtr = LibOQSUtils.uint8ListToPointer(publicKey);
+      if (context != null) {
+        contextPtr = LibOQSUtils.uint8ListToPointer(context);
+      }
 
-      final status = LibOQSBase.bindings.OQS_SIG_verify(
-        _sigPtr,
-        messagePtr,
-        message.length,
-        signaturePtr,
-        signature.length,
-        publicKeyPtr,
-      );
+      final status = context != null
+          ? LibOQSBase.bindings.OQS_SIG_verify_with_ctx_str(
+              _sigPtr,
+              messagePtr,
+              message.length,
+              signaturePtr,
+              signature.length,
+              contextPtr!,
+              context.length,
+              publicKeyPtr,
+            )
+          : LibOQSBase.bindings.OQS_SIG_verify(
+              _sigPtr,
+              messagePtr,
+              message.length,
+              signaturePtr,
+              signature.length,
+              publicKeyPtr,
+            );
 
       return status == OQS_STATUS.OQS_SUCCESS;
     } finally {
       LibOQSUtils.freePointer(messagePtr);
       LibOQSUtils.freePointer(signaturePtr);
       LibOQSUtils.freePointer(publicKeyPtr);
+      if (contextPtr != null) {
+        LibOQSUtils.freePointer(contextPtr);
+      }
     }
   }
 

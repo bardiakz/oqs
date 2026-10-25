@@ -1,3 +1,14 @@
+## [4.2.0] - 2026-10-24
+
+### Added
+- Context-aware signatures: `Signature.sign` and `Signature.verify` now accept an optional `context` parameter (`Uint8List?`) delegating to `OQS_SIG_sign_with_ctx_str` and `OQS_SIG_verify_with_ctx_str` for domain separation (e.g. ML-DSA, SLH-DSA).
+- Added `Signature.supportsContextString` getter.
+- Constant-time comparison: added `LibOQS.secureCompare` and `LibOQSUtils.secureCompare` (in-Dart constant-time byte comparison) and `LibOQSUtils.secureNativeCompare` (`OQS_MEM_secure_bcmp` binding) to prevent timing side-channels when checking secrets.
+- Exported `LibOQSUtils` from `package:oqs/oqs.dart`.
+
+### Changed
+- Replaced `uname` subprocess calls and string heuristics in `LibraryPaths` and `BinaryReleaseStrategy` with `dart:ffi`'s `Abi.current()`, improving reliability in minimal containers and sandboxed environments.
+
 ## [4.1.1] - 2026-09-12
 
 ### Fixed

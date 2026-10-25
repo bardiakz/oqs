@@ -1,5 +1,7 @@
+import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart';
 import 'package:oqs/oqs.dart';
 import 'package:oqs/src/signature.dart';
 import 'package:test/test.dart';
@@ -261,5 +263,139 @@ void main() {
       expect(res.ciphertext, equals(Uint8List.fromList([0, 0, 0])));
       expect(res.sharedSecret, equals(Uint8List.fromList([0, 0, 0])));
     });
+  });
+
+  group('Constant-Time Comparison (OQS_MEM_secure_bcmp)', () {
+    test('LibOQS.secureCompare behaves correctly', () {
+      final a = Uint8List.fromList([1, 2, 3, 4, 5]);
+      final b = Uint8List.fromList([1, 2, 3, 4, 5]);
+      final c = Uint8List.fromList([1, 2, 3, 4, 6]);
+      final d = Uint8List.fromList([1, 2, 3, 4]);
+
+      expect(LibOQS.secureCompare(a, a), isTrue);
+      expect(LibOQS.secureCompare(a, b), isTrue);
+      expect(LibOQS.secureCompare(a, c), isFalse);
+      expect(LibOQS.secureCompare(a, d), isFalse);
+      expect(LibOQS.secureCompare(Uint8List(0), Uint8List(0)), isTrue);
+    });
+
+    test('LibOQSUtils.secureNativeCompare uses OQS_MEM_secure_bcmp', () {
+      final p1 = calloc<Uint8>(4);
+      final p2 = calloc<Uint8>(4);
+      try {
+        p1.asTypedList(4).setAll(0, [10, 20, 30, 40]);
+        p2.asTypedList(4).setAll(0, [10, 20, 30, 40]);
+        expect(
+          LibOQSUtils.secureNativeCompare(p1.cast(), p2.cast(), 4),
+          isTrue,
+        );
+
+        p2.asTypedList(4)[3] = 41;
+        expect(
+          LibOQSUtils.secureNativeCompare(p1.cast(), p2.cast(), 4),
+          isFalse,
+        );
+        expect(
+          LibOQSUtils.secureNativeCompare(p1.cast(), p2.cast(), 0),
+          isTrue,
+        );
+      } finally {
+        calloc.free(p1);
+        calloc.free(p2);
+      }
+    });
+  });
+
+  group('ABI-based Library Loading', () {
+    test('LibraryPaths.currentPlatformPath resolves without subprocess', () {
+      const paths = LibraryPaths(
+        linuxX64: '/test/linux/x64/liboqs.so',
+        linuxArm64: '/test/linux/arm64/liboqs.so',
+        macOS: '/test/macos/liboqs.dylib',
+        windows: '/test/windows/oqs.dll',
+      );
+      final resolved = paths.currentPlatformPath;
+      expect(resolved, isNotNull);
+    });
+
+    test('LibraryPaths.fromReleaseArchive maps architectures', () {
+      final paths = LibraryPaths.fromReleaseArchive('/fake/root');
+      expect(paths.linuxX64, equals('/fake/root/linux/x86_64/liboqs.so'));
+      expect(paths.linuxArm64, equals('/fake/root/linux/aarch64/liboqs.so'));
+      expect(
+        paths.androidArm64,
+        equals('/fake/root/android/arm64-v8a/liboqs.so'),
+      );
+      expect(paths.currentPlatformPath, contains('/fake/root/'));
+    });
+  });
+
+  group('Context String Signatures (sign_with_ctx_str)', () {
+    test(
+      'ML-DSA supports context strings and verifies with matching context',
+      () {
+        final enabled = Signature.getSupportedSignatureAlgorithms();
+        final algName = pickSignatureAlgorithm(enabled);
+        final sig = Signature.create(algName);
+
+        try {
+          if (sig.supportsContextString) {
+            final kp = sig.generateKeyPair();
+            final message = Uint8List.fromList('test-message'.codeUnits);
+            final ctx = Uint8List.fromList('domain-separation-ctx'.codeUnits);
+            final otherCtx = Uint8List.fromList('other-domain-ctx'.codeUnits);
+
+            final signature = sig.sign(message, kp.secretKey, context: ctx);
+            expect(signature.isNotEmpty, isTrue);
+
+            // Matching context verifies
+            expect(
+              sig.verify(message, signature, kp.publicKey, context: ctx),
+              isTrue,
+            );
+
+            // Mismatched context fails
+            expect(
+              sig.verify(message, signature, kp.publicKey, context: otherCtx),
+              isFalse,
+            );
+
+            // Null context fails
+            expect(sig.verify(message, signature, kp.publicKey), isFalse);
+          }
+        } finally {
+          sig.dispose();
+        }
+      },
+    );
+
+    test(
+      'Algorithm without context string support throws on context parameter',
+      () {
+        final enabled = Signature.getSupportedSignatureAlgorithms();
+        final noCtxAlg = enabled.firstWhere((alg) {
+          final s = Signature.create(alg);
+          final supported = s.supportsContextString;
+          s.dispose();
+          return !supported;
+        }, orElse: () => '');
+
+        if (noCtxAlg.isNotEmpty) {
+          final sig = Signature.create(noCtxAlg);
+          try {
+            final kp = sig.generateKeyPair();
+            final message = Uint8List.fromList('test-msg'.codeUnits);
+            final ctx = Uint8List.fromList('ctx'.codeUnits);
+
+            expect(
+              () => sig.sign(message, kp.secretKey, context: ctx),
+              throwsA(isA<LibOQSException>()),
+            );
+          } finally {
+            sig.dispose();
+          }
+        }
+      },
+    );
   });
 }

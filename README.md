@@ -22,7 +22,7 @@ upgrading.
 
 ```yaml
 dependencies:
-  oqs: ^4.1.0
+  oqs: ^4.2.0
 ```
 
 ## Native Library Setup
